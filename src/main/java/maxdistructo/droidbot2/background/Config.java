@@ -1,15 +1,10 @@
 package maxdistructo.droidbot2.background;
 
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 public class Config{
     public static String token;
@@ -21,14 +16,14 @@ public class Config{
 
     public static void newCasino(long user){
         JSONObject obj = new JSONObject();
-        obj.put("name", user);
-        obj.put("chips", 100);
-        obj.put("membership",null);
-        obj.put("payday",0);
-        obj.put("allin", 0);
+        obj.append("name", user);
+        obj.append("chips", 100);
+        obj.append("membership",null);
+        obj.append("payday",0);
+        obj.append("allin", 0);
 
         try (FileWriter file = new FileWriter("/config/"+ user +".json")) {
-            file.write(obj.toJSONString());
+            file.write(obj.toString());
             System.out.println("Successfully Copied JSON Object to File...");
             System.out.println("\nJSON Object: " + obj);
         }
@@ -39,26 +34,26 @@ public class Config{
 
     }
     public static void readCasino(long user){
-            JSONParser parser = new JSONParser();
+        File jsonStr = new File("/config/"+user+".json");
         try {
-            JSONArray a = (JSONArray) parser.parse(new FileReader("/config/" + user + ".json"));
-            for (Object o : a)
-            {
-                JSONObject player = (JSONObject) o;
+            JSONObject rootObject = new JSONObject(jsonStr); // Parse the JSON to a JSONObject
+            JSONArray rows = rootObject.getJSONArray("rows"); // Get all JSONArray rows
 
-                PLAYER = (long)player.get("name");
-                CHIPS = (double)player.get("chips");
-                MEMBERSHIP = (String)player.get("membership");
-                PAYDAY = (int)player.get("payday");
-                ALLIN = (int)player.get("allin");
+            for(int i=0; i < rows.length(); i++) { // Loop over each each row
+                JSONObject row = rows.getJSONObject(i); // Get row object
+                JSONArray elements = row.getJSONArray("elements"); // Get all elements for each row as an array
+
+                for(int j=0; j < elements.length(); j++) { // Iterate each element in the elements array
+                    JSONObject element =  elements.getJSONObject(j); // Get the element object
+                    JSONObject duration = element.getJSONObject("duration"); // Get duration sub object
+                    JSONObject distance = element.getJSONObject("distance"); // Get distance sub object
+
+                    System.out.println("Duration: " + duration.getInt("value")); // Print int value
+                    System.out.println("Distance: " + distance.getInt("value")); // Print int value
+                }
             }
-
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
+        } catch (JSONException e) {
+            // JSON Parsing error
             e.printStackTrace();
         }
     }

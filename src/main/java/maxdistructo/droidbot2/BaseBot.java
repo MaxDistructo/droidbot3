@@ -14,13 +14,12 @@ import javax.security.auth.login.LoginException;
 public class BaseBot {
     public static String PREFIX;
     public static void main(String[] args){
-        String token = "MzE1MzEzOTY3NzU5MDk3ODU3.DANVQw.jygOczrZr40m7OXfBv4b1kYQdPI";
+        String token = "MjY2NzMxNzg4NTk0OTcwNjM1.DAOsQQ.IqbKZsq5Rboc49qRAnm_WJpYLyk";
         JDA jda;
         try {
             jda = new JDABuilder(AccountType.BOT).setToken(token).buildBlocking();
             CommandHandler handler = new JDA3Handler(jda);
             handler.registerCommand(new Debug());
-            handler.registerCommand(new Casino());
         }
         catch (InterruptedException e) {
             e.printStackTrace();
