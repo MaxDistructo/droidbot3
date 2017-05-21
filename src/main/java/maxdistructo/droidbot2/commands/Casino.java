@@ -8,20 +8,21 @@ import net.dv8tion.jda.core.entities.User;
 
 
 public class Casino implements CommandExecutor {
-    @Command(aliases = {"/casino" }, description = "Shows some information about the bot.", usage = "!info [author|time]")
+    @Command(aliases = {"/casino" }, description = "Casino Commands.", usage = "/casino [payday|balance]")
     public String onCasinoCommand(String[] args, Message message) {
         User author = message.getAuthor();
         long authorIdLong = author.getIdLong();
         Config.readCasino(authorIdLong);
+        boolean bot = author.isBot();
 
-        if(Config.PLAYER != 0 && args.length == 0){
+        if(Config.PLAYER != 0 && args.length == 0 && !bot){
             return "You have already registered to Doggo Casino";
         }
-        else if(Config.PLAYER == 0 && args.length == 0){
+        else if(Config.PLAYER == 0 && args.length == 0 && !bot){
             Config.newCasino(authorIdLong);
             return "You have been registered to join Doggo Casino";
         }
-        else if(args.length == 1){
+        else if(args.length == 1 && !bot){
             if(args[0].equals("payday")){
                 if(Config.MEMBERSHIP.equals(null)){
                     Config.CHIPS = Config.CHIPS + 100;

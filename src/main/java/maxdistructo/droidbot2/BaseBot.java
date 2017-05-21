@@ -2,6 +2,7 @@ package maxdistructo.droidbot2;
 
 import de.btobastian.sdcf4j.CommandHandler;
 import de.btobastian.sdcf4j.handler.JDA3Handler;
+import maxdistructo.droidbot2.commands.Casino;
 import maxdistructo.droidbot2.commands.Debug;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
@@ -19,6 +20,7 @@ public class BaseBot {
             jda = new JDABuilder(AccountType.BOT).setToken(token).buildBlocking();
             CommandHandler handler = new JDA3Handler(jda);
             handler.registerCommand(new Debug());
+            handler.registerCommand(new Casino());
         }
         catch (InterruptedException e) {
             e.printStackTrace();
