@@ -1,61 +1,135 @@
 package maxdistructo.droidbot2.background;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class Config{
     public static String token;
-    public static long PLAYER;
-    public static double CHIPS;
+    public static long PLAYER = 0;
+    public static int CHIPS;
     public static String MEMBERSHIP;
     public static int PAYDAY;
     public static int ALLIN;
 
     public static void newCasino(long user){
-        JSONObject obj = new JSONObject();
-        obj.append("name", user);
-        obj.append("chips", 100);
-        obj.append("membership",null);
-        obj.append("payday",0);
-        obj.append("allin", 0);
-
-        try (FileWriter file = new FileWriter("/config/"+ user +".json")) {
-            file.write(obj.toString());
-            System.out.println("Successfully Copied JSON Object to File...");
-            System.out.println("\nJSON Object: " + obj);
+        Path currentRelativePath = Paths.get("");
+        String s = currentRelativePath.toAbsolutePath().toString();
+        File f = new File(s+"/droidbot/config/casino/"+ user + ".txt");
+        f.getParentFile().mkdirs();
+        try {
+            f.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        catch(IOException e){
-            System.out.println(e);
-        }
-
-
+        writeLong(s+"/droidbot/config/casino/"+ user + ".txt", 1, user); //Value of User
+        writeInt(s+"/droidbot/config/casino/"+ user + ".txt", 2, 100); //Base Chips
+        writeString(s+"/droidbot/config/casino/"+ user + ".txt",3,"null"); //Membership
+        writeInt(s+"/droidbot/config/casino/"+ user + ".txt", 4, 0); //Payday Cooldown
+        writeInt(s+"/droidbot/config/casino/"+ user + ".txt", 5, 0); //All In Cooldown
     }
     public static void readCasino(long user){
-        File jsonStr = new File("/config/"+user+".json");
+        Path currentRelativePath = Paths.get("");
+        String s = currentRelativePath.toAbsolutePath().toString();
+        reader(s +"/droidbot/config/casino/"+ user + ".txt", 1, PLAYER);
+        reader(s +"/droidbot/config/casino/"+ user + ".txt", 2, CHIPS);
+        reader(s +"/droidbot/config/casino/"+ user + ".txt", 3, MEMBERSHIP);
+        reader(s +"/droidbot/config/casino/"+ user + ".txt", 4, PAYDAY);
+        reader(s +"/droidbot/config/casino/"+ user + ".txt", 5, ALLIN);
+    }
+    public static void writeCasino(long user){
+        Path currentRelativePath = Paths.get("");
+        String s = currentRelativePath.toAbsolutePath().toString();
+        writeInt(s+"/droidbot/config/casino/"+ user + ".txt", 2, CHIPS); //Base Chips
+        writeString(s+"/droidbot/config/casino/"+ user + ".txt", 3, MEMBERSHIP); //Membership
+        writeInt(s+"/droidbot/config/casino/"+ user + ".txt", 4, PAYDAY); //Payday Cooldown
+        writeInt(s+"/droidbot/config/casino/"+ user + ".txt", 5, ALLIN); //All In Cooldown
+    }
+
+    public static void reader(String file, int line, Object var){
+        FileInputStream fs = null;
+        BufferedReader br;
+        int cntr = 0;
         try {
-            JSONObject rootObject = new JSONObject(jsonStr); // Parse the JSON to a JSONObject
-            JSONArray rows = rootObject.getJSONArray("rows"); // Get all JSONArray rows
-
-            for(int i=0; i < rows.length(); i++) { // Loop over each each row
-                JSONObject row = rows.getJSONObject(i); // Get row object
-                JSONArray elements = row.getJSONArray("elements"); // Get all elements for each row as an array
-
-                for(int j=0; j < elements.length(); j++) { // Iterate each element in the elements array
-                    JSONObject element =  elements.getJSONObject(j); // Get the element object
-                    JSONObject duration = element.getJSONObject("duration"); // Get duration sub object
-                    JSONObject distance = element.getJSONObject("distance"); // Get distance sub object
-
-                    System.out.println("Duration: " + duration.getInt("value")); // Print int value
-                    System.out.println("Distance: " + distance.getInt("value")); // Print int value
-                }
+            fs = new FileInputStream(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        br = new BufferedReader(new InputStreamReader(fs)); //Initialize BufferedReader
+        while(cntr < line){ //Changes the line that the program is reading to the one I want to read
+            try{
+                br.readLine();
             }
-        } catch (JSONException e) {
-            // JSON Parsing error
+            catch(IOException e){
+                e.printStackTrace();
+            }
+            cntr++;
+        }
+        try {
+            var = br.readLine();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
+    public static void writeLong(String file, int line, long var){
+        RandomAccessFile ra = null;
+        try {
+            ra = new RandomAccessFile(file,"rw" );
+        } catch (FileNotFoundException e1) {
+            e1.printStackTrace();
+        }// (file name, mode of file)
+          try {
+            ra.seek(line);
+        } catch (IOException e1) {      
+            e1.printStackTrace();
+        }// set the poss to overwrite
+        try {
+            ra.writeLong(var);
+       
+        } catch (IOException e) {
+            e.printStackTrace();
+        } 
+
+    }   
+    public static void writeInt(String file, int line, int var){
+        RandomAccessFile ra = null;
+        try {
+            ra = new RandomAccessFile(file,"rw" );
+        } catch (FileNotFoundException e1) {
+            e1.printStackTrace();
+        }// (file name, mode of file)
+          try {
+            ra.seek(line);
+        } catch (IOException e1) {      
+            e1.printStackTrace();
+        }// set the poss to overwrite
+        try {
+            ra.write(var);
+       
+        } catch (IOException e) {
+            e.printStackTrace();
+        } 
+
+    }   
+    public static void writeString(String file, int line, String var){
+        RandomAccessFile ra = null;
+        try {
+            ra = new RandomAccessFile(file,"rw" );
+        } catch (FileNotFoundException e1) {
+            e1.printStackTrace();
+        }// (file name, mode of file)
+          try {
+            ra.seek(line);
+        } catch (IOException e1) {      
+            e1.printStackTrace();
+        }// set the poss to overwrite
+        try {
+            ra.writeUTF(var);
+       
+        } catch (IOException e) {
+            e.printStackTrace();
+        } 
+
+    }   
 
 }
