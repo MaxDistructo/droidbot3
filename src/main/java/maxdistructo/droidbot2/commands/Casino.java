@@ -64,7 +64,7 @@ public class Casino implements CommandExecutor {
             }
         }
 
-        return "Unknown argument!";
+        return "Error in command: Casino. Possible causes: Triggered by bot user, unknown argument, or User has attempted to run command in a channel other than the game channel.";
     }
 
 }
