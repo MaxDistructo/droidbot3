@@ -19,12 +19,17 @@ public class Blackjack implements CommandExecutor {
         int[] cards = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10};
         int scoreDealer = 0;
         int scorePlayer = 0;
+        String blackjackProgress
         if(Config.PLAYER == 0){
             return author + "Please join the casino by using /casino to play BlackJack";
         }
         else if (args.length == 0) {
             return "You must specify a bet. Please enter /blackjack|bj <bet> to play.";
         } 
+        else if(args.length == 1 && args[0].equals("hit")){
+            return blackjackProgress;
+        }
+        else if(args.length == 1 && )
         else{
             Config.CHIPS = Config.CHIPS - args[0];
             double win = args[0] + args[0] + Config.CHIPS;
