@@ -11,6 +11,10 @@ public class Config{
     public static String MEMBERSHIP;
     public static int PAYDAY;
     public static int ALLIN;
+    public static boolean ISMOD = false;
+    public static boolean ISADMIN = false;
+    public static boolean ISOWNER = false;
+    public static boolean ISGAME = false;
 
     public static void newCasino(long user){
         Path currentRelativePath = Paths.get("");

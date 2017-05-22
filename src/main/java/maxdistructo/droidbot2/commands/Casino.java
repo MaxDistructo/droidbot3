@@ -3,7 +3,9 @@ package maxdistructo.droidbot2.commands;
 import de.btobastian.sdcf4j.Command;
 import de.btobastian.sdcf4j.CommandExecutor;
 import maxdistructo.droidbot2.background.Config;
+import maxdistructo.droidbot2.background.Perms;
 import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
 
 
@@ -14,15 +16,17 @@ public class Casino implements CommandExecutor {
         long authorIdLong = author.getIdLong();
         Config.readCasino(authorIdLong);
         boolean bot = author.isBot();
-
-        if(Config.PLAYER != 0 && args.length == 0 && !bot){
+        MessageChannel channel = message.getChannel();
+        long channelID = channel.getIdLong();
+        Perms.checkGames(channelID);
+      if(Config.PLAYER != 0 && args.length == 0 && !bot && Config.ISGAME){
             return "You have already registered to Doggo Casino";
         }
-        else if(Config.PLAYER == 0 && args.length == 0 && !bot){
+        else if(Config.PLAYER == 0 && args.length == 0 && !bot && Config.ISGAME){
             Config.newCasino(authorIdLong);
             return "You have been registered to join Doggo Casino";
         }
-        else if(args.length == 1 && !bot){
+        else if(args.length == 1 && !bot && Config.ISGAME){
             if(args[0].equals("payday")){
                 if(Config.MEMBERSHIP.equals("null")){
                     Config.CHIPS = Config.CHIPS + 100;
@@ -55,7 +59,7 @@ public class Casino implements CommandExecutor {
                     return "You have collected your 3000 Doge chips";
                 }
             }
-            else if(args[0].equals("balance")){
+            else if(args[0].equals("balance") && Config.ISGAME && !bot){
                 return "You have " + Config.CHIPS + "Doge chips";
             }
         }
