@@ -1,26 +1,29 @@
 package maxdistructo.droidbot2.commands;
 
+import sx.blah.discord.handle.impl.obj.Message;
+import sx.blah.discord.handle.obj.IUser;
 import de.btobastian.sdcf4j.Command;
 import de.btobastian.sdcf4j.CommandExecutor;
 import maxdistructo.droidbot2.background.Config;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.User;
 
 
 public class Blackjack implements CommandExecutor {
 
     @Command(aliases = {"/blackjack", "/bj"}, description = "Blackjack Game", usage = "/blackjack|bj <bet>")
     public String onBlackjackCommand(int[] args, Message message) {
-        User author = message.getAuthor();
-        long authorIdLong = author.getIdLong();
-        Config.readCasino(authorIdLong);
+        IUser author = message.getAuthor();
+        Config.readCasino(author);
         boolean end = true;
         boolean initialDraw = true;
         int[] cards = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10};
         int scoreDealer = 0;
         int scorePlayer = 0;
+<<<<<<< HEAD
+        if(Config.PLAYER == null){
+=======
         String blackjackProgress
         if(Config.PLAYER == 0){
+>>>>>>> refs/heads/master
             return author + "Please join the casino by using /casino to play BlackJack";
         }
         else if (args.length == 0) {
