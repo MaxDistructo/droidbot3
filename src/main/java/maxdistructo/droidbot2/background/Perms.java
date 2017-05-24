@@ -1,51 +1,85 @@
 package maxdistructo.droidbot2.background;
 
+import java.util.List;
+
+import sx.blah.discord.handle.impl.obj.Message;
+import sx.blah.discord.handle.obj.IChannel;
+import sx.blah.discord.handle.obj.IGuild;
+import sx.blah.discord.handle.obj.IRole;
+import sx.blah.discord.handle.obj.IUser;
+
 public class Perms {
-    static long[] moderators = {};
-    static long[] admin = {};
-    static long owner = 2000958192395L;
-    static long gameChannel = 2000L;
-    public static void checkMod(long user){
-        int i = 0;       
-        while(i < moderators.length){
-            if(moderators[i] == user){
+    public static boolean checkMod(Message message){
+        IUser author = message.getAuthor();
+        IGuild guild = message.getGuild();
+        List<IRole> roleList = author.getRolesForGuild(guild);
+        IRole[] roleArray = roleList.toArray(new IRole[0]);
+        String [] roles = new String[roleArray.length];
+        int i = 0;
+        
+        while(i < roles.length){
+            if(roles[i] == "Moderator" || roles[i] == "Administrator" || roles[i] == "Bot Moderator"){
+                i = roles.length;
+                return true;     
+            }
+            else{
+                i++;
+            }
+        }
+        return false;
+          
+        }
+        
+    public static boolean checkAdmin(Message message){
+        IUser author = message.getAuthor();
+        IGuild guild = message.getGuild();
+        List<IRole> roleList = author.getRolesForGuild(guild);
+        IRole[] roleArray = roleList.toArray(new IRole[0]);
+        String [] roles = new String[roleArray.length];
+        int i = 0;
+        while(i < roles.length){
+            if(roles[i] == "Administrator" || roles[i] == "Bot Moderator"){
                 Config.ISMOD = true;
-                i = moderators.length;
+                i = roles.length;
+                return true;     
             }
             else{
                 Config.ISMOD = false;
+                i++;
             }
-            
         }
-    }
-    public static void checkAdmin(long user){
+        return false;
+}
+    public static boolean checkOwner(Message message){
+        IUser author = message.getAuthor();
+        IGuild guild = message.getGuild();
+        List<IRole> roleList = author.getRolesForGuild(guild);
+        IRole[] roleArray = roleList.toArray(new IRole[0]);
+        String [] roles = new String[roleArray.length];
         int i = 0;
-        while(i < admin.length){
-            if(admin[i] == user){
-                Config.ISADMIN = true;
-                i = moderators.length;
+        while(i < roles.length){
+            if(roles[i] == "Bot Moderator"){
+                Config.ISMOD = true;
+                i = roles.length;
+                return true;     
             }
             else{
-                Config.ISADMIN = false;
+                Config.ISMOD = false;
+                i++;
             }
-    }
-}
-    public static void checkOwner(long user){
-        if(user == owner){
-            Config.ISOWNER = true;
         }
-        else{
-            Config.ISOWNER = false;
-        }
+        return false;
     }
     
-    public static void checkGames(long channel){
-        if(channel == gameChannel){
-            Config.ISGAME = true;
+    public static boolean checkGames(Message message){
+        IChannel channel = message.getChannel();
+        String channelName = channel.getName();
+        
+        if(channelName == "games"){
+            return true;
         }
         else{
-            Config.ISGAME = false;
+            return false;
         }
     }
-
 }
