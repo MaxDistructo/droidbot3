@@ -4,9 +4,11 @@ import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import sx.blah.discord.handle.obj.IUser;
+
 public class Config{
     public static String token;
-    public static long PLAYER = 0;
+    public static String PLAYER = null;
     public static int CHIPS;
     public static String MEMBERSHIP;
     public static int PAYDAY;
@@ -16,7 +18,7 @@ public class Config{
     public static boolean ISOWNER = false;
     public static boolean ISGAME = false;
 
-    public static void newCasino(long user){
+    public static void newCasino(IUser user){
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
         File f = new File(s+"/droidbot/config/casino/"+ user + ".txt");
@@ -26,13 +28,14 @@ public class Config{
         } catch (IOException e) {
             e.printStackTrace();
         }
-        writeLong(s+"/droidbot/config/casino/"+ user + ".txt", 1, user); //Value of User
+        String stringUser = user.getName();
+        writeString(s+"/droidbot/config/casino/"+ user + ".txt", 1, stringUser); //Value of User
         writeInt(s+"/droidbot/config/casino/"+ user + ".txt", 2, 100); //Base Chips
         writeString(s+"/droidbot/config/casino/"+ user + ".txt",3,"null"); //Membership
         writeInt(s+"/droidbot/config/casino/"+ user + ".txt", 4, 0); //Payday Cooldown
         writeInt(s+"/droidbot/config/casino/"+ user + ".txt", 5, 0); //All In Cooldown
     }
-    public static void readCasino(long user){
+    public static void readCasino(IUser user){
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
         reader(s +"/droidbot/config/casino/"+ user + ".txt", 1, PLAYER);
@@ -41,7 +44,7 @@ public class Config{
         reader(s +"/droidbot/config/casino/"+ user + ".txt", 4, PAYDAY);
         reader(s +"/droidbot/config/casino/"+ user + ".txt", 5, ALLIN);
     }
-    public static void writeCasino(long user){
+    public static void writeCasino(IUser user){
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
         writeInt(s+"/droidbot/config/casino/"+ user + ".txt", 2, CHIPS); //Base Chips
@@ -135,5 +138,6 @@ public class Config{
         } 
 
     }   
+    
 
 }
