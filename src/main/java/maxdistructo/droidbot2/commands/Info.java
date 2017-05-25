@@ -11,7 +11,7 @@ import de.btobastian.sdcf4j.CommandExecutor;
 
 public class Info implements CommandExecutor{
     @Command(aliases = {"/i", "/info"}, description = "Gets your info. Mods can get info on any user.", usage = "/i|info @User#0000")
-    public String onInfoCommand(Object[] args, Message message){
+    public String onInfoCommand(Object[] args, IMessage message){
         IUser author = message.getAuthor();
         IGuild guild = message.getGuild();
         String guildName = guild.getName();
@@ -21,8 +21,8 @@ public class Info implements CommandExecutor{
         if(args.length == 0){
             return author.mention() + "``` You are known as: " + nick + ". \n You are in Discord Server: " + guildName + "\n Your roles in this server are: " + roles + " \n ```";
         }
-        else if(args.length == 1 && Perms.checkMod(message)){
-            IUser checked = (IUser)args[0];
+        else if(Perms.checkMod(message)){
+            IUser checked = (IUser)args[1];
             Optional<String> nickChecked = checked.getNicknameForGuild(guild);
             List<IRole> rolesChecked = checked.getRolesForGuild(guild);
             

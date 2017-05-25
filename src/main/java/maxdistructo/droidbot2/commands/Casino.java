@@ -4,22 +4,21 @@ import de.btobastian.sdcf4j.Command;
 import de.btobastian.sdcf4j.CommandExecutor;
 import maxdistructo.droidbot2.background.Config;
 import maxdistructo.droidbot2.background.Perms;
+import maxdistructo.droidbot2.background.Role;
 import sx.blah.discord.handle.impl.obj.Message;
 import sx.blah.discord.handle.obj.*;
 
 
 public class Casino implements CommandExecutor {
     @Command(aliases = {"/casino" }, description = "Casino Commands.", usage = "/casino [payday|balance]")
-    public String onCasinoCommand(Object[] args, Message message) {
+    public String onCasinoCommand(Object[] args, IMessage message) {
         IUser author = message.getAuthor();
-        Config.readCasino(author);
         boolean bot = author.isBot();
-        Perms.checkGames(message);
-      if(Config.PLAYER != null && args.length == 0 && !bot && Perms.checkGames(message)){
+      if(!Config.PLAYER.equals("null") && args.length == 0){
           checkMembership(author);
-            return "You have already registered to Doggo Casino";
+          return "You have already registered to Doggo Casino";
         }
-        else if(Config.PLAYER == null && args.length == 0 && !bot && Perms.checkGames(message)){
+        else if(Config.PLAYER.equals("null") && args.length == 0){
             Config.newCasino(author);
             return "You have been registered to join Doggo Casino";
         }
@@ -81,6 +80,7 @@ public class Casino implements CommandExecutor {
                 }
             }
             else if(args[0].equals("balance") && Perms.checkGames(message) && !bot){
+                Role.addRole(author,"Playing Game", message.getGuild());
                 return "You have " + Config.CHIPS + "Doge chips";
             }
             else if(args.length == 4 && args[0].equals("set") && args[1].equals("balance") && Perms.checkMod(message)){

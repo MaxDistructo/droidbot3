@@ -8,7 +8,7 @@ import sx.blah.discord.handle.obj.IUser;
 
 public class Config{
     public static String token;
-    public static String PLAYER = null;
+    public static String PLAYER = "null";
     public static int CHIPS;
     public static String MEMBERSHIP;
     public static int PAYDAY;

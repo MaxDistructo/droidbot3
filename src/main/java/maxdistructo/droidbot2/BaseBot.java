@@ -1,33 +1,28 @@
 package maxdistructo.droidbot2;
 
-import de.btobastian.sdcf4j.CommandHandler;
-import de.btobastian.sdcf4j.handler.JDA3Handler;
-import maxdistructo.droidbot2.commands.Casino;
-import maxdistructo.droidbot2.commands.Debug;
-import net.dv8tion.jda.core.AccountType;
-import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.JDABuilder;
-import net.dv8tion.jda.core.exceptions.RateLimitedException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
-import javax.security.auth.login.LoginException;
+import de.btobastian.sdcf4j.CommandHandler;
+import de.btobastian.sdcf4j.handler.Discord4JHandler;
+import maxdistructo.droidbot2.background.Client;
+import maxdistructo.droidbot2.background.Config;
+import maxdistructo.droidbot2.commands.*;
+import sx.blah.discord.api.IDiscordClient;
 
 public class BaseBot {
     public static String PREFIX;
+    public static IDiscordClient client;
     public static void main(String[] args){
-        String token = "MjY2NzMxNzg4NTk0OTcwNjM1.DAOsQQ.IqbKZsq5Rboc49qRAnm_WJpYLyk";
-        JDA jda;
-        try {
-            jda = new JDABuilder(AccountType.BOT).setToken(token).buildBlocking();
-            CommandHandler handler = new JDA3Handler(jda);
-            handler.registerCommand(new Debug());
-        }
-        catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (RateLimitedException e) {
-            e.printStackTrace();
-        } catch (LoginException e) {
-            e.printStackTrace();
-        }
+        String token = "MzE1MzEzOTY3NzU5MDk3ODU3.DAexvg.3N7thF8tQwu7zkWcIyMGWxJa070";
+        Path currentRelativePath = Paths.get("");
+        String s = currentRelativePath.toAbsolutePath().toString();
+        Config.reader(s + "/droidbot/config/config.txt", 1, token);
+        client = Client.createClient(token);
+        CommandHandler cmdHandler = new Discord4JHandler(client);
+        cmdHandler.registerCommand(new Debug());
+        cmdHandler.registerCommand(new Casino());
+        cmdHandler.registerCommand(new Info());
 
 
 
