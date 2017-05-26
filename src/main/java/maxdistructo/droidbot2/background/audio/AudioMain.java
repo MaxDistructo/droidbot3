@@ -66,7 +66,7 @@ public class AudioMain {
   }
 
   private void loadAndPlay(final IChannel channel, final String trackUrl) {
-    GuildMusicManager musicManager = getGuildAudioPlayer(channel.getGuild());
+    final GuildMusicManager musicManager = getGuildAudioPlayer(channel.getGuild());
 
     playerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
       @Override

@@ -17,7 +17,7 @@ public class Info implements CommandExecutor{
         String guildName = guild.getName();
         Optional<String> nick = author.getNicknameForGuild(guild);
         List<IRole> roles = author.getRolesForGuild(guild);
-        
+
         if(args.length == 0){
             return author.mention() + "``` You are known as: " + nick + ". \n You are in Discord Server: " + guildName + "\n Your roles in this server are: " + roles + " \n ```";
         }
@@ -25,10 +25,10 @@ public class Info implements CommandExecutor{
             IUser checked = (IUser)args[1];
             Optional<String> nickChecked = checked.getNicknameForGuild(guild);
             List<IRole> rolesChecked = checked.getRolesForGuild(guild);
-            
+
             return "```Member " + checked.mention() + "is also known as " + nickChecked + "\n They have the roles " + rolesChecked + " here in Discord Server " + guildName + "```";
-            
+
         }
-        return "Command has errored. Please enter a valid command.";   
+        return "Command has errored. Please enter a valid command.";
     }
 }

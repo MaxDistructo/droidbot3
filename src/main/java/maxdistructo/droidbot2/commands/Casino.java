@@ -4,8 +4,6 @@ import de.btobastian.sdcf4j.Command;
 import de.btobastian.sdcf4j.CommandExecutor;
 import maxdistructo.droidbot2.background.Config;
 import maxdistructo.droidbot2.background.Perms;
-import maxdistructo.droidbot2.background.Role;
-import sx.blah.discord.handle.impl.obj.Message;
 import sx.blah.discord.handle.obj.*;
 
 
@@ -13,16 +11,12 @@ public class Casino implements CommandExecutor {
     @Command(aliases = {"/casino" }, description = "Casino Commands.", usage = "/casino [payday|balance]")
     public String onCasinoCommand(Object[] args, IMessage message) {
         IUser author = message.getAuthor();
-        boolean bot = author.isBot();
-      if(!Config.PLAYER.equals("null") && args.length == 0){
-          checkMembership(author);
-          return "You have already registered to Doggo Casino";
-        }
-        else if(Config.PLAYER.equals("null") && args.length == 0){
+
+        if(Config.PLAYER.equals("null") && args.length == 1 && args[0].equals("join")){
             Config.newCasino(author);
             return "You have been registered to join Doggo Casino";
         }
-        else if(args.length == 1 && !bot && Perms.checkGames(message)){
+        else if(args.length == 1){
             if(args[0].equals("payday")){
                 checkMembership(author);
                 if(Config.MEMBERSHIP.equals("null")){
@@ -79,11 +73,10 @@ public class Casino implements CommandExecutor {
                     return "Command \"/casino payday\" has errored. Your balance has not been affected.";
                 }
             }
-            else if(args[0].equals("balance") && Perms.checkGames(message) && !bot){
-                Role.addRole(author,"Playing Game", message.getGuild());
+            else if(args[0].equals("balance")){
                 return "You have " + Config.CHIPS + "Doge chips";
             }
-            else if(args.length == 4 && args[0].equals("set") && args[1].equals("balance") && Perms.checkMod(message)){
+            else if(args[0].equals("set") && args[1].equals("balance") && Perms.checkMod(message)){
                 IUser modify = (IUser)args[2];
                 int chips = (int)args[3];
                 Config.readCasino(modify);
@@ -91,8 +84,8 @@ public class Casino implements CommandExecutor {
                 checkMembership(modify);
                 Config.writeCasino(modify);
                 return author.mention() + "Balance of " + chips + " was successfully set for " + modify.mention();
-                }
-            else if(args.length == 4 && args[0].equals("add") && args[1].equals("balance") && Perms.checkMod(message)){
+            }
+            else if(args[0].equals("add") && args[1].equals("balance") && Perms.checkMod(message)){
                 IUser modify = (IUser)args[2];
                 int chips = (int)args[3];
                 Config.readCasino(modify);
@@ -100,7 +93,7 @@ public class Casino implements CommandExecutor {
                 checkMembership(modify);
                 Config.writeCasino(modify);
                 return author.mention() + "Balance of " + Config.CHIPS + " was successfully set for " + modify.mention();
-                }
+            }
         }
 
         return "Error in command: Casino. Possible causes: Triggered by bot user, unknown argument, or User has attemped to run a command that they shouldn't.";

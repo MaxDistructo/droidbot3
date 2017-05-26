@@ -9,53 +9,43 @@ public class Perms {
         IUser author = message.getAuthor();
         IGuild guild = message.getGuild();
         List<IRole> roleList = author.getRolesForGuild(guild);
-        Object[] roleArray = roleList.toArray(new Object[0]);
+        IRole[] roleArray = roleList.toArray(new IRole[0]);
+        String[] roleAsStringArray = new String[roleArray.length];
         int i = 0;
-        
+        while (i < roleArray.length){
+            roleAsStringArray[i] = roleArray[i].getName();
+        }
+        i = 0;
+
         while(i < roleArray.length){
-            if(roleArray[i].equals("Moderator") || roleArray[i].equals("Administrator") || roleArray[i].equals("Bot Moderator")){
+            if(roleAsStringArray[i].equals("Moderator") || roleAsStringArray[i].equals("Administrator") || roleAsStringArray[i].equals("Bot Moderator")){
                 i = roleArray.length;
-                return true;     
+                return true;
             }
             else{
                 i++;
             }
         }
         return false;
-          
-        }
-        
+
+    }
+
     public static boolean checkAdmin(IMessage message){
         IUser author = message.getAuthor();
         IGuild guild = message.getGuild();
         List<IRole> roleList = author.getRolesForGuild(guild);
-        Object[] roleArray = roleList.toArray(new Object[0]);
+        IRole[] roleArray = roleList.toArray(new IRole[0]);
+        String[] roleAsStringArray = new String[roleArray.length];
         int i = 0;
+        while (i < roleArray.length){
+            roleAsStringArray[i] = roleArray[i].getName();
+        }
+        i = 0;
         while(i < roleArray.length){
-            if(roleArray[i] == "Administrator" || roleArray[i] == "Bot Moderator"){
+            if(roleAsStringArray[i].equals("Administrator")){
                 Config.ISMOD = true;
                 i = roleArray.length;
-                return true;     
-            }
-            else{
-                Config.ISMOD = false;
-                i++;
-            }
-        }
-        return false;
-}
-    public static boolean checkOwner(IMessage message){
-        IUser author = message.getAuthor();
-        IGuild guild = message.getGuild();
-        List<IRole> roleList = author.getRolesForGuild(guild);
-        IRole[] roleArray = roleList.toArray(new IRole[0]);
-        String [] roles = new String[roleArray.length];
-        int i = 0;
-        while(i < roles.length){
-            if(roles[i] == "Bot Moderator"){
-                Config.ISMOD = true;
-                i = roles.length;
-                return true;     
+                return true;
             }
             else{
                 Config.ISMOD = false;
@@ -64,11 +54,35 @@ public class Perms {
         }
         return false;
     }
-    
+    public static boolean checkOwner(IMessage message){
+        IUser author = message.getAuthor();
+        IGuild guild = message.getGuild();
+        List<IRole> roleList = author.getRolesForGuild(guild);
+        IRole[] roleArray = roleList.toArray(new IRole[0]);
+        String[] roleAsStringArray = new String[roleArray.length];
+        int i = 0;
+        while (i < roleArray.length){
+            roleAsStringArray[i] = roleArray[i].getName();
+        }
+        i = 0;
+        while(i < roleAsStringArray.length){
+            if(roleAsStringArray[i] == "Bot Moderator"){
+                Config.ISMOD = true;
+                i = roleAsStringArray.length;
+                return true;
+            }
+            else{
+                Config.ISMOD = false;
+                i++;
+            }
+        }
+        return false;
+    }
+
     public static boolean checkGames(IMessage message){
         IChannel channel = message.getChannel();
         String channelName = channel.getName();
-        
+
         if(channelName == "casino"){
             return true;
         }
