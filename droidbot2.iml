@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_7">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
@@ -16,7 +16,6 @@
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.7" level="project" />
     <orderEntry type="library" name="Maven: de.btobastian.sdcf4j:sdcf4j-discord4j:1.0.4" level="project" />
     <orderEntry type="library" name="Maven: de.btobastian.sdcf4j:sdcf4j-core:1.0.4" level="project" />
-    <orderEntry type="library" name="Maven: com.github.austinv11:Discord4j:2.6.1" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.7" level="project" />
     <orderEntry type="library" name="Maven: com.github.austinv11:Discord4J:shaded:2.8.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpcore:4.4.6" level="project" />
@@ -44,7 +43,6 @@
     <orderEntry type="library" name="Maven: com.googlecode.soundlibs:tritonus-share:0.3.7-3" level="project" />
     <orderEntry type="library" name="Maven: org.tritonus:tritonus-dsp:0.3.6" level="project" />
     <orderEntry type="library" name="Maven: com.vdurmont:emoji-java:3.2.0" level="project" />
-    <orderEntry type="library" name="Maven: org.json:json:20140107" level="project" />
     <orderEntry type="library" name="Maven: com.koloboke:koloboke-impl-common-jdk8:1.0.0" level="project" />
     <orderEntry type="library" name="Maven: com.koloboke:koloboke-api-jdk8:1.0.0" level="project" />
     <orderEntry type="library" name="Maven: com.github.Discord4J-Addons:Commands4J:1.0.2" level="project" />
@@ -55,5 +53,6 @@
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.8.0" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.jsoup:jsoup:1.10.1" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: net.iharder:base64:2.3.9" level="project" />
+    <orderEntry type="library" name="Maven: org.json:json:20170516" level="project" />
   </component>
 </module>

@@ -6,97 +6,107 @@ import maxdistructo.droidbot2.background.Config;
 import maxdistructo.droidbot2.background.Perms;
 import sx.blah.discord.handle.obj.*;
 
+import java.time.LocalTime;
+
 
 public class Casino implements CommandExecutor {
-    @Command(aliases = {"/casino" }, description = "Casino Commands.", usage = "/casino [payday|balance]")
-    public String onCasinoCommand(Object[] args, IMessage message) {
+    //@Command(aliases = {"/casino" }, description = "Casino Commands.", usage = "/casino [payday|balance]")
+    public static String onCasinoCommand(Object[] args, IMessage message, IUser mentioned) {
         IUser author = message.getAuthor();
 
-        if(Config.PLAYER.equals("null") && args.length == 1 && args[0].equals("join")){
+        if(args[1].equals("join") && Perms.checkGames(message)){
             Config.newCasino(author);
             return "You have been registered to join Doggo Casino";
         }
-        else if(args.length == 1){
-            if(args[0].equals("payday")){
+        else if(args.length == 2){
+            if(args[1].equals("payday") && paydayChecker() && Perms.checkGames(message)){
+
+                if(Config.PAYDAY + 6 > 24){
+                    Config.PAYDAY = Config.PAYDAY + 6 - 24;
+                }
                 checkMembership(author);
                 if(Config.MEMBERSHIP.equals("null")){
                     Config.CHIPS = Config.CHIPS + 1000;
                     Config.writeCasino(author);
-                    return "You have collected your 1,000 Doge chips";
+                    return "You have collected your 1,000 Casino chips";
                 }
                 else if (Config.MEMBERSHIP.equals("A")){
                     Config.CHIPS = Config.CHIPS + 1500;
                     Config.writeCasino(author);
-                    return "You have collected your 1,500 Doge chips";
+                    return "You have collected your 1,500 Casino chips";
                 }
                 else if (Config.MEMBERSHIP.equals("B")){
                     Config.CHIPS = Config.CHIPS + 1500;
                     Config.writeCasino(author);
-                    return "You have collected your 1,500 Doge chips";
+                    return "You have collected your 1,500 Casino chips";
                 }
                 else if (Config.MEMBERSHIP.equals("C")){
                     Config.CHIPS = Config.CHIPS + 1800;
                     Config.writeCasino(author);
-                    return "You have collected your 1,800 Doge chips";
+                    return "You have collected your 1,800 Casino chips";
                 }
                 else if (Config.MEMBERSHIP.equals("D")){
                     Config.CHIPS = Config.CHIPS + 2000;
                     Config.writeCasino(author);
-                    return "You have collected your 2,000 Doge chips";
+                    return "You have collected your 2,000 Casino chips";
                 }
                 else if (Config.MEMBERSHIP.equals("E")){
                     Config.CHIPS = Config.CHIPS + 3000;
                     Config.writeCasino(author);
-                    return "You have collected your 3,000 Doge chips";
+                    return "You have collected your 3,000 Casino chips";
                 }
                 else if (Config.MEMBERSHIP.equals("F")){
                     Config.CHIPS = Config.CHIPS + 4500;
                     Config.writeCasino(author);
-                    return "You have collected your 4,500 Doge chips";
+                    return "You have collected your 4,500 Casino chips";
                 }
                 else if (Config.MEMBERSHIP.equals("G")){
                     Config.CHIPS = Config.CHIPS + 6000;
                     Config.writeCasino(author);
-                    return "You have collected your 6,000 Doge chips";
+                    return "You have collected your 6,000 Casino chips";
                 }
                 else if (Config.MEMBERSHIP.equals("H")){
                     Config.CHIPS = Config.CHIPS + 6000;
                     Config.writeCasino(author);
-                    return "You have collected your 6,000 Doge chips";
+                    return "You have collected your 6,000 Casino chips";
                 }
                 else if(Config.MEMBERSHIP.equals("I")){
                     Config.CHIPS =  Config.CHIPS + 7500;
                     Config.writeCasino(author);
-                    return "You have collected your 7,500 Doge chips";
+                    return "You have collected your 7,500 Casino chips";
                 }
                 else{
                     return "Command \"/casino payday\" has errored. Your balance has not been affected.";
                 }
             }
-            else if(args[0].equals("balance")){
-                return "You have " + Config.CHIPS + "Doge chips";
+            else if(args[1].equals("balance") && Perms.checkGames(message)){
+                Config.readCasino(author);
+                return "You have " + Config.CHIPS + " Casino chips";
             }
-            else if(args[0].equals("set") && args[1].equals("balance") && Perms.checkMod(message)){
-                IUser modify = (IUser)args[2];
-                int chips = (int)args[3];
+            else if(args[1].equals("set") && args[2].equals("balance") && Perms.checkMod(message)){
+                IUser modify = mentioned;
+                int chips = Config.converToInt(args[4]);
                 Config.readCasino(modify);
                 Config.CHIPS = chips;
                 checkMembership(modify);
                 Config.writeCasino(modify);
                 return author.mention() + "Balance of " + chips + " was successfully set for " + modify.mention();
             }
-            else if(args[0].equals("add") && args[1].equals("balance") && Perms.checkMod(message)){
-                IUser modify = (IUser)args[2];
-                int chips = (int)args[3];
+            else if(args[1].equals("add") && args[2].equals("balance") && Perms.checkMod(message)){
+                IUser modify = mentioned;
+                int chips = Config.converToInt(args[4]);
                 Config.readCasino(modify);
                 Config.CHIPS = Config.CHIPS + chips;
                 checkMembership(modify);
                 Config.writeCasino(modify);
                 return author.mention() + "Balance of " + Config.CHIPS + " was successfully set for " + modify.mention();
             }
+            else if(args[1].equals("payday") && !paydayChecker()){
+                return "Please wait until " + Config.PAYDAY + "Central US Time to receive your next payday.";
+            }
         }
 
-        return "Error in command: Casino. Possible causes: Triggered by bot user, unknown argument, or User has attemped to run a command that they shouldn't.";
+        return "Error in command: Casino.";
     }
     public static void checkMembership(IUser user){
         Config.readCasino(user);
@@ -129,6 +139,15 @@ public class Casino implements CommandExecutor {
         }
         else{
             Config.MEMBERSHIP = "I";
+        }
+    }
+    private static boolean paydayChecker(){
+        return Config.PAYDAY < LocalTime.now().getHour();
+    }
+    private static void paydayAddition(){
+        Config.PAYDAY = LocalTime.now().getHour() + 6;
+        if(Config.PAYDAY > 24){
+            Config.PAYDAY = Config.PAYDAY - 24;
         }
     }
 

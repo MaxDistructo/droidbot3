@@ -1,96 +1,108 @@
-package maxdistructo.droidbot2.background;
+package backup;
 
-import java.io.*;
-import java.net.URI;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Scanner;
-
-import maxdistructo.droidbot2.BaseBot;
-import org.json.JSONObject;
-import org.json.JSONTokener;
 import sx.blah.discord.handle.obj.IUser;
 
-public class Config{
+import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+public class Config {
     public static String token;
     public static String PLAYER = "null";
     public static int CHIPS;
     public static String MEMBERSHIP;
     public static int PAYDAY;
     public static int ALLIN;
-    public static String[] trivia;
     public static boolean ISMOD = false;
     public static boolean ISADMIN = false;
     public static boolean ISOWNER = false;
     public static boolean ISGAME = false;
+    public static String SPLIT = ",";
 
     public static void newCasino(IUser user){
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
         String stringUser = user.getName();
         File f = new File(s+"/droidbot/config/casino/"+ stringUser + ".txt");
-        f.getParentFile().mkdirs(); //Create Directories for File
+        f.getParentFile().mkdirs();
         try {
-            f.createNewFile(); //Create file
+            f.createNewFile();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        JSONObject newUser = new JSONObject();
-        newUser.put("User",stringUser);
-        newUser.put("Chips",100);
-        newUser.put("Membership","null");
-        newUser.put("Payday",0);
-        newUser.put("Allin",0);
-
-        try (FileWriter file = new FileWriter(s + "/droidbot/config/casino/" + stringUser + ".txt")) {
-            file.write(newUser.toString());
-            System.out.println("Successfully Copied JSON Object to File...");
-            System.out.println("\nJSON Object: " + newUser);
+        try {
+            writeString(s+"/droidbot/config/casino/"+ stringUser + ".txt", 0, stringUser + SPLIT); //Value of User
         } catch (IOException e) {
-            BaseBot.LOGGER.warning("Config.newCasino Error.");
             e.printStackTrace();
         }
-
+        try {
+            writeString(s+"/droidbot/config/casino/"+ stringUser + ".txt", 1, "100" + SPLIT); //Base Chips
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            writeString(s+"/droidbot/config/casino/"+ stringUser + ".txt",2,"null"+ SPLIT); //Membership
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            writeString(s+"/droidbot/config/casino/"+ stringUser + ".txt", 3, "0"+ SPLIT); //Payday Cooldown
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            writeString(s+"/droidbot/config/casino/"+ stringUser + ".txt", 4, "0"); //All In Cooldown
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     public static void readCasino(IUser user){
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
         String stringUser = user.getName();
-
-        File file = new File (s + "/droidbot/config/casino/" + stringUser + ".txt");
-        URI uri = file.toURI();
-        JSONTokener tokener = null;
+        BufferedReader in = null;
         try {
-            tokener = new JSONTokener(uri.toURL().openStream());
-            System.out.println("Successfully read file " + stringUser + ".txt");
+            in = new BufferedReader(new FileReader(s + "/droidbot/config/casino/" + stringUser + ".txt"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        String line = null;
+        try {
+            if(in.readLine() != null) {
+                line = in.readLine();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        JSONObject root = new JSONObject(tokener);
-        System.out.println("Converted JSON file to JSONObject");
-        PLAYER = root.getString("User");
-        CHIPS = root.getInt("Chips");
-        MEMBERSHIP = root.getString("Membership");
-        PAYDAY = root.getInt("Payday");
-        ALLIN = root.getInt("Allin");
-        System.out.println("Successfully read values from file.");
+        Object[] lineArray = line.split(",");
+        lineArray[0] = PLAYER;
+        lineArray[1] = CHIPS;
+        lineArray[2] = MEMBERSHIP;
+        lineArray[3] = PAYDAY;
+        lineArray[4] = ALLIN;
 
     }
     public static void writeCasino(IUser user){
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
         String stringUser = user.getName();
-        JSONObject newUser = new JSONObject();
-        newUser.put("User", PLAYER);
-        newUser.put("Chips", CHIPS);
-        newUser.put("Membership",MEMBERSHIP);
-        newUser.put("Payday",PAYDAY);
-        newUser.put("Allin",ALLIN);
-
-        try (FileWriter file = new FileWriter(s + "/droidbot/config/casino/" + stringUser + ".txt")) {
-            file.write(newUser.toString());
-            System.out.println("Successfully Copied JSON Object to File...");
-            System.out.println("\nJSON Object: " + newUser);
+        try {
+            writeInt(s+"/droidbot/config/casino/"+ stringUser + ".txt", 2, CHIPS); //Base Chips
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            writeString(s+"/droidbot/config/casino/"+ stringUser + ".txt", 3, MEMBERSHIP); //Membership
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            writeInt(s+"/droidbot/config/casino/"+ stringUser + ".txt", 4, PAYDAY); //Payday Cooldown
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            writeInt(s+"/droidbot/config/casino/"+ stringUser + ".txt", 5, ALLIN); //All In Cooldown
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -172,27 +184,6 @@ public class Config{
 
         fw.close();
     }
-
-  public static void readLine(String file, int line){
-        File fileVar = new File(file);
-      Scanner scanner = null;
-      try {
-          scanner = new Scanner(fileVar);
-      } catch (FileNotFoundException e) {
-          e.printStackTrace();
-      }
-      while(scanner.hasNextLine()) {
-          String theLine = scanner.nextLine();
-          trivia = theLine.split("`");
-    }
-   }
-   public static IUser convertToIUser(Object in){
-      Object out = in.toString().replace('"',' ');
-       return(IUser)out;
-   }
-   public static int converToInt(Object in){
-       return Integer.valueOf(in.toString());
-   }
 
 
 }

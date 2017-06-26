@@ -1,0 +1,32 @@
+package maxdistructo.droidbot2.commands;
+
+import maxdistructo.droidbot2.background.Config;
+import maxdistructo.droidbot2.background.Perms;
+import maxdistructo.droidbot2.background.message.Message;
+import sx.blah.discord.handle.obj.IMessage;
+
+public class Allin {
+    public static String onAllinCommand(Object[] args, IMessage message){
+        Config.readCasino(message.getAuthor());
+        if (args.length != 2) {
+            return "Please specify the amount to multiply your balance by if you win.";
+        }
+        if(Perms.checkGames(message)) {
+            Message.sendMessage(message.getChannel(), "You deposit all of your chips into the machine and pull the lever...");
+            int multipy = Integer.valueOf((String) args[1]);
+            int random = (int) (Math.random() * multipy + 1);
+            int random2 = (int) (Math.random() * multipy + 1);
+
+            if (random == random2) {
+                Config.CHIPS = Config.CHIPS * multipy;
+                Config.writeCasino(message.getAuthor());
+                return "You win and have multiplied your chips by " + multipy;
+            } else {
+                Config.CHIPS = 0;
+                Config.writeCasino(message.getAuthor());
+                return "You lose and have lost all your chips.";
+            }
+        }
+        return "Please run this command in one of the bot channels.";
+    }
+}
