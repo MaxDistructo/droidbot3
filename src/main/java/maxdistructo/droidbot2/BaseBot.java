@@ -27,7 +27,7 @@ public class BaseBot {
     public final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     public static void main(String[] args){
         LOGGER.setLevel(Level.INFO);
-        String token = "MzE1MzEzOTY3NzU5MDk3ODU3.DDLJjg.IRQRt-A1ioVxdJoxf-qo06dT9V8";
+        String token = "";
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
        // token = Config.reader(s + "/droidbot/config/config.txt", 1);j
