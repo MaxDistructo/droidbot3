@@ -10,7 +10,7 @@ public class Insult implements CommandExecutor{
     public static String onInsultCommand(Object[] args, IMessage message, IUser mentioned){
         IUser author = message.getAuthor();
 
-        if(mentioned.getLongID() == 315313967759097857L){
+        if(315313967759097857L == mentioned.getLongID()){
             return author.mention() + "How original. No one else had thought of trying to get the bot to insult itself. I applaud your creativity. Yawn. Perhaps this is why you don't have friends. You don't add anything new to any conversation. You are more of a bot than me, predictable answers, and absolutely dull to have an actual conversation with.";
         }
         else{

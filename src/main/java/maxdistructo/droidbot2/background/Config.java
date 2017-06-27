@@ -173,19 +173,29 @@ public class Config{
         fw.close();
     }
 
-  public static void readLine(String file, int line){
-        File fileVar = new File(file);
-      Scanner scanner = null;
-      try {
-          scanner = new Scanner(fileVar);
-      } catch (FileNotFoundException e) {
-          e.printStackTrace();
+  public static void triviaReadLine(String file, int line){
+      Path currentRelativePath = Paths.get("");
+      String s = currentRelativePath.toAbsolutePath().toString();
+        File fileVar = new File(s + "/droidbot/config/trivia/" + file + ".txt");
+      try{
+          // Open the file that is the first
+          // command line parameter
+          FileInputStream fstream = new FileInputStream(fileVar);
+          // Get the object of DataInputStream
+          DataInputStream in = new DataInputStream(fstream);
+          BufferedReader br = new BufferedReader(new InputStreamReader(in));
+          String strLine;
+          int readLine = 1;
+          //Read File Line By Line
+          while ((strLine = br.readLine()) != null && readLine == line)   {
+              trivia = strLine.split("`");
+          }
+          in.close();
+      }catch (Exception e){//Catch exception if any
+          System.err.println("Error: " + e.getMessage());
       }
-      while(scanner.hasNextLine()) {
-          String theLine = scanner.nextLine();
-          trivia = theLine.split("`");
-    }
-   }
+  }
+
    public static IUser convertToIUser(Object in){
       Object out = in.toString().replace('"',' ');
        return(IUser)out;

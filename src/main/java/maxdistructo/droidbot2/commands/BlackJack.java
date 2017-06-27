@@ -6,7 +6,6 @@ import maxdistructo.droidbot2.background.Listener;
 import sx.blah.discord.handle.obj.IMessage;
 
 import java.util.Random;
-import java.util.Scanner;
 
 public class BlackJack {
     private static IMessage message;

@@ -1,28 +1,41 @@
 package maxdistructo.droidbot2.background;
 
-import com.fasterxml.jackson.databind.ser.Serializers;
+
 import maxdistructo.droidbot2.BaseBot;
 import maxdistructo.droidbot2.background.message.Message;
 import maxdistructo.droidbot2.commands.*;
-import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.events.EventSubscriber;
-import sx.blah.discord.api.internal.DiscordClientImpl;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.events.guild.voice.user.UserVoiceChannelJoinEvent;
 import sx.blah.discord.handle.impl.events.guild.voice.user.UserVoiceChannelLeaveEvent;
+import sx.blah.discord.handle.impl.events.shard.ShardReadyEvent;
 import sx.blah.discord.handle.obj.*;
-import sx.blah.discord.util.MessageBuilder;
+import sx.blah.discord.util.DiscordException;
+import sx.blah.discord.util.MissingPermissionsException;
+import sx.blah.discord.util.RateLimitException;
 
 import java.util.List;
+
+import static maxdistructo.droidbot2.BaseBot.client;
 
 public class Listener {
     public static boolean blackJackRunning = false;
     public static String blackjackAnswer;
-    public static String prefix = "d@"; //Change back to ! for release!
+    public static String prefix = "d!"; //Change back to ! for release!
+    public static String triviaAnswer;
 
     @EventSubscriber
-    public void onMessageReceivedEvent(MessageReceivedEvent event) { // This method is NOT called because it doesn't have the @EventSubscriber annotation
+    public void onMessageReceivedEvent(MessageReceivedEvent event) throws RateLimitException, DiscordException, MissingPermissionsException { // This method is NOT called because it doesn't have the @EventSubscriber annotation
         IMessage message = event.getMessage();
+        List<IChannel> mentionedChannelList = message.getChannelMentions();
+        Object[] mentionedChannelArray = mentionedChannelList.toArray();
+        IChannel channelMention;
+        if(mentionedChannelArray.length > 0){
+            channelMention = (IChannel) mentionedChannelArray[0];
+        }
+        else{
+            channelMention = null;
+        }
         List<IUser> mentionedList = message.getMentions();
         Object[] mentionedArray = mentionedList.toArray();
         IUser mentioned;
@@ -33,54 +46,93 @@ public class Listener {
         }
         String content = message.getContent();
         Object messageContent[] = content.split(" ");
-        if (Perms.checkOwner(message)) { //REMOVE THIS FOR RELEASE!!
-            if (messageContent[0].equals(prefix + "bj")) { //broken
-                message.reply(BlackJack.onBlackjackCommand(messageContent, message));
-            }
-            else if(messageContent[0].equals("hit") || messageContent[0].equals("stay") || messageContent[0].equals("double") && blackJackRunning){
-                blackjackAnswer = (String)messageContent[0];
-            }
-            else if (messageContent[0].equals(prefix + "check")) { //Works
-                Message.sendMessage(message.getChannel(), Check.onCheckCommand(messageContent, message));
+       // if (Perms.checkOwner(message)) { //REMOVE THIS FOR RELEASE!!
+          //  if (messageContent[0].equals(prefix + "bj")) { //broken
+          //      message.reply(BlackJack.onBlackjackCommand(messageContent, message));
+          //  }
+            //if(messageContent[0].equals("hit") || messageContent[0].equals("stay") || messageContent[0].equals("double") && blackJackRunning){
+           //     blackjackAnswer = (String)messageContent[0];
+          //  }
+            if (messageContent[0].equals(prefix + "check")) { //Works
+                Message.sendMessage(message.getChannel(), Message.simpleEmbed(message.getAuthor(), "Check", Check.onCheckCommand(messageContent, message),message));
+                message.delete();
             } else if (messageContent[0].equals(prefix + "casino")) { //Works except for admin commands
-                message.reply(Casino.onCasinoCommand(messageContent, message, mentioned));
+                message.reply("",Message.simpleEmbed(message.getAuthor(), "Casino",Casino.onCasinoCommand(messageContent,message,message.getAuthor()),message));
+                message.delete();
             } else if (messageContent[0].equals(prefix + "50") || messageContent[0].equals(prefix + "fifty")) { //Works
-                message.reply(FiftyFifty.onFiftyCommand(messageContent, message));
+                message.reply("",Message.simpleEmbed(message.getAuthor(), "FiftyFifty", FiftyFifty.onFiftyCommand(messageContent, message), message));
+                message.delete();
             } else if (messageContent[0].equals(prefix + "fortune")) { //Works
-                message.reply(Fortune.onFortuneCommand(messageContent, message));
+                message.reply("",Message.simpleEmbed(message.getAuthor(),"Fortune",Fortune.onFortuneCommand(messageContent, message),message));
+                message.delete();
             }
-            //    else if(messageContent[0].equals(prefix + "game")){ //Broke
-            //      message.reply(GameCommand.onGameCommand(messageContent, message));
-            //}
+                //else if(messageContent[0].equals(prefix + "game")){ //Broke
+                //  message.reply(GameCommand.onGameCommand(messageContent, message));
+           // }
             else if (messageContent[0].equals(prefix + "info")) { //Not Working ATM
-                Message.sendMessage(message.getChannel(), Info.onInfoCommand(messageContent, message, mentioned));
+                Message.sendMessage(message.getChannel(), Message.simpleEmbed(message.getAuthor(),"Info", Info.onInfoCommand(messageContent, message, mentioned),message));
+                message.delete();
             } else if (messageContent[0].equals(prefix + "insult")) { //Works
-                Message.sendMessage(message.getChannel(), Insult.onInsultCommand(messageContent, message, mentioned));
+                Message.sendMessage(message.getChannel(), Message.simpleEmbed(message.getAuthor(),"Insult", Insult.onInsultCommand(messageContent, message, mentioned), message));
+                message.delete();
             } else if (messageContent[0].equals(prefix + "debug")) { //Needs perms set.
-                message.reply(Debug.onDebugCommand((String[]) messageContent, message));
+                message.reply("",Message.simpleEmbed(message.getAuthor(),"Debug", Debug.onDebugCommand((String[]) messageContent, message),message));
+                message.delete();
             } else if (messageContent[0].equals(prefix + "shutdown")) { //Works
-                message.reply(Shutdown.onShutdownCommand(message));
+                message.reply("",Message.simpleEmbed(message.getAuthor(),"Shutdown",Shutdown.onShutdownCommand(message),message));
+                message.delete();
             } else if (messageContent[0].equals(prefix + "help")) {
-                Message.sendMessage(message.getChannel(), Help.onHelpCommand());
+                Message.sendDM(message.getAuthor(), Help.onHelpCommand());
+                message.delete();
             } else if (messageContent[0].equals(prefix + "allin")) {
-                message.reply(Allin.onAllinCommand(messageContent, message));
+                message.reply("",Message.simpleEmbed(message.getAuthor(),"Allin",Allin.onAllinCommand(messageContent, message),message));
+                message.delete();
+            } else if (messageContent[0].equals(prefix + "say") && channelMention != null) {
+                Message.sendMessage(channelMention, Say.onSayCommand(messageContent, message, channelMention));
             } else if (messageContent[0].equals(prefix + "say")) {
-                Message.sendMessage(message.getChannel(), Say.onSayCommand(messageContent, message));
+                Message.sendMessage(message.getChannel(), Say.onSayCommand(messageContent, message, channelMention));
             } else if (messageContent[0].equals(prefix + "spam")) {
                 Message.sendMessage(message.getChannel(), Spam.onSpamCommand(messageContent, message, mentioned));
+                message.delete();
             }
-            //  else if(messageContent[0].equals(prefix + "trivia")){
-            //        message.reply(Trivia.onTriviaCommand(messageContent, message));
-            //   }
+            else if (messageContent[0].equals(prefix + "slap")){
+                Message.sendMessage(message.getChannel(), PlayerFun.onSlapCommand(message,mentioned));
+            }
+            else if (messageContent[0].equals(prefix + "tnt")){
+                Message.sendMessage(message.getChannel(), PlayerFun.onTntCommand(message,mentioned));
+            }
+            else if (messageContent[0].equals(prefix + "kiss")){
+                Message.sendMessage(message.getChannel(), PlayerFun.onKissCommand(message,mentioned));
+            }
+            else if (messageContent[0].equals(prefix + "hug")){
+                Message.sendMessage(message.getChannel(), PlayerFun.onHugCommand(message,mentioned));
+            }
+            else if (messageContent[0].equals(prefix + "poke")){
+                Message.sendMessage(message.getChannel(), PlayerFun.onPokeCommand(message,mentioned));
+            }
+            else if (messageContent[0].equals(prefix + "respect") || messageContent[0].equals("/f")){
+                Message.sendMessage(message.getChannel(), PlayerFun.onPayRespects(message,mentioned));
+                message.delete();
+            }
+            else if(messageContent[0].equals(prefix + "banhammer")){
+                Message.sendMessage(message.getChannel(), PlayerFun.onBanHammer(message,mentioned));
+            }
+          //   else if(messageContent[0].equals(prefix + "trivia")) {
+         //       message.reply(Trivia.onTriviaCommand(messageContent, message));
+          //  }
+          //  else if(messageContent[0].equals(triviaAnswer)){
+          //      Trivia.addTriviaScore(event.getMessage());
+          //      Trivia.checkTrivia(event.getMessage());
+         //   }
 
-        } else if (message.getContent().contains("d@")) {
-            message.reply("Command Error: User has attempted to run a WIP command.");
-        }
+      //  } else if (message.getContent().contains("d@")) {
+      //      message.reply("Command Error: User has attempted to run a WIP command.");
+      //  }
     }
 
 
     @EventSubscriber
-    public void onVoiceChannelJoin(UserVoiceChannelJoinEvent event){
+    public void onVoiceChannelJoin(UserVoiceChannelJoinEvent event) throws RateLimitException, DiscordException, MissingPermissionsException {
         IVoiceChannel channel = event.getVoiceChannel();
         IUser user = event.getUser();
         IGuild guild = channel.getGuild();
@@ -90,7 +142,7 @@ public class Listener {
         }
     }
     @EventSubscriber
-    public void onVoiceChannelLeave(UserVoiceChannelLeaveEvent event){
+    public void onVoiceChannelLeave(UserVoiceChannelLeaveEvent event) throws RateLimitException, DiscordException, MissingPermissionsException {
         IVoiceChannel channel = event.getVoiceChannel();
         IUser user = event.getUser();
         IGuild guild = channel.getGuild();
@@ -99,6 +151,10 @@ public class Listener {
             user.removeRole(role);
         }
     }
-
+    @EventSubscriber
+    public void onShardReadyEvent(ShardReadyEvent event){
+        client.online(Listener.prefix + "help");
+        BaseBot.LOGGER.info("Added playing content");
+    }
 
 }

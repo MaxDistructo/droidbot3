@@ -9,7 +9,7 @@ public class Perms {
         IUser author = message.getAuthor();
         IGuild guild = message.getGuild();
         //Checks if user is a Moderator of Doggo.
-        if(author.getLongID() == 261700221606690816L || author.getLongID() == 228111371965956099L || author.getLongID() == 256964987073855488L || author.getLongID() == 265173874738593792L || author.getLongID() == 194943753490792449L && guild.getLongID() == 314569556809220118L){
+        if(author.getID().equals("261700221606690816") || author.getID() .equals("228111371965956099") || author.getID().equals("256964987073855488") || author.getID().equals("265173874738593792") || author.getID().equals("194943753490792449") && guild.getID().equals("314569556809220118")){
             return true;
         }
         else{
@@ -21,7 +21,7 @@ public class Perms {
         IUser author = message.getAuthor();
         IGuild guild = message.getGuild();
         //Checks if user is a Admin of Doggo (Or Myself).
-        if(author.getLongID() == 261700221606690816L || author.getLongID() == 228111371965956099L && guild.getLongID() == 314569556809220118L){
+        if(author.getID().equals("261700221606690816") || author.getID().equals("228111371965956099") && guild.getID().equals("314569556809220118")){
             return true;
         }
         else{
@@ -30,7 +30,7 @@ public class Perms {
     }
     public static boolean checkOwner(IMessage message){
        IUser author = message.getAuthor();
-       if(author.getLongID() == 228111371965956099L){
+       if(author.getID().equals("228111371965956099")){
            return true;
        }
        else{

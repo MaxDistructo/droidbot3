@@ -23,7 +23,7 @@ public class GameCommand implements CommandExecutor{
     public static String onGameCommand(Object[] args, IMessage message){
         IUser author =  message.getAuthor();
 
-        if(args[1].equals("create") && !Game.getHostingStatus(game) && args.length == 4){
+        if(args[1].equals("create") && !Game.getHostingStatus(game)){
             EmbedBuilder builder = new EmbedBuilder();
             int numPlayers = Config.converToInt(args[2]);
             list = new PlayerList(numPlayers);

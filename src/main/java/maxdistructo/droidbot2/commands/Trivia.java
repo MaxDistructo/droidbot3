@@ -2,90 +2,64 @@ package maxdistructo.droidbot2.commands;
 
 import de.btobastian.sdcf4j.CommandExecutor;
 import maxdistructo.droidbot2.background.Config;
+import maxdistructo.droidbot2.background.Listener;
+import maxdistructo.droidbot2.background.PlayerScoreList;
+import maxdistructo.droidbot2.background.message.Message;
 import sx.blah.discord.handle.obj.*;
-import sx.blah.discord.util.DiscordException;
-import sx.blah.discord.util.MissingPermissionsException;
-import sx.blah.discord.util.RateLimitException;
-import maxdistructo.droidbot2.background.PlayerList;
-
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class Trivia implements CommandExecutor{
-    private static String[] triviaLists = {"general"};
-    private static String[] trivia;
-    private static String[] players = new String[20];
-    private static int[] score = new int[20];
     private static int question = 0;
-    private static int answer = 1;
-    private static String listenAnswer;
-    private static String triviaList;
-    private static int line = 1;
-    private static Path currentRelativePath = Paths.get("");
-    private static String s = currentRelativePath.toAbsolutePath().toString();
-    private static String dir = s + "/droidbot/config/trivia/";
-    private static PlayerList list;
+    public static PlayerScoreList list;
    // @Command(aliases = {"/trivia"}, description = "Trivia Game", usage = "/trivia <listname>|join")
     public static String onTriviaCommand(Object[] args, IMessage message){
-        IUser author = message.getAuthor();
-        if(args.length == 2 && args[0].equals("start")) {
-            int i = 0;
-            while (i < triviaLists.length - 1) {
-                if (args[2].equals(triviaLists[i])) {
-                    triviaList = triviaLists[i];
-                    startTrivia(triviaLists[i], message);
-
-                    return "Started Trivia " + triviaList;
-                }
-                else {
-
-                }
-                i++;
-
-            }
-        }
-        else if(args[0].equals("join")){
-            PlayerList.addToList(list, author.getName());
-        }
-        return ".";
+        if(args[1].equals("start")){
+            list = new PlayerScoreList((String)args[2], message.getGuild());
+            PlayerScoreList.setTriviaList(list, (String)args[2]);
+            triviaStart(message);
+            return "Started trivia game.";
+       }
+       else if(args[1].equals("join")&& args.length == 2){
+           triviaJoin(message);
+       }
+       return "Command Error: Trivia";
     }
-    private static void startTrivia(String triviaList, IMessage message){
-        Config.readLine(dir + triviaList + ".txt", 1);
-        trivia = Config.trivia;
-        try {
-            message.reply(trivia[question]);
-        } catch (MissingPermissionsException | RateLimitException | DiscordException e) {
-            e.printStackTrace();
-        }
-        listenAnswer = trivia[answer];
+    private static void triviaJoin(IMessage message){
+        PlayerScoreList.addPlayerToList(list, message.getAuthor().getDisplayName(message.getGuild()));
     }
-    private static void nextQuestion(String triviaList, IMessage message){
-        Config.readLine(dir + list + ".txt", 1);
-        trivia = Config.trivia;
-        try {
-            message.reply(trivia[question]);
-        } catch (MissingPermissionsException | RateLimitException | DiscordException e) {
-            e.printStackTrace();
-        }
-        listenAnswer = trivia[answer];
+    private static void triviaStart(IMessage message){
+        triviaJoin(message);
+        question++;
+        readTrivia(list, question);
+        triviaQuestion(message);
     }
-    private static void triviaEndCheck(IMessage message){
+    public static void checkTrivia(IMessage message){
         int i = 0;
-        while (i < score.length - 1){
-            if(score[i] == 10){
-                try {
-                    message.reply(triviaEnd(players[i]));
-                } catch (MissingPermissionsException | RateLimitException | DiscordException e) {
-                    e.printStackTrace();
-                }
-            }
-            else{
-                nextQuestion(triviaList, message);
-
-            }
+        while (i < PlayerScoreList.getPlayerArray(list).length){
+        if(PlayerScoreList.getScoreForPlayer(list, PlayerScoreList.getPlayerArray(list)[i]) > 10){
+            endTrivia(PlayerScoreList.getPlayerArray(list)[i], message);
+        }
+        else{
+            triviaQuestion(message);
+        }
         }
     }
-    private static String triviaEnd(String player){
-        return player + " has won!";
+    private static void triviaQuestion(IMessage message){
+        question++;
+        readTrivia(list, question);
+        Message.sendMessage(message.getChannel(),Config.trivia[0]);
+        Listener.triviaAnswer = Config.trivia[1];
+    }
+    private static void readTrivia(PlayerScoreList p, int questionNum){
+        Config.triviaReadLine(PlayerScoreList.getTriviaList(p), questionNum);
+    }
+    private static void endTrivia(String player, IMessage message){
+        Message.sendMessage(message.getChannel(),player + " has won the game!");
+    }
+    public static void addTriviaScore(IMessage message){
+        int playerscore = PlayerScoreList.getScoreForPlayer(list, message.getAuthor().getDisplayName(message.getGuild()));
+        playerscore++;
+        PlayerScoreList.setScoreForPlayer(list, message.getAuthor().getDisplayName(message.getGuild()), playerscore);
     }
 }
