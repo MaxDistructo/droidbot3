@@ -7,8 +7,11 @@ import java.nio.file.Paths;
 import java.util.Scanner;
 
 import maxdistructo.droidbot2.BaseBot;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import sx.blah.discord.handle.obj.IChannel;
+import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IUser;
 
 public class Config{
@@ -195,11 +198,6 @@ public class Config{
           System.err.println("Error: " + e.getMessage());
       }
   }
-
-   public static IUser convertToIUser(Object in){
-      Object out = in.toString().replace('"',' ');
-       return(IUser)out;
-   }
    public static int converToInt(Object in){
        return Integer.valueOf(in.toString());
    }
@@ -221,6 +219,75 @@ public class Config{
        return root.getString("Token");
 
    }
+    public static long[] readServerModConfig(IGuild guild){
+        Path currentRelativePath = Paths.get("");
+        String s = currentRelativePath.toAbsolutePath().toString();
+        File file = new File (s + "/droidbot/config/" + guild.getLongID() + ".txt");
+        URI uri = file.toURI();
+        JSONTokener tokener = null;
+        try {
+            tokener = new JSONTokener(uri.toURL().openStream());
+            System.out.println("Successfully read file "+ guild.getLongID() + ".txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        JSONObject root = new JSONObject(tokener);
+        System.out.println("Converted JSON file to JSONObject");
+        JSONArray array = root.getJSONArray("Moderators");
+        long[] longArray = new long[array.length()];
+        int i = 0;
+        while(i < array.length()){
+            longArray[i] = array.getLong(i);
+        }
+        return longArray;
+
+    }
+    public static long[] readServerAdminConfig(IGuild guild){
+        Path currentRelativePath = Paths.get("");
+        String s = currentRelativePath.toAbsolutePath().toString();
+        File file = new File (s + "/droidbot/config/" + guild.getLongID() + ".txt");
+        URI uri = file.toURI();
+        JSONTokener tokener = null;
+        try {
+            tokener = new JSONTokener(uri.toURL().openStream());
+            System.out.println("Successfully read file "+ guild.getLongID() + ".txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        JSONObject root = new JSONObject(tokener);
+        System.out.println("Converted JSON file to JSONObject");
+        JSONArray array = root.getJSONArray("Admins");
+        long[] longArray = new long[array.length()];
+        int i = 0;
+        while(i < array.length()){
+            longArray[i] = array.getLong(i);
+        }
+        return longArray;
+
+    }
+    public static String[] readServerGamesConfig(IGuild guild){
+        Path currentRelativePath = Paths.get("");
+        String s = currentRelativePath.toAbsolutePath().toString();
+        File file = new File (s + "/droidbot/config/" + guild.getLongID() + ".txt");
+        URI uri = file.toURI();
+        JSONTokener tokener = null;
+        try {
+            tokener = new JSONTokener(uri.toURL().openStream());
+            System.out.println("Successfully read file "+ guild.getLongID() + ".txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        JSONObject root = new JSONObject(tokener);
+        System.out.println("Converted JSON file to JSONObject");
+        JSONArray array = root.getJSONArray("Moderators");
+        String[] longArray = new String[array.length()];
+        int i = 0;
+        while(i < array.length()){
+            longArray[i] = array.getString(i);
+        }
+        return longArray;
+
+    }
 
 
 }

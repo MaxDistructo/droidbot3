@@ -29,5 +29,13 @@ public class PlayerFun //Additions Ideas: Shoot,Stab,Fake mute
     public static String onBanHammer(IMessage message, IUser mentioned){
         return message.getAuthor() + " picks up the <:blobhammer:315285738302341121> and prepares to swing it at " + mentioned + "! It misses " + mentioned + " by a hair and they live to see another day!";
    }
-
+   public static String onShootCommand(IMessage message, IUser mentioned){
+        return message.getAuthor() + " picks up a gun and shoots " + mentioned + "! ";
+   }
+   public static String onStabCommand(IMessage message, IUser mentioned){
+        return mentioned + " was attacked by " + message.getAuthor() + " using a knife!";
+   }
+   public static String onMuteCommand(IMessage message, IUser mentioned) {
+       return mentioned + " was muted by " + message.getAuthor() + " for 1 second.";
+   }
 }

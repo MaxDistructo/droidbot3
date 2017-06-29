@@ -19,7 +19,6 @@ import sx.blah.discord.api.IDiscordClient;
 import javax.security.auth.login.LoginException;
 
 public class BaseBot {
-    public static String PREFIX = "/";
     public static IDiscordClient client;
     public static JDA jda;
     public final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);

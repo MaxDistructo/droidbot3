@@ -14,15 +14,16 @@ public class Casino implements CommandExecutor {
     public static String onCasinoCommand(Object[] args, IMessage message, IUser mentioned) {
         IUser author = message.getAuthor();
 
-        if(args[1].equals("join") && Perms.checkGames(message)){
+        if(args[1].equals("join")){
             Config.newCasino(author);
             return "You have been registered to join Doggo Casino";
         }
         else if(args.length == 2){
-            if(args[1].equals("payday") && paydayChecker() && Perms.checkGames(message)){
+            if(args[1].equals("payday") && paydayChecker()){
 
                 if(Config.PAYDAY + 6 > 24){
                     Config.PAYDAY = Config.PAYDAY + 6 - 24;
+                    Config.writeCasino(author);
                 }
                 checkMembership(author);
                 if(Config.MEMBERSHIP.equals("null")){
@@ -79,7 +80,7 @@ public class Casino implements CommandExecutor {
                     return "Command \"/casino payday\" has errored. Your balance has not been affected.";
                 }
             }
-            else if(args[1].equals("balance") && Perms.checkGames(message)){
+            else if(args[1].equals("balance")){
                 Config.readCasino(author);
                 return "You have " + Config.CHIPS + " Casino chips";
             }
@@ -102,7 +103,7 @@ public class Casino implements CommandExecutor {
                 return author.mention() + "Balance of " + Config.CHIPS + " was successfully set for " + modify.mention();
             }
             else if(args[1].equals("payday") && !paydayChecker()){
-                return "Please wait until " + Config.PAYDAY + "Central US Time to receive your next payday.";
+                return "Please wait until " + Config.PAYDAY + " Central US Time to receive your next payday.";
             }
         }
 
@@ -144,11 +145,12 @@ public class Casino implements CommandExecutor {
     private static boolean paydayChecker(){
         return Config.PAYDAY < LocalTime.now().getHour();
     }
-    private static void paydayAddition(){
+    private static void paydayAddition(IUser user){
         Config.PAYDAY = LocalTime.now().getHour() + 6;
         if(Config.PAYDAY > 24){
             Config.PAYDAY = Config.PAYDAY - 24;
         }
+        Config.writeCasino(user);
     }
 
 }
