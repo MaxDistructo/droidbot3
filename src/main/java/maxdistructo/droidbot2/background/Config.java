@@ -204,5 +204,23 @@ public class Config{
        return Integer.valueOf(in.toString());
    }
 
+   public static String readToken(){
+       Path currentRelativePath = Paths.get("");
+       String s = currentRelativePath.toAbsolutePath().toString();
+       File file = new File (s + "/droidbot/config.txt");
+       URI uri = file.toURI();
+       JSONTokener tokener = null;
+       try {
+           tokener = new JSONTokener(uri.toURL().openStream());
+           System.out.println("Successfully read file config.txt");
+       } catch (IOException e) {
+           e.printStackTrace();
+       }
+       JSONObject root = new JSONObject(tokener);
+       System.out.println("Converted JSON file to JSONObject");
+       return root.getString("Token");
+
+   }
+
 
 }

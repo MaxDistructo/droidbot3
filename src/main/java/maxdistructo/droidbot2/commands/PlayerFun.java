@@ -3,7 +3,7 @@ package maxdistructo.droidbot2.commands;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IUser;
 
-public class PlayerFun
+public class PlayerFun //Additions Ideas: Shoot,Stab,Fake mute
 {
     public static String onSlapCommand(IMessage message, IUser mentioned){
         return mentioned + " you have been slapped by " + message.getAuthor() + ":clap:";
@@ -28,6 +28,6 @@ public class PlayerFun
     }
     public static String onBanHammer(IMessage message, IUser mentioned){
         return message.getAuthor() + " picks up the <:blobhammer:315285738302341121> and prepares to swing it at " + mentioned + "! It misses " + mentioned + " by a hair and they live to see another day!";
-    }
+   }
 
 }
