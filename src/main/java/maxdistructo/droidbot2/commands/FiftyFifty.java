@@ -10,7 +10,7 @@ public class FiftyFifty implements CommandExecutor {
     //@Command(aliases = {"/50","/fifty"}, description = "Fifty Fifty chance of doubling your money imputed", usage = "/50|fifty <bet>")
     public static String onFiftyCommand(Object[] args, IMessage message){
         IUser author = message.getAuthor();
-        Casino.checkMembership(author);
+        Casino.checkMembership(message);
 
         if(args.length == 1){
             return "You have not entered a bet. Please enter a bet by using the command /50|fifty <bet>";
@@ -22,11 +22,13 @@ public class FiftyFifty implements CommandExecutor {
                 Config.CHIPS += Config.converToInt(args[1]);
                 Config.CHIPS += Config.converToInt(args[1]);
                 int wins = Config.converToInt(args[1]) + Config.converToInt(args[1]);
-                Config.writeCasino(author);
+                Config.writeCasino(message);
+                Casino.checkMembership(message);
                 return "You have successfully won " + wins;
             }
             else{
-                Config.writeCasino(author);
+                Config.writeCasino(message);
+                Casino.checkMembership(message);
                 return "Sorry! You were unlucky!";
             }
 

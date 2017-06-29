@@ -21,7 +21,7 @@ import static maxdistructo.droidbot2.BaseBot.client;
 public class Listener {
     public static boolean blackJackRunning = false;
     public static String blackjackAnswer;
-    public static String prefix = "@"; //Change back to ! for release!
+    public static String prefix = "!"; //Change back to ! for release!
     public static String triviaAnswer;
 
     @EventSubscriber
@@ -128,6 +128,12 @@ public class Listener {
             else if (messageContent[0].equals(prefix + "mute")) {
                 Message.sendMessage(message.getChannel(), PlayerFun.onMuteCommand(message, mentioned));
                 message.delete();
+            }
+            else if(messageContent[0].equals(prefix + "admin") && messageContent[1].equals("addmod")){
+                Message.sendMessage(message.getChannel(), Admin.addMod(message, mentioned));
+            }
+            else if(messageContent[0].equals(prefix + "admin") && messageContent[1].equals("addadmin")){
+                Message.sendMessage(message.getChannel(), Admin.addAdmin(message,mentioned));
             }
             //   else if(messageContent[0].equals(prefix + "trivia")) {
             //       message.reply(Trivia.onTriviaCommand(messageContent, message));

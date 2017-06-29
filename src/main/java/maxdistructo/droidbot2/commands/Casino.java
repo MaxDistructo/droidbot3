@@ -15,7 +15,7 @@ public class Casino implements CommandExecutor {
         IUser author = message.getAuthor();
 
         if(args[1].equals("join")){
-            Config.newCasino(author);
+            Config.newCasino(message);
             return "You have been registered to join Doggo Casino";
         }
         else if(args.length == 2){
@@ -23,57 +23,57 @@ public class Casino implements CommandExecutor {
 
                 if(Config.PAYDAY + 6 > 24){
                     Config.PAYDAY = Config.PAYDAY + 6 - 24;
-                    Config.writeCasino(author);
+                    Config.writeCasino(message);
                 }
-                checkMembership(author);
+                checkMembership(message);
                 if(Config.MEMBERSHIP.equals("null")){
                     Config.CHIPS = Config.CHIPS + 1000;
-                    Config.writeCasino(author);
+                    Config.writeCasino(message);
                     return "You have collected your 1,000 Casino chips";
                 }
                 else if (Config.MEMBERSHIP.equals("A")){
                     Config.CHIPS = Config.CHIPS + 1500;
-                    Config.writeCasino(author);
+                    Config.writeCasino(message);
                     return "You have collected your 1,500 Casino chips";
                 }
                 else if (Config.MEMBERSHIP.equals("B")){
                     Config.CHIPS = Config.CHIPS + 1500;
-                    Config.writeCasino(author);
+                    Config.writeCasino(message);
                     return "You have collected your 1,500 Casino chips";
                 }
                 else if (Config.MEMBERSHIP.equals("C")){
                     Config.CHIPS = Config.CHIPS + 1800;
-                    Config.writeCasino(author);
+                    Config.writeCasino(message);
                     return "You have collected your 1,800 Casino chips";
                 }
                 else if (Config.MEMBERSHIP.equals("D")){
                     Config.CHIPS = Config.CHIPS + 2000;
-                    Config.writeCasino(author);
+                    Config.writeCasino(message);
                     return "You have collected your 2,000 Casino chips";
                 }
                 else if (Config.MEMBERSHIP.equals("E")){
                     Config.CHIPS = Config.CHIPS + 3000;
-                    Config.writeCasino(author);
+                    Config.writeCasino(message);
                     return "You have collected your 3,000 Casino chips";
                 }
                 else if (Config.MEMBERSHIP.equals("F")){
                     Config.CHIPS = Config.CHIPS + 4500;
-                    Config.writeCasino(author);
+                    Config.writeCasino(message);
                     return "You have collected your 4,500 Casino chips";
                 }
                 else if (Config.MEMBERSHIP.equals("G")){
                     Config.CHIPS = Config.CHIPS + 6000;
-                    Config.writeCasino(author);
+                    Config.writeCasino(message);
                     return "You have collected your 6,000 Casino chips";
                 }
                 else if (Config.MEMBERSHIP.equals("H")){
                     Config.CHIPS = Config.CHIPS + 6000;
-                    Config.writeCasino(author);
+                    Config.writeCasino(message);
                     return "You have collected your 6,000 Casino chips";
                 }
                 else if(Config.MEMBERSHIP.equals("I")){
                     Config.CHIPS =  Config.CHIPS + 7500;
-                    Config.writeCasino(author);
+                    Config.writeCasino(message);
                     return "You have collected your 7,500 Casino chips";
                 }
                 else{
@@ -81,25 +81,25 @@ public class Casino implements CommandExecutor {
                 }
             }
             else if(args[1].equals("balance")){
-                Config.readCasino(author);
+                Config.readCasino(message);
                 return "You have " + Config.CHIPS + " Casino chips";
             }
             else if(args[1].equals("set") && args[2].equals("balance") && Perms.checkMod(message)){
                 IUser modify = mentioned;
                 int chips = Config.converToInt(args[4]);
-                Config.readCasino(modify);
+                Config.readCasino(mentioned, message.getGuild());
                 Config.CHIPS = chips;
-                checkMembership(modify);
-                Config.writeCasino(modify);
+                checkMembership(message);
+                Config.writeCasino(mentioned, message.getGuild());
                 return author.mention() + "Balance of " + chips + " was successfully set for " + modify.mention();
             }
             else if(args[1].equals("add") && args[2].equals("balance") && Perms.checkMod(message)){
                 IUser modify = mentioned;
                 int chips = Config.converToInt(args[4]);
-                Config.readCasino(modify);
+                Config.readCasino(mentioned, message.getGuild());
                 Config.CHIPS = Config.CHIPS + chips;
-                checkMembership(modify);
-                Config.writeCasino(modify);
+                checkMembership(message);
+                Config.writeCasino(mentioned, message.getGuild());
                 return author.mention() + "Balance of " + Config.CHIPS + " was successfully set for " + modify.mention();
             }
             else if(args[1].equals("payday") && !paydayChecker()){
@@ -109,7 +109,7 @@ public class Casino implements CommandExecutor {
 
         return "Error in command: Casino.";
     }
-    public static void checkMembership(IUser user){
+    public static void checkMembership(IMessage user){
         Config.readCasino(user);
         if(Config.CHIPS < 10000){
             Config.MEMBERSHIP = "null";
@@ -144,13 +144,6 @@ public class Casino implements CommandExecutor {
     }
     private static boolean paydayChecker(){
         return Config.PAYDAY < LocalTime.now().getHour();
-    }
-    private static void paydayAddition(IUser user){
-        Config.PAYDAY = LocalTime.now().getHour() + 6;
-        if(Config.PAYDAY > 24){
-            Config.PAYDAY = Config.PAYDAY - 24;
-        }
-        Config.writeCasino(user);
     }
 
 }

@@ -7,7 +7,7 @@ import sx.blah.discord.handle.obj.IMessage;
 
 public class Allin {
     public static String onAllinCommand(Object[] args, IMessage message){
-        Config.readCasino(message.getAuthor());
+        Config.readCasino(message);
         if (args.length != 2) {
             return "Please specify the amount to multiply your balance by if you win.";
         }
@@ -19,14 +19,16 @@ public class Allin {
 
             if (random == random2) {
                 Config.CHIPS = Config.CHIPS * multipy;
-                Config.writeCasino(message.getAuthor());
+                Config.writeCasino(message);
+                Casino.checkMembership(message);
                 return "You win and have multiplied your chips by " + multipy;
             } else {
                 Config.CHIPS = 0;
-                Config.writeCasino(message.getAuthor());
+                Config.writeCasino(message);
+                Casino.checkMembership(message);
                 return "You lose and have lost all your chips.";
             }
         }
-        return "Please run this command in one of the bot channels.";
+        return "Please run this command in one of your bot channels.";
     }
 }

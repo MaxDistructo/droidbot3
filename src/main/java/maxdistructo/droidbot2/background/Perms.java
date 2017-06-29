@@ -14,6 +14,7 @@ public class Perms {
             if(author.getLongID() == moderators[i]){
                 return true;
             }
+            i++;
         }
         return false;
     }
@@ -28,6 +29,7 @@ public class Perms {
             if(author.getLongID() == admins[i]){
                 return true;
             }
+            i++;
         }
         return false;
     }
@@ -51,6 +53,7 @@ public class Perms {
             if(channelName.equals(channels[i])){
                 return true;
             }
+            i++;
         }
         return false;
     }
