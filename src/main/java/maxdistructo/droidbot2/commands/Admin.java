@@ -28,7 +28,7 @@ public class Admin {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return "Sucessfully added " + message.getAuthor().getDisplayName(message.getGuild()) + " to the Moderator list.";
+            return "Sucessfully added " + mentioned.getDisplayName(message.getGuild()) + " to the Moderator list.";
         }
         return "Command Error";
     }
@@ -47,8 +47,14 @@ public class Admin {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return "Sucessfully added " + message.getAuthor().getDisplayName(message.getGuild()) + " to the Admin list.";
+            return "Sucessfully added " + mentioned.getDisplayName(message.getGuild()) + " to the Admin list.";
         }
         return "Command Error";
+    }
+    public static String addCasinoBalance(Object[] args, IMessage message, IUser mentioned){ // !@casino balance add @user <numofchips>
+        Config.readCasino(mentioned,message.getGuild());
+        Config.CHIPS = Config.CHIPS + Config.converToInt(args[4]);
+        Config.writeCasino(message);
+        return "Sucessfully added " + args[4] + " chips to " + mentioned.getDisplayName(message.getGuild()) + "'s casino balance.";
     }
 }
