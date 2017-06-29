@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import maxdistructo.droidbot2.background.Client;
 import maxdistructo.droidbot2.background.Config;
 import maxdistructo.droidbot2.background.Listener;
+import maxdistructo.droidbot2.background.Config;
 import maxdistructo.droidbot2.background.audio.AudioMain;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
