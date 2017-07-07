@@ -5,9 +5,7 @@ import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import maxdistructo.droidbot2.background.Client;
-import maxdistructo.droidbot2.background.Config;
-import maxdistructo.droidbot2.background.Listener;
+import maxdistructo.droidbot2.background.*;
 import maxdistructo.droidbot2.background.Config;
 import maxdistructo.droidbot2.background.audio.AudioMain;
 import net.dv8tion.jda.core.AccountType;
@@ -22,6 +20,8 @@ public class BaseBot {
     public static IDiscordClient client;
     public static JDA jda;
     public final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    public final static String version = "2.0_b9";
+
     public static void main(String[] args){
         LOGGER.setLevel(Level.INFO);
         String token = Config.readToken();
@@ -36,6 +36,15 @@ public class BaseBot {
         LOGGER.info("Registered Audio Commands ");
         client.getDispatcher().registerListener(new Listener());
         LOGGER.info("Registered Listener");
+        do {
+            try {
+                Thread.sleep(86400000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            ZIPBackup.startBackup();
+        }
+        while (client.isLoggedIn());
 
 
 

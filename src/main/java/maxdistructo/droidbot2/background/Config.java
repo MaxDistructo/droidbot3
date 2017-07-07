@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.util.Scanner;
 
 import maxdistructo.droidbot2.BaseBot;
+import maxdistructo.droidbot2.background.message.Message;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -16,17 +17,12 @@ import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IUser;
 
 public class Config{
-    public static String token;
     public static String PLAYER = "null";
     public static int CHIPS;
     public static String MEMBERSHIP;
     public static int PAYDAY;
     public static int ALLIN;
-    public static String[] trivia;
-    public static boolean ISMOD = false;
-    public static boolean ISADMIN = false;
-    public static boolean ISOWNER = false;
-    public static boolean ISGAME = false;
+    public static String[] trivia = new String[2];
 
     public static void newCasino(IMessage message){
         Path currentRelativePath = Paths.get("");
@@ -53,6 +49,7 @@ public class Config{
             System.out.println("\nJSON Object: " + newUser);
         } catch (IOException e) {
             BaseBot.LOGGER.warning("Config.newCasino Error.");
+            Message.sendDM(BaseBot.client.getApplicationOwner(), e.toString());
             e.printStackTrace();
         }
 
@@ -70,6 +67,7 @@ public class Config{
             tokener = new JSONTokener(uri.toURL().openStream());
             System.out.println("Successfully read file " + stringUser + ".txt");
         } catch (IOException e) {
+            Message.sendDM(BaseBot.client.getApplicationOwner(), e.toString());
             e.printStackTrace();
         }
         JSONObject root = new JSONObject(tokener);
@@ -95,6 +93,7 @@ public class Config{
             tokener = new JSONTokener(uri.toURL().openStream());
             System.out.println("Successfully read file " + stringUser + ".txt");
         } catch (IOException e) {
+            Message.sendDM(BaseBot.client.getApplicationOwner(), e.toString());
             e.printStackTrace();
         }
         JSONObject root = new JSONObject(tokener);
@@ -111,15 +110,27 @@ public class Config{
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
         IUser user = message.getAuthor();
-        JSONObject newUser = new JSONObject();
+        String stringUser = user.getName();
+
+        File file = new File (s+"/droidbot/config/" + message.getGuild().getLongID() +"/casino/"+ user.getLongID() + ".txt");
+        URI uri = file.toURI();
+        JSONTokener tokener = null;
+        try {
+            tokener = new JSONTokener(uri.toURL().openStream());
+            System.out.println("Successfully read file " + stringUser + ".txt");
+        } catch (IOException e) {
+            Message.sendDM(BaseBot.client.getApplicationOwner(), e.toString());
+            e.printStackTrace();
+        }
+        JSONObject newUser = new JSONObject(tokener);
         newUser.put("User", PLAYER);
         newUser.put("Chips", CHIPS);
         newUser.put("Membership",MEMBERSHIP);
         newUser.put("Payday",PAYDAY);
         newUser.put("Allin",ALLIN);
 
-        try (FileWriter file = new FileWriter(s+"/droidbot/config/" + message.getGuild().getLongID() +"/casino/"+ user.getLongID() + ".txt")) {
-            file.write(newUser.toString());
+        try (FileWriter fileWriter = new FileWriter(s+"/droidbot/config/" + message.getGuild().getLongID() +"/casino/"+ user.getLongID() + ".txt")) {
+            fileWriter.write(newUser.toString());
             System.out.println("Successfully Copied JSON Object to File...");
             System.out.println("\nJSON Object: " + newUser);
         } catch (IOException e) {
@@ -129,42 +140,58 @@ public class Config{
     public static void writeCasino(IUser user, IGuild guild){
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
-        JSONObject newUser = new JSONObject();
+        String stringUser = user.getName();
+
+        File file = new File (s+"/droidbot/config/" + guild.getLongID() +"/casino/"+ user.getLongID() + ".txt");
+        URI uri = file.toURI();
+        JSONTokener tokener = null;
+        try {
+            tokener = new JSONTokener(uri.toURL().openStream());
+            System.out.println("Successfully read file " + stringUser + ".txt");
+        } catch (IOException e) {
+            Message.sendDM(BaseBot.client.getApplicationOwner(), e.toString());
+            e.printStackTrace();
+        }
+        JSONObject newUser = new JSONObject(tokener);
         newUser.put("User", PLAYER);
         newUser.put("Chips", CHIPS);
         newUser.put("Membership",MEMBERSHIP);
         newUser.put("Payday",PAYDAY);
         newUser.put("Allin",ALLIN);
 
-        try (FileWriter file = new FileWriter(s+"/droidbot/config/" + guild.getLongID() +"/casino/"+ user.getLongID() + ".txt")) {
-            file.write(newUser.toString());
+        try (FileWriter fileWriter = new FileWriter(s+"/droidbot/config/" + guild.getLongID() +"/casino/"+ user.getLongID() + ".txt")) {
+            fileWriter.write(newUser.toString());
             System.out.println("Successfully Copied JSON Object to File...");
             System.out.println("\nJSON Object: " + newUser);
         } catch (IOException e) {
+            Message.sendDM(BaseBot.client.getApplicationOwner(), e.toString());
             e.printStackTrace();
         }
     }
-  public static void triviaReadLine(String file, int line){
+    public static void resetBJ(IMessage message){
+        Path currentRelativePath = Paths.get("");
+        String s = currentRelativePath.toAbsolutePath().toString();
+       File file = new File(s + "/droidbot/config/" + message.getGuild().getLongID() + "/blackjack/" + message.getAuthor().getLongID());
+       file.delete();
+    }
+  public static String triviaReadLine(String file, int line){
+      Scanner input = null;
       Path currentRelativePath = Paths.get("");
       String s = currentRelativePath.toAbsolutePath().toString();
-        File fileVar = new File(s + "/droidbot/config/trivia/" + file + ".txt");
-      try{
-          // Open the file that is the first
-          // command line parameter
-          FileInputStream fstream = new FileInputStream(fileVar);
-          // Get the object of DataInputStream
-          DataInputStream in = new DataInputStream(fstream);
-          BufferedReader br = new BufferedReader(new InputStreamReader(in));
-          String strLine;
-          int readLine = 1;
-          //Read File Line By Line
-          while ((strLine = br.readLine()) != null && readLine == line)   {
-              trivia = strLine.split("`");
-          }
-          in.close();
-      }catch (Exception e){//Catch exception if any
-          System.err.println("Error: " + e.getMessage());
+      try {
+          input = new Scanner(new FileReader(s + "/droidbot/config/trivia/" + file + ".txt"));
+      } catch (FileNotFoundException e) {
+          Message.sendDM(BaseBot.client.getApplicationOwner(), e.toString());
+          e.printStackTrace();
       }
+      int i = 0;
+      while(input.hasNextLine()){
+          if(i == line) {
+              return input.next();
+          }
+          i++;
+      }
+      return "Is this bot broken?`yes";
   }
    public static int converToInt(Object in){
        return Integer.valueOf(in.toString());
@@ -180,6 +207,7 @@ public class Config{
            tokener = new JSONTokener(uri.toURL().openStream());
            System.out.println("Successfully read file config.txt");
        } catch (IOException e) {
+           Message.sendDM(BaseBot.client.getApplicationOwner(), e.toString());
            e.printStackTrace();
        }
        JSONObject root = new JSONObject(tokener);
@@ -187,6 +215,22 @@ public class Config{
        return root.getString("Token");
 
    }
+    public static String readPrefix(){
+        Path currentRelativePath = Paths.get("");
+        String s = currentRelativePath.toAbsolutePath().toString();
+        File file = new File (s + "/droidbot/config.txt");
+        URI uri = file.toURI();
+        JSONTokener tokener = null;
+        try {
+            tokener = new JSONTokener(uri.toURL().openStream());
+        } catch (IOException e) {
+            Message.sendDM(BaseBot.client.getApplicationOwner(), e.toString());
+            e.printStackTrace();
+        }
+        JSONObject root = new JSONObject(tokener);
+        return root.getString("Prefix");
+
+    }
     public static long[] readServerModConfig(IGuild guild){
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
@@ -197,6 +241,7 @@ public class Config{
             tokener = new JSONTokener(uri.toURL().openStream());
             System.out.println("Successfully read file "+ guild.getLongID() + ".txt");
         } catch (IOException e) {
+            Message.sendDM(BaseBot.client.getApplicationOwner(), e.toString());
             e.printStackTrace();
         }
         JSONObject root = new JSONObject(tokener);
@@ -223,6 +268,7 @@ public class Config{
             tokener = new JSONTokener(uri.toURL().openStream());
             System.out.println("Successfully read file "+ guild.getLongID() + ".txt");
         } catch (IOException e) {
+            Message.sendDM(BaseBot.client.getApplicationOwner(), e.toString());
             e.printStackTrace();
         }
         JSONObject root = new JSONObject(tokener);
@@ -247,6 +293,7 @@ public class Config{
             tokener = new JSONTokener(uri.toURL().openStream());
             System.out.println("Successfully read file "+ guild.getLongID() + ".txt");
         } catch (IOException e) {
+            Message.sendDM(BaseBot.client.getApplicationOwner(), e.toString());
             e.printStackTrace();
         }
         JSONObject root = new JSONObject(tokener);
@@ -271,6 +318,85 @@ public class Config{
             tokener = new JSONTokener(uri.toURL().openStream());
             System.out.println("Successfully read file "+ guild.getLongID() + ".txt");
         } catch (IOException e) {
+            Message.sendDM(BaseBot.client.getApplicationOwner(), e.toString());
+            e.printStackTrace();
+        }
+        return new JSONObject(tokener);
+    }
+    public static int readBotAbuse(IGuild guild, IUser user){
+        Path currentRelativePath = Paths.get("");
+        String s = currentRelativePath.toAbsolutePath().toString();
+        File file = new File (s + "/droidbot/config/" + guild.getLongID() + "/" + user.getLongID() + ".txt");
+        URI uri = file.toURI();
+        JSONTokener tokener = null;
+        try {
+            tokener = new JSONTokener(uri.toURL().openStream());
+            System.out.println("Successfully read file "+ user.getLongID() + ".txt");
+        } catch (IOException e) {
+            Message.sendDM(BaseBot.client.getApplicationOwner(), e.toString());
+            e.printStackTrace();
+        }
+        JSONObject root = new JSONObject(tokener);
+        int i;
+        try{
+                i = root.getInt("BotAbuse");
+        }
+        catch(NullPointerException e){
+            Message.sendDM(BaseBot.client.getApplicationOwner(), e.toString());
+            writeBotAbuse(guild,user,1);
+            i = 1;
+        }
+        return i;
+    }
+    public static void writeBotAbuse(IGuild guild, IUser user, int abuse){
+        Path currentRelativePath = Paths.get("");
+        String s = currentRelativePath.toAbsolutePath().toString();
+        JSONObject newUser = new JSONObject();
+        newUser.put("BotAbuse", abuse);
+        try (FileWriter file = new FileWriter(s+"/droidbot/config/" + guild.getLongID() +"/"+ user.getLongID() + ".txt")) {
+            file.write(newUser.toString());
+            System.out.println("Successfully Copied JSON Object to File...");
+            System.out.println("\nJSON Object: " + newUser);
+        } catch (IOException e) {
+            Message.sendDM(BaseBot.client.getApplicationOwner(), e.toString());
+            e.printStackTrace();
+        }
+    }
+    public static void writeBlackjackFields(int playerScore, String playerHand, int dealerScore, String dealerHand,int bet, IMessage message){
+        Path currentRelativePath = Paths.get("");
+        String s = currentRelativePath.toAbsolutePath().toString();
+        IUser user = message.getAuthor();
+        String stringUser = user.getName();
+        JSONObject root = new JSONObject();
+        root.put("BJ_playerScore", playerScore);
+        root.put("BJ_playerHand", playerHand);
+        root.put("BJ_dealerScore",dealerScore);
+        root.put("BJ_dealerHand",dealerHand);
+        root.put("BJ_bet",bet);
+        try (FileWriter fileWriter = new FileWriter(s + "/droidbot/config/" + message.getGuild().getLongID() + "/blackjack/" + message.getAuthor().getLongID())) {
+            fileWriter.write(root.toString());
+            System.out.println("Successfully Copied JSON Object to File...");
+            System.out.println("\nJSON Object: " + root);
+        } catch (IOException e) {
+            Message.sendDM(BaseBot.client.getApplicationOwner(), e.toString());
+            e.printStackTrace();
+        }
+
+    }
+    public static JSONObject readBJFields(IMessage message){
+        Path currentRelativePath = Paths.get("");
+        String s = currentRelativePath.toAbsolutePath().toString();
+        IUser user = message.getAuthor();
+        String stringUser = user.getName();
+
+        File file = new File (s + "/droidbot/config/" + message.getGuild().getLongID() + "/blackjack/" + message.getAuthor().getLongID());
+        URI uri = file.toURI();
+        JSONTokener tokener = null;
+        try {
+            tokener = new JSONTokener(uri.toURL().openStream());
+            System.out.println("Successfully read file " + stringUser + ".txt");
+        } catch (IOException e) {
+            Message.sendDM(BaseBot.client.getApplicationOwner(), e.toString());
             e.printStackTrace();
         }
         return new JSONObject(tokener);

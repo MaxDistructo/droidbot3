@@ -9,6 +9,7 @@ import sx.blah.discord.util.*;
 
 import java.awt.*;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import static maxdistructo.droidbot2.BaseBot.jda;
 
@@ -17,11 +18,12 @@ public class Message {
 
     public static EmbedObject simpleEmbed(IUser user, String title, String description, IMessage message){
         EmbedBuilder builder = new EmbedBuilder();
-        String authorName = user.getName();
         String authorAvatar = user.getAvatarURL();
         Guild guild = jda.getGuildById(message.getGuild().getLongID());
         Member member = guild.getMemberById(user.getLongID());
         Color color = member.getColor();
+        String guildImage = guild.getIconUrl();
+        String guildName = guild.getName();
 
 
         //builder.appendField(title1, content1, true);
@@ -29,8 +31,8 @@ public class Message {
        // builder.appendField("fieldTitleNotInline", "fieldContentNotInline", false);
       //  builder.appendField(":tada: fieldWithCoolThings :tada:", "[hiddenLink](http://i.imgur.com/Y9utuDe.png)", false);
 
-     //   builder.withAuthorName(user.mention());
-      //  builder.withAuthorIcon(authorAvatar);
+        builder.withAuthorName(message.getAuthor().getName() + "#" + message.getAuthor().getDiscriminator());
+        builder.withAuthorIcon(authorAvatar);
 
         //builder.withDesc("withDesc");
         builder.withDescription(description);
@@ -39,8 +41,8 @@ public class Message {
        // builder.withUrl("http://i.imgur.com/IrEVKQq.png");
        // builder.withImage("http://i.imgur.com/agsp5Re.png");
 
-        builder.withFooterIcon(authorAvatar);
-        builder.withFooterText(authorName + "#" + user.getDiscriminator());
+        builder.withFooterIcon(guildImage);
+        builder.withFooterText(guildName);
         builder.withColor(color);
        // builder.withFooterIcon("http://i.imgur.com/TELh8OT.png");
         //builder.withThumbnail("http://i.imgur.com/7heQOCt.png");

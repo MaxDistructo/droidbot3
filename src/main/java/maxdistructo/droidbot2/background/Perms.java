@@ -2,7 +2,12 @@ package maxdistructo.droidbot2.background;
 
 import java.util.List;
 
+import net.dv8tion.jda.core.Permission;
+import net.dv8tion.jda.core.entities.Role;
 import sx.blah.discord.handle.obj.*;
+import sx.blah.discord.util.PermissionUtils;
+
+import static maxdistructo.droidbot2.BaseBot.jda;
 
 public class Perms {
     public static boolean checkMod(IMessage message){
@@ -21,7 +26,6 @@ public class Perms {
 
     public static boolean checkAdmin(IMessage message){
         IUser author = message.getAuthor();
-        IGuild guild = message.getGuild();
         //Checks if user is a Admin of Doggo (Or Myself).
         long[] admins = Config.readServerAdminConfig(message.getGuild());
         int i = 0;
@@ -56,5 +60,8 @@ public class Perms {
             i++;
         }
         return false;
+    }
+    public static boolean checkForPermission(IMessage message, Permissions permission){
+        return PermissionUtils.hasPermissions(message.getGuild(),message.getAuthor(),permission);
     }
 }
