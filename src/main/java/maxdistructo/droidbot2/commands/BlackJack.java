@@ -14,7 +14,6 @@ import java.nio.file.Paths;
 
 public class BlackJack {
     private static String[] main_deck = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
-    private static int[] bj_values = {2,3,4,5,6,7,8,9,10,10,10,11,2,3,4,5,6,7,8,9,10,10,10,11,2,3,4,5,6,7,8,9,10,10,10,11,2,3,4,5,6,7,8,9,10,10,10,11};
     private static int playerScore;
     private static int dealerScore;
     private static String playerHand;
@@ -30,7 +29,6 @@ public class BlackJack {
             playerHand = drawCard(main_deck, playerHand);
             dealerHand = drawCard(main_deck, dealerHand);
             playerHand = drawCard(main_deck, playerHand);
-            dealerHand = drawCard(main_deck, dealerHand);
             playerScore = calculateScore(playerHand);
             dealerScore = calculateScore(dealerHand);
             Path currentRelativePath = Paths.get("");
@@ -143,7 +141,7 @@ public class BlackJack {
     }
     private static String checkEnd(int pScore, int dScore){
         System.out.println("Running check end");
-        if(pScore == 21 && dScore == 21 || pScore > 21 && dScore > 21){
+        if(pScore == 21 && dScore == 21 || pScore > 21 && dScore > 21 || pScore == dScore && dScore > 17){
             return "Push";
         }
         else if(pScore > 21){
@@ -167,61 +165,16 @@ public class BlackJack {
             return "Continue";
         }
     }
-    private static String isEnd(String end, IMessage message){
-        playerScore = calculateScore(playerHand);
-        dealerScore = calculateScore(dealerHand);
-        try {
-            Thread.sleep(1250L);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        Message.sendMessage(message.getChannel(), Message.simpleEmbed(message.getAuthor(), "BlackJack", "Your hand: " + playerHand + "\nYour Score: " + playerScore + "\nDealer Hand: " + dealerHand + "\nDealer Score: " + dealerScore, message));
-        System.out.println("Running is end");
-        switch (end) {
-            case "Continue":
-                Config.writeBlackjackFields(playerScore, playerHand, dealerScore, dealerHand, bet, message);
-                return "Would you like to Hit or Stay ?";
-            case "Push":
-                Config.CHIPS += bet;
-                Config.resetBJ(message);
-                playerHand = null;
-                dealerHand = null;
-                Config.writeCasino(message);
-                return checkEnd(playerScore, dealerScore);
-            case "Bust! Dealer Wins!":
-                Config.resetBJ(message);
-                playerHand = null;
-                dealerHand = null;
-                Config.writeCasino(message);
-                return checkEnd(playerScore, dealerScore);
-            case "Player Wins!":
-                Config.CHIPS += bet;
-                Config.CHIPS += bet;
-                Config.resetBJ(message);
-                playerHand = null;
-                dealerHand = null;
-                Config.writeCasino(message);
-                return checkEnd(playerScore, dealerScore);
-        }
-        return "Casino Error: Blackjack";
-    }
     public static String continueGame(IMessage message, String[] messageContent, JSONObject root){
         playerHand = root.getString("BJ_playerHand");
         dealerHand = root.getString("BJ_dealerHand");
         playerScore = root.getInt("BJ_playerScore");
         dealerScore = root.getInt("BJ_dealerScore");
         bet = root.getInt("BJ_bet");
-        switch (messageContent[0]) {
+        switch (messageContent[0].toLowerCase()) {
             case "hit":
                 if (!root.getString("BJ_playerHand").equals("null")) {
                     playerHand = drawCard(main_deck, playerHand);
-                }
-
-                if(calculateScore(dealerHand) > 17) {
-                    return isEnd(checkEnd(playerScore, dealerScore), message);
-                }
-                if (!root.getString("BJ_dealerHand").equals("null") && !(calculateScore(dealerHand) > 17)) {
-                    dealerHand = drawCard(main_deck, dealerHand);
                 }
 
                 playerScore = calculateScore(playerHand);
@@ -266,58 +219,44 @@ public class BlackJack {
 
                 break;
             case "stay":
-                if(calculateScore(dealerHand) > 17) {
-                    return isEnd(checkEnd(playerScore, dealerScore), message);
-                }
-                if (!root.getString("BJ_dealerHand").equals("null") && !(calculateScore(dealerHand) > 17)) {
-                    dealerHand = drawCard(main_deck, dealerHand);
-                }
-                playerScore = calculateScore(playerHand);
-                dealerScore = calculateScore(dealerHand);
-                try {
-                    Thread.sleep(1250L);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                Message.sendMessage(message.getChannel(), Message.simpleEmbed(message.getAuthor(), "BlackJack", "Your hand: " + playerHand + "\nYour Score: " + playerScore + "\nDealer Hand: " + dealerHand + "\nDealer Score: " + dealerScore, message));
-                switch (checkEnd(playerScore, dealerScore)) {
-                    case "Continue":
-                        Config.writeBlackjackFields(playerScore, playerHand, dealerScore, dealerHand, bet, message);
-                        try {
-                            Thread.sleep(1250L);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        return "Would you like to Hit or Stay ?";
-                    case "Push":
-                        Config.CHIPS += bet;
-                        Config.resetBJ(message);
-                        playerHand = null;
-                        dealerHand = null;
-                        Config.writeCasino(message);
-                        return checkEnd(playerScore, dealerScore);
-                    case "Bust! Dealer Wins!":
-                        Config.resetBJ(message);
-                        playerHand = null;
-                        dealerHand = null;
-                        Config.writeCasino(message);
-                        return checkEnd(playerScore, dealerScore);
-                    case "Player Wins!":
-                        Config.CHIPS += bet;
-                        Config.CHIPS += bet;
-                        Config.resetBJ(message);
-                        playerHand = null;
-                        dealerHand = null;
-                        Config.writeCasino(message);
-                        return checkEnd(playerScore, dealerScore);
-                }
-                break;
-            default:
-                return "HEY! Start a Blackjack game before saying \"hit\" or \"stay!\"";
+               return dealerMove(message);
+
         }
 
         return "How TF did you reach this?";
     }
 
+    private static String dealerMove(IMessage message){
+        while(calculateScore(dealerHand) <= 17){
+           dealerHand = drawCard(main_deck,dealerHand);
+           dealerScore = calculateScore(dealerHand);
+        }
+        Message.sendMessage(message.getChannel(), Message.simpleEmbed(message.getAuthor(), "BlackJack", "Your hand: " + playerHand + "\nYour Score: " + playerScore + "\nDealer Hand: " + dealerHand + "\nDealer Score: " + dealerScore, message));
+        switch (checkEnd(playerScore, dealerScore)) {
+            case "Push":
+                Config.CHIPS += bet;
+                Config.resetBJ(message);
+                playerHand = null;
+                dealerHand = null;
+                Config.writeCasino(message);
+                return checkEnd(playerScore, dealerScore);
+            case "Bust! Dealer Wins!":
+                Config.resetBJ(message);
+                playerHand = null;
+                dealerHand = null;
+                Config.writeCasino(message);
+                return checkEnd(playerScore, dealerScore);
+            case "Player Wins!":
+                Config.CHIPS += bet;
+                Config.CHIPS += bet;
+                Config.resetBJ(message);
+                playerHand = null;
+                dealerHand = null;
+                Config.writeCasino(message);
+                return checkEnd(playerScore, dealerScore);
+        }
+        return "Command Error.";
+     }
 }
+
 

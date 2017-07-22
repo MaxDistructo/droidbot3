@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IUser;
+import sx.blah.discord.util.Image;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -86,6 +87,22 @@ public class Admin {
         }
         Roles.removeBotAbuser(message,mentioned);
         return mentioned.mention(true) + " you have been released from your bot abuse punishment.";
+    }
+    public static String setNickname(Object[] args){
+        String makeNewString = "";
+        System.out.println("Begin making new string.");
+        int i = 2;
+        while (i < args.length) {
+            makeNewString = makeNewString + " " + args[i];
+            i++;
+        }
+        System.out.println("End making new string.");
+        BaseBot.client.changeUsername(makeNewString);
+        return "Name successfully set to :" + makeNewString;
+    }
+    public static String setProfilePic(Object[] args){
+        BaseBot.client.changeAvatar(Image.forUrl((String)args[2],(String)args[3]));
+        return "Changed Profile Picture Sucessfully.";
     }
 
 

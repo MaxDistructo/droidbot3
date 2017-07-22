@@ -8,6 +8,7 @@ public class Client {
         public static IDiscordClient createClient(String token) { // Returns a new instance of the Discord client
         ClientBuilder clientBuilder = new ClientBuilder(); // Creates the ClientBuilder instance
         clientBuilder.withToken(token); // A to the builder
+        clientBuilder.withRecommendedShardCount();
         try {
             return clientBuilder.login();
         } catch (DiscordException e) {

@@ -1,7 +1,5 @@
 package maxdistructo.droidbot2;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,7 +18,7 @@ public class BaseBot {
     public static IDiscordClient client;
     public static JDA jda;
     public final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-    public final static String version = "2.0_b9";
+    public final static String version = "2.0_b11";
 
     public static void main(String[] args){
         LOGGER.setLevel(Level.INFO);
