@@ -18,7 +18,7 @@ public class BaseBot {
     public static IDiscordClient client;
     public static JDA jda;
     public final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-    public final static String version = "2.0_b11";
+    public final static String version = "2.0_b12";
 
     public static void main(String[] args){
         LOGGER.setLevel(Level.INFO);

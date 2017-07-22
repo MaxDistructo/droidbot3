@@ -6,6 +6,7 @@ import maxdistructo.droidbot2.background.message.Message;
 import maxdistructo.droidbot2.commands.*;
 import net.dv8tion.jda.core.Permission;
 import sx.blah.discord.api.events.EventSubscriber;
+import sx.blah.discord.handle.impl.events.guild.GuildCreateEvent;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.events.guild.voice.user.UserVoiceChannelJoinEvent;
 import sx.blah.discord.handle.impl.events.guild.voice.user.UserVoiceChannelLeaveEvent;
@@ -210,15 +211,44 @@ public class Listener {
                 IGuild doggo = client.getGuildByID(314569556809220118L);
                 List<IUser> paydayUsers = doggo.getUsersByRole(doggo.getRoleByID((330353751116480512L)));
                 Object[] paydayArray = paydayUsers.toArray();
-                int ii;
+                int ii = 0;
                 while(ii < paydayArray.length){
-
+                    IUser user  = (IUser) paydayArray[ii];
+                    user.removeRole(doggo.getRoleByID(330353751116480512L));
+                    ii++;
                 }
              break;
             }
             i++;
         }
+        List<IGuild> guildsList = event.getShard().getGuilds();
+        Object[] guildsArray = guildsList.toArray();
+        int iii = 0;
+        while(iii < guildsArray.length){
+            IGuild guild = (IGuild) guildsArray[iii];
+            String name;
+            if(client.getOurUser().getNicknameForGuild(guild) != null){
+                name = client.getOurUser().getNicknameForGuild(guild);
+            }
+            else{
+                name = client.getApplicationName();
+            }
+            Message.sendMessage(guild.getGeneralChannel(), name + " has been loaded. Version: " + BaseBot.version);
+            iii++;
+        }
+    }
+    @EventSubscriber
+    public static void onGuildJoinEvent(GuildCreateEvent event){
+            IGuild guild = event.getGuild();
+            String name;
+            if(client.getOurUser().getNicknameForGuild(guild) != null){
+                name = client.getOurUser().getNicknameForGuild(guild);
+            }
+            else{
+                name = client.getApplicationName();
+            }
+            Message.sendMessage(guild.getGeneralChannel(), name + " has been loaded. Version: " + BaseBot.version);
+        }
     }
 
 
-}

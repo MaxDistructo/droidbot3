@@ -168,8 +168,8 @@ public class BlackJack {
     public static String continueGame(IMessage message, String[] messageContent, JSONObject root){
         playerHand = root.getString("BJ_playerHand");
         dealerHand = root.getString("BJ_dealerHand");
-        playerScore = root.getInt("BJ_playerScore");
-        dealerScore = root.getInt("BJ_dealerScore");
+        playerScore = calculateScore(playerHand);
+        dealerScore = calculateScore(dealerHand);
         bet = root.getInt("BJ_bet");
         switch (messageContent[0].toLowerCase()) {
             case "hit":
@@ -255,7 +255,9 @@ public class BlackJack {
                 Config.writeCasino(message);
                 return checkEnd(playerScore, dealerScore);
         }
-        return "Command Error.";
+        Config.CHIPS += bet;
+        Config.writeCasino(message);
+        return "Command Error. Your balance has not been affected.";
      }
 }
 
