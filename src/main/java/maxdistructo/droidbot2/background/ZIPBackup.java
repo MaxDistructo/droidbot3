@@ -19,18 +19,16 @@ public class ZIPBackup {
     private static Path currentRelativePath = Paths.get("");
     private static String s = currentRelativePath.toAbsolutePath().toString();
     private static final String OUTPUT_ZIP_FILE = s + LocalDateTime.now() + ".zip";
-    private static final String SOURCE_FOLDER = s + "/droidbot"; // SourceFolder path
+    private static final String SOURCE_FOLDER = s + "/droidbot/"; // SourceFolder path
 
     public ZIPBackup() {
         fileList = new ArrayList< String >();
     }
 
     public static void startBackup() {
-        BaseBot.client.getDispatcher().unregisterListener(new Listener());
         ZIPBackup appZip = new ZIPBackup();
         appZip.generateFileList(new File(SOURCE_FOLDER));
         appZip.zipIt(OUTPUT_ZIP_FILE);
-        BaseBot.client.getDispatcher().registerListener(new Listener());
     }
 
     private void zipIt(String zipFile) {

@@ -203,39 +203,6 @@ public class Listener {
     public void onShardReadyEvent(ShardReadyEvent event){
         client.online(Listener.prefix + "help");
         BaseBot.LOGGER.info("Added playing content");
-        List<IGuild> guilds = client.getGuilds();
-        Object[] guildObjects = guilds.toArray();
-        int i = 0;
-        while(i < guildObjects.length){
-            if(guildObjects[i] == client.getGuildByID(314569556809220118L)){
-                IGuild doggo = client.getGuildByID(314569556809220118L);
-                List<IUser> paydayUsers = doggo.getUsersByRole(doggo.getRoleByID((330353751116480512L)));
-                Object[] paydayArray = paydayUsers.toArray();
-                int ii = 0;
-                while(ii < paydayArray.length){
-                    IUser user  = (IUser) paydayArray[ii];
-                    user.removeRole(doggo.getRoleByID(330353751116480512L));
-                    ii++;
-                }
-             break;
-            }
-            i++;
-        }
-        List<IGuild> guildsList = event.getShard().getGuilds();
-        Object[] guildsArray = guildsList.toArray();
-        int iii = 0;
-        while(iii < guildsArray.length){
-            IGuild guild = (IGuild) guildsArray[iii];
-            String name;
-            if(client.getOurUser().getNicknameForGuild(guild) != null){
-                name = client.getOurUser().getNicknameForGuild(guild);
-            }
-            else{
-                name = client.getApplicationName();
-            }
-            Message.sendMessage(guild.getGeneralChannel(), name + " has been loaded. Version: " + BaseBot.version);
-            iii++;
-        }
     }
     @EventSubscriber
     public static void onGuildJoinEvent(GuildCreateEvent event){
@@ -248,7 +215,17 @@ public class Listener {
                 name = client.getApplicationName();
             }
             Message.sendMessage(guild.getGeneralChannel(), name + " has been loaded. Version: " + BaseBot.version);
+
+            List<IUser> paydayUsers = guild.getUsersByRole(guild.getRoleByID((330353751116480512L)));
+            Object[] paydayArray = paydayUsers.toArray();
+            int ii = 0;
+                while(ii < paydayArray.length){
+                    IUser user  = (IUser) paydayArray[ii];
+                    user.removeRole(guild.getRoleByID(330353751116480512L));
+                    ii++;
+                }
+            }
+
         }
-    }
 
 

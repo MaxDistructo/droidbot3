@@ -35,11 +35,22 @@ public class BlackJack {
             String s = currentRelativePath.toAbsolutePath().toString();
             File file = new File(s + "/droidbot/config/" + message.getGuild().getLongID() + "/blackjack/" + message.getAuthor().getLongID());
             file.getParentFile().mkdirs();
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                Message.sendDM(BaseBot.client.getApplicationOwner(),e.toString());
-                e.printStackTrace();
+            if(file.exists() && !file.isDirectory()){
+                file.delete();
+                try {
+                    file.createNewFile();
+                } catch (IOException e) {
+                    Message.sendDM(BaseBot.client.getApplicationOwner(),e.toString());
+                    e.printStackTrace();
+                }
+            }
+            else{
+                try {
+                    file.createNewFile();
+                } catch (IOException e) {
+                    Message.sendDM(BaseBot.client.getApplicationOwner(),e.toString());
+                    e.printStackTrace();
+                }
             }
             try {
                 Thread.sleep(1250L);
