@@ -2,10 +2,8 @@ package maxdistructo.droidbot2.commands;
 
 import maxdistructo.droidbot2.background.Config;
 import sx.blah.discord.handle.obj.*;
-import de.btobastian.sdcf4j.Command;
-import de.btobastian.sdcf4j.CommandExecutor;
 
-public class Insult implements CommandExecutor{
+public class Insult{
     //@Command(aliases = {"/game", "/g"}, description = "Creates a new Game session" , usage = "/game create|join|lastcall|start|info")
     public static String onInsultCommand(Object[] args, IMessage message, IUser mentioned){
         IUser author = message.getAuthor();

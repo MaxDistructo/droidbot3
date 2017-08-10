@@ -11,10 +11,8 @@ import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RateLimitException;
-import de.btobastian.sdcf4j.Command;
-import de.btobastian.sdcf4j.CommandExecutor;
 
-public class GameCommand implements CommandExecutor{
+public class GameCommand{
 
     private static Game game = new Game();
     private static PlayerList list;

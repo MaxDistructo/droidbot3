@@ -1,10 +1,8 @@
 package maxdistructo.droidbot2.commands;
 
-import de.btobastian.sdcf4j.Command;
-import de.btobastian.sdcf4j.CommandExecutor;
 import sx.blah.discord.handle.obj.*;
 
-public class Fortune implements CommandExecutor{
+public class Fortune{
 
    // @Command(aliases = {"/casino" }, description = "Casino Commands.", usage = "/casino [payday|balance]")
     public static String onFortuneCommand(Object[] args, IMessage message){

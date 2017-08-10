@@ -1,11 +1,8 @@
 package maxdistructo.droidbot2.commands;
 
-import de.btobastian.sdcf4j.Command;
-import de.btobastian.sdcf4j.CommandExecutor;
 import maxdistructo.droidbot2.background.*;
 import maxdistructo.droidbot2.background.message.Message;
 import net.dv8tion.jda.core.entities.Member;
-import sun.java2d.pipe.SpanShapeRenderer;
 import sx.blah.discord.api.internal.json.objects.EmbedObject;
 import sx.blah.discord.handle.obj.*;
 import sx.blah.discord.util.EmbedBuilder;
@@ -22,7 +19,7 @@ import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 
 
-public class Casino implements CommandExecutor {
+public class Casino{
     //@Command(aliases = {"/casino" }, description = "Casino Commands.", usage = "/casino [payday|balance]")
     public static NumberFormat nf = NumberFormat.getInstance();
     public static String onCasinoCommand(Object[] args, IMessage message, IUser mentioned) {

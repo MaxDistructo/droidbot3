@@ -1,12 +1,10 @@
 package maxdistructo.droidbot2.commands;
 
-import de.btobastian.sdcf4j.Command;
-import de.btobastian.sdcf4j.CommandExecutor;
 import maxdistructo.droidbot2.background.Config;
 import maxdistructo.droidbot2.background.Perms;
 import sx.blah.discord.handle.obj.*;
 
-public class FiftyFifty implements CommandExecutor {
+public class FiftyFifty{
     //@Command(aliases = {"/50","/fifty"}, description = "Fifty Fifty chance of doubling your money imputed", usage = "/50|fifty <bet>")
     public static String onFiftyCommand(Object[] args, IMessage message){
         IUser author = message.getAuthor();

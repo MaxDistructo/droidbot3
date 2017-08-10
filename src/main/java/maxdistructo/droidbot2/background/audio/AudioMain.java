@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.audio.IAudioManager;
-import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IMessage;
@@ -36,7 +36,7 @@ public class AudioMain {
   }
 
   private synchronized GuildMusicManager getGuildAudioPlayer(IGuild guild) {
-    long guildId = Long.parseLong(guild.getID());
+    long guildId = guild.getLongID();
     GuildMusicManager musicManager = musicManagers.get(guildId);
 
     if (musicManager == null) {
