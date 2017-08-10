@@ -125,7 +125,7 @@ public class Admin {
             i++;
         }
         Roles.changeRolePerm(message, (String) args[2], formated);
-        return "Sucessfully edited role perms";
+        return "Sucessfully edited role perms.";
 
     }
 
