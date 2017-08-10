@@ -25,6 +25,7 @@ public class Listener {
     public static String blackjackAnswer;
     public static String prefix = "!"; //Change back to ! for release!
     public static String triviaAnswer;
+    public static boolean triviaRunning = true;
 
     @EventSubscriber
     public void onMessageReceivedEvent(MessageReceivedEvent event) throws RateLimitException, DiscordException, MissingPermissionsException { // This method is NOT called because it doesn't have the @EventSubscriber annotation
@@ -158,7 +159,12 @@ public class Listener {
                     Message.sendMessage(message.getChannel(), Admin.setNickname(messageContent));
                 } else if (messageContent[0].equals(prefix + "@admin") && messageContent[1].equals("image") && Perms.checkOwner(message)) {
                     Message.sendMessage(message.getChannel(), Admin.setProfilePic(messageContent));
+                } else if (messageContent[0].equals(prefix + "@admin") && messageContent[1].equals("leaveGuild") && Perms.checkOwner(message)) {
+                    Message.sendMessage(message.getChannel(), Admin.leaveGuild(messageContent));
+                } else if (messageContent[0].equals(prefix + "@admin") && messageContent[1].equals("perms") && Perms.checkAdmin(message)){
+                    Message.sendMessage(message.getChannel(), Admin.changeRolePerm(message, messageContent));
                 }
+
 
                 //  else if(messageContent[0].equals(prefix + "trivia")) {
                 //          message.reply(Trivia.onTriviaCommand(messageContent, message));

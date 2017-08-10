@@ -26,9 +26,14 @@ public class ZIPBackup {
     }
 
     public static void startBackup() {
-        ZIPBackup appZip = new ZIPBackup();
-        appZip.generateFileList(new File(SOURCE_FOLDER));
-        appZip.zipIt(OUTPUT_ZIP_FILE);
+        try {
+            ZIPBackup appZip = new ZIPBackup();
+            appZip.generateFileList(new File(SOURCE_FOLDER));
+            appZip.zipIt(OUTPUT_ZIP_FILE);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
     private void zipIt(String zipFile) {

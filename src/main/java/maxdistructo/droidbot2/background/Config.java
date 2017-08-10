@@ -2,8 +2,12 @@ package maxdistructo.droidbot2.background;
 
 import java.io.*;
 import java.net.URI;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import maxdistructo.droidbot2.BaseBot;
@@ -373,7 +377,7 @@ public class Config{
         root.put("BJ_dealerScore",dealerScore);
         root.put("BJ_dealerHand",dealerHand);
         root.put("BJ_bet",bet);
-        try (FileWriter fileWriter = new FileWriter(s + "/droidbot/config/" + message.getGuild().getLongID() + "/blackjack/" + message.getAuthor().getLongID())) {
+        try (FileWriter fileWriter = new FileWriter(s + "/droidbot/config/" + message.getGuild().getLongID() + "/blackjack/" + message.getAuthor().getLongID() + ".txt")) {
             fileWriter.write(root.toString());
             System.out.println("Successfully Copied JSON Object to File...");
             System.out.println("\nJSON Object: " + root);
@@ -389,7 +393,7 @@ public class Config{
         IUser user = message.getAuthor();
         String stringUser = user.getName();
 
-        File file = new File (s + "/droidbot/config/" + message.getGuild().getLongID() + "/blackjack/" + message.getAuthor().getLongID());
+        File file = new File (s + "/droidbot/config/" + message.getGuild().getLongID() + "/blackjack/" + message.getAuthor().getLongID() +  ".txt");
         URI uri = file.toURI();
         JSONTokener tokener = null;
         try {
@@ -400,6 +404,21 @@ public class Config{
             e.printStackTrace();
         }
         return new JSONObject(tokener);
+    }
+    public static long convertToLong(Object o){
+        return Long.valueOf(o.toString());
+    }
+
+    public static List<String> readFileAsList(File file){
+        List<String> lines = null;
+        try{
+            lines = Files.readAllLines(Paths.get(file.toURI()));
+        }
+        catch(Exception e){
+            Message.sendDM(BaseBot.client.getApplicationOwner(), e.getLocalizedMessage());
+            e.printStackTrace();
+        }
+        return lines;
     }
 
 

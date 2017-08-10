@@ -40,7 +40,13 @@ public class BaseBot {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            ZIPBackup.startBackup();
+            try{
+                ZIPBackup.startBackup();
+            }
+            catch(Exception e){
+
+            }
+
         }
         while (client.isLoggedIn());
 

@@ -1,12 +1,14 @@
 package maxdistructo.droidbot2.commands;
 
 
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import maxdistructo.droidbot2.BaseBot;
 import maxdistructo.droidbot2.background.Config;
 import maxdistructo.droidbot2.background.Roles;
 import maxdistructo.droidbot2.background.message.Message;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.Image;
@@ -104,6 +106,29 @@ public class Admin {
         BaseBot.client.changeAvatar(Image.forUrl((String)args[2],(String)args[3]));
         return "Changed Profile Picture Sucessfully.";
     }
+    public static String leaveGuild(Object[] args){// !admin leaveGuild <GuildLongID>
+        IGuild guild = BaseBot.client.getGuildByID(Config.convertToLong(args[2]));
+        guild.leave();
+        return "Sucessfully left \"" + guild.getName() + "\"";
+    }
+    public static String changeRolePerm(IMessage message, Object[] args){ // !admin perms <Permission> <Role>
+        String formated = "";
+        int i = 3;
+        while (i < args.length){
+            if(i == 3){
+                formated = formated + args[i];
+            }
+            else{
+                formated = formated + " " + args[i];
+            }
+
+            i++;
+        }
+        Roles.changeRolePerm(message, (String) args[2], formated);
+        return "Sucessfully edited role perms";
+
+    }
+
 
 
 }

@@ -33,7 +33,7 @@ public class BlackJack {
             dealerScore = calculateScore(dealerHand);
             Path currentRelativePath = Paths.get("");
             String s = currentRelativePath.toAbsolutePath().toString();
-            File file = new File(s + "/droidbot/config/" + message.getGuild().getLongID() + "/blackjack/" + message.getAuthor().getLongID());
+            File file = new File(s + "/droidbot/config/" + message.getGuild().getLongID() + "/blackjack/" + message.getAuthor().getLongID() + ".txt");
             file.getParentFile().mkdirs();
             if(file.exists() && !file.isDirectory()){
                 file.delete();
@@ -161,9 +161,6 @@ public class BlackJack {
         else if(pScore == 21 && dScore < 21 || dScore > 21){
             return "Player Wins!";
         }
-        else if(pScore < dScore && dScore > 17){
-            return "Continue";
-        }
         else if(pScore < 21 && dScore < 21 && dScore > 17){
             if(pScore > dScore){
                 return "Player Wins!";
@@ -172,9 +169,18 @@ public class BlackJack {
                 return "Bust! Dealer Wins!";
             }
         }
+        else if (dScore > 17){
+            if(pScore > dScore){
+                return "Player Wins!";
+            }
+            else if(dScore > pScore){
+                return "Bust! Dealer Wins!";
+            }
+        }
         else{
             return "Continue";
         }
+        return "Push";
     }
     public static String continueGame(IMessage message, String[] messageContent, JSONObject root){
         playerHand = root.getString("BJ_playerHand");
