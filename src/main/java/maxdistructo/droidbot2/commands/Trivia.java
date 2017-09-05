@@ -1,6 +1,5 @@
 package maxdistructo.droidbot2.commands;
 
-import de.btobastian.sdcf4j.CommandExecutor;
 import maxdistructo.droidbot2.BaseBot;
 import maxdistructo.droidbot2.background.Config;
 import maxdistructo.droidbot2.background.Listener;
@@ -20,7 +19,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-public class Trivia implements CommandExecutor{
+public class Trivia{
 
     private static int question = 1;
     private static String list;

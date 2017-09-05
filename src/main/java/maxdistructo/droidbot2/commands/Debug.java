@@ -1,14 +1,12 @@
 package maxdistructo.droidbot2.commands;
 
-import de.btobastian.sdcf4j.Command;
-import de.btobastian.sdcf4j.CommandExecutor;
 
 import java.util.List;
 
 import maxdistructo.droidbot2.background.Perms;
 import sx.blah.discord.handle.obj.*;
 
-public class Debug implements CommandExecutor {
+public class Debug{
     //@Command(aliases = {"/debug"}, description = "Shows debug info for making code for the bot.", usage = "/debug")
     public static String onDebugCommand(String[] args, IMessage message) {
         IUser author = message.getAuthor();

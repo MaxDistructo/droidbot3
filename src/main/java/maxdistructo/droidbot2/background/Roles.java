@@ -111,6 +111,38 @@ public class Roles {
                 set.add(Permissions.MANAGE_CHANNELS);
             case "manageEmojis":
                 set.add(Permissions.MANAGE_EMOJIS);
+            case "manageMessages":
+                set.add(Permissions.MANAGE_MESSAGES);
+            case "managePermissions":
+                set.add(Permissions.MANAGE_PERMISSIONS);
+            case "manageServer":
+                set.add(Permissions.MANAGE_SERVER);
+            case "manageWebhooks":
+                set.add(Permissions.MANAGE_WEBHOOKS);
+            case "mentionEveryone":
+                set.add(Permissions.MENTION_EVERYONE);
+            case "readMessageHistory":
+                set.add(Permissions.READ_MESSAGE_HISTORY);
+            case "readMessages":
+                set.add(Permissions.READ_MESSAGES);
+            case "sendMessages":
+                set.add(Permissions.SEND_MESSAGES);
+            case "sendTTSMessages":
+                set.add(Permissions.SEND_TTS_MESSAGES);
+            case "useExternalEmojis":
+                set.add(Permissions.USE_EXTERNAL_EMOJIS);
+            case "viewAuditLog":
+                set.add(Permissions.VIEW_AUDIT_LOG);
+            case "voiceConnect":
+                set.add(Permissions.VOICE_CONNECT);
+            case "voiceModerator":
+                set.add(Permissions.VOICE_DEAFEN_MEMBERS);
+                set.add(Permissions.VOICE_MOVE_MEMBERS);
+                set.add(Permissions.VOICE_MUTE_MEMBERS);
+            case "voiceSpeak":
+                set.add(Permissions.VOICE_SPEAK);
+            case "voiceUseVad":
+                set.add(Permissions.VOICE_USE_VAD);
 
         }
         roleNew.changePermissions(set);
