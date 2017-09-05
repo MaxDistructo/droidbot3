@@ -18,7 +18,7 @@ public class BaseBot {
     public static IDiscordClient client;
     public static JDA jda;
     public final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-    public final static String version = "2.0_b12";
+    public final static String version = "2.0.1";
 
     public static void main(String[] args){
         LOGGER.setLevel(Level.INFO);
@@ -32,7 +32,8 @@ public class BaseBot {
         LOGGER.info("Client Created");
         client.getDispatcher().registerListener(new AudioMain());
         LOGGER.info("Registered Audio Commands ");
-        client.getDispatcher().registerListener(new Listener());
+        Listener listener = new Listener();
+        client.getDispatcher().registerListener(listener);
         LOGGER.info("Registered Listener");
         do {
             try {
