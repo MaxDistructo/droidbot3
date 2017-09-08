@@ -26,6 +26,8 @@ public class ZIPBackup {
     }
 
     public static void startBackup() {
+        BaseBot.client.getDispatcher().unregisterListener(BaseBot.listener);
+        BaseBot.client.getDispatcher().registerListener(BaseBot.bl);
         try {
             ZIPBackup appZip = new ZIPBackup();
             appZip.generateFileList(new File(SOURCE_FOLDER));
@@ -34,6 +36,8 @@ public class ZIPBackup {
         catch(Exception e){
             e.printStackTrace();
         }
+        BaseBot.client.getDispatcher().unregisterListener(BaseBot.bl);
+        BaseBot.client.getDispatcher().registerListener(BaseBot.listener);
     }
 
     private void zipIt(String zipFile) {

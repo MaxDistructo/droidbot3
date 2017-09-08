@@ -1,20 +1,10 @@
 package maxdistructo.droidbot2.background;
 
-import com.sun.javafx.tk.PermissionHelper;
 import maxdistructo.droidbot2.background.message.Message;
-import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Role;
-import net.dv8tion.jda.core.entities.User;
-import net.dv8tion.jda.core.managers.RoleManager;
-import net.dv8tion.jda.core.managers.RoleManagerUpdatable;
-import net.dv8tion.jda.core.managers.fields.PermissionField;
 import sx.blah.discord.handle.obj.*;
 
 import java.util.EnumSet;
 import java.util.List;
-
-import static maxdistructo.droidbot2.BaseBot.jda;
 
 public class Roles {
     public static boolean checkForBotAbuse(IMessage message){

@@ -1,11 +1,9 @@
 package maxdistructo.droidbot2.commands;
 
-import com.sun.javaws.jnl.LibraryDesc;
 import maxdistructo.droidbot2.BaseBot;
 import maxdistructo.droidbot2.background.Listener;
 import sx.blah.discord.handle.obj.IUser;
 
-import javax.management.ListenerNotFoundException;
 
 
 public class Help {

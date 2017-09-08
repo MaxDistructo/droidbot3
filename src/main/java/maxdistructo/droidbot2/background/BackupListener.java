@@ -1,26 +1,20 @@
 package maxdistructo.droidbot2.background;
 
+import java.util.List;
 
 import maxdistructo.droidbot2.BaseBot;
-import maxdistructo.droidbot2.background.message.Message;
 import maxdistructo.droidbot2.commands.*;
-import net.dv8tion.jda.core.Permission;
-import sx.blah.discord.api.events.EventSubscriber;
-import sx.blah.discord.handle.impl.events.guild.GuildCreateEvent;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import maxdistructo.droidbot2.background.message.*;
+import sx.blah.discord.api.events.*;
 import sx.blah.discord.handle.impl.events.guild.voice.user.UserVoiceChannelJoinEvent;
+import sx.blah.discord.handle.impl.events.guild.channel.message.*;
 import sx.blah.discord.handle.impl.events.guild.voice.user.UserVoiceChannelLeaveEvent;
 import sx.blah.discord.handle.impl.events.shard.ShardReadyEvent;
 import sx.blah.discord.handle.obj.*;
-import sx.blah.discord.util.DiscordException;
-import sx.blah.discord.util.MissingPermissionsException;
-import sx.blah.discord.util.RateLimitException;
-
-import java.util.List;
-
+import sx.blah.discord.util.*;
 import static maxdistructo.droidbot2.BaseBot.client;
 
-public class Listener {
+public class BackupListener {
     public static boolean blackJackRunning = false;
     public static String blackjackAnswer;
     public static String prefix = "!"; //Change back to ! for release!
@@ -51,26 +45,23 @@ public class Listener {
             Object messageContent[] = content.split(" ");
             prefix = Config.readPrefix();
 
+            String backupMessage = "The bot is currently doing a backup. Thank you for waiting for this daily backup to be complete.";
+
             if (!Roles.checkForBotAbuse(message)) {
                 if (messageContent[0].equals(prefix + "bj")) { //WIP
-                    message.reply(BlackJack.blackjack(messageContent, message));
+                    message.reply(backupMessage);
                 } else if (messageContent[0].toString().toLowerCase().equals("hit") && Perms.checkGames(message) || messageContent[0].toString().toLowerCase().equals("stay") && Perms.checkGames(message)) {
-                    message.reply(BlackJack.continueGame(message, (String[]) messageContent, Config.readBJFields(message)));
+                    message.reply(backupMessage);
                 } else if (messageContent[0].equals(prefix + "check")) { //Works
-                    Message.sendMessage(message.getChannel(), Message.simpleEmbed(message.getAuthor(), "Check", Check.onCheckCommand(messageContent, message), message));
-                    message.delete();
+                    message.reply(backupMessage);
                 } else if (messageContent[0].equals(prefix + "casino") && messageContent[1].equals("info") && mentioned != null && Perms.checkGames(message)) { //Works except for admin commands
-                    message.reply("", Casino.onCasinoInfo(message, mentioned));
-                    message.delete();
+                    message.reply(backupMessage);
                 } else if (messageContent[0].equals(prefix + "casino") && messageContent[1].equals("info") && Perms.checkGames(message)) { //Works except for admin commands
-                    message.reply("", Casino.onCasinoInfo(message));
-                    message.delete();
+                   message.reply(backupMessage);
                 } else if (messageContent[0].equals(prefix + "casino") && Perms.checkGames(message)) { //Works except for admin commands
-                    message.reply("", Message.simpleEmbed(message.getAuthor(), "Casino", Casino.onCasinoCommand(messageContent, message, message.getAuthor()), message));
-                    message.delete();
+                    message.reply(backupMessage);
                 } else if (messageContent[0].equals(prefix + "50") || messageContent[0].equals(prefix + "fifty") && Perms.checkGames(message)) { //Works
-                    message.reply("", Message.simpleEmbed(message.getAuthor(), "FiftyFifty", FiftyFifty.onFiftyCommand(messageContent, message), message));
-                    message.delete();
+                    message.reply(backupMessage);
                 } else if (messageContent[0].equals(prefix + "fortune")) { //Works
                     message.reply("", Message.simpleEmbed(message.getAuthor(), "Fortune", Fortune.onFortuneCommand(messageContent, message), message));
                     message.delete();
@@ -79,23 +70,19 @@ public class Listener {
                 //  message.reply(GameCommand.onGameCommand(messageContent, message));
                 // }
                 else if (messageContent[0].equals(prefix + "info")) { //Works Well
-                    Message.sendMessage(message.getChannel(), Message.simpleEmbed(message.getAuthor(), "Info", Info.onInfoCommand(messageContent, message, mentioned), message));
-                    message.delete();
+                    message.reply(backupMessage);
                 } else if (messageContent[0].equals(prefix + "insult")) { //Works
                     Message.sendMessage(message.getChannel(), Message.simpleEmbed(message.getAuthor(), "Insult", Insult.onInsultCommand(messageContent, message, mentioned), message));
                     message.delete();
                 } else if (messageContent[0].equals(prefix + "debug")) { //Needs perms set.
-                    message.reply("", Message.simpleEmbed(message.getAuthor(), "Debug", Debug.onDebugCommand((String[]) messageContent, message), message));
-                    message.delete();
+                    message.reply(backupMessage);
                 } else if (messageContent[0].equals(prefix + "shutdown")) { //Works
-                    message.reply("", Message.simpleEmbed(message.getAuthor(), "Shutdown", Shutdown.onShutdownCommand(message), message));
-                    message.delete();
+                    message.reply(backupMessage);
                 } else if (messageContent[0].equals(prefix + "help")) {
                     Message.sendDM(message.getAuthor(), Help.onHelpCommand());
                     message.delete();
                 } else if (messageContent[0].equals(prefix + "allin") && Perms.checkGames(message)) {
-                    message.reply("", Message.simpleEmbed(message.getAuthor(), "Allin", Allin.onAllinCommand(messageContent, message), message));
-                    message.delete();
+                    message.reply(backupMessage);
                 } else if (messageContent[0].equals(prefix + "say") && channelMention != null) {
                     Message.sendMessage(channelMention, Say.onSayCommand(messageContent, message, channelMention));
                 } else if (messageContent[0].equals(prefix + "say")) {
@@ -143,29 +130,8 @@ public class Listener {
                 } else if (messageContent[0].equals(prefix + "punch")) {
                     Message.sendMessage(message.getChannel(), PlayerFun.onPunchCommand(message, mentioned));
                     message.delete();
-                } else if (messageContent[0].equals(prefix + "@admin") && messageContent[1].equals("addmod") && Perms.checkAdmin(message)) {
-                    Message.sendMessage(message.getChannel(), Admin.addMod(message, mentioned));
-                } else if (messageContent[0].equals(prefix + "@admin") && messageContent[1].equals("addadmin") && Perms.checkAdmin(message)) {
-                    Message.sendMessage(message.getChannel(), Admin.addAdmin(message, mentioned));
-                } else if (messageContent[0].equals(prefix + "@casino") && messageContent[1].equals("balance") && messageContent[2].equals("add") && Config.converToInt(messageContent[4]) != 0 && mentioned != null && Perms.checkAdmin(message)) {
-                    Message.sendMessage(message.getChannel(), Admin.addCasinoBalance(messageContent, message, mentioned));
-                } else if (messageContent[0].equals(prefix + "@casino") && messageContent[1].equals("balance") && messageContent[2].equals("remove") && Config.converToInt(messageContent[4]) != 0 && mentioned != null && Perms.checkAdmin(message)) {
-                    Message.sendMessage(message.getChannel(), Admin.subtractCasinoBalance(messageContent, message, mentioned));
-                } else if (messageContent[0].equals(prefix + "@casino") && messageContent[1].equals("balance") && messageContent[2].equals("set") && Config.converToInt(messageContent[4]) != 0 && mentioned != null && Perms.checkAdmin(message)) {
-                    Message.sendMessage(message.getChannel(), Admin.setCasinoBalance(messageContent, message, mentioned));
-                } else if (messageContent[0].equals(prefix + "@admin") && messageContent[1].equals("botabuse") && Perms.checkAdmin(message)) {
-                    Message.sendMessage(message.getChannel(), Admin.setBotAbuser(messageContent, message, mentioned));
-                } else if (messageContent[0].equals(prefix + "@admin") && messageContent[1].equals("name") && Perms.checkOwner(message)) {
-                    Message.sendMessage(message.getChannel(), Admin.setNickname(messageContent));
-                } else if (messageContent[0].equals(prefix + "@admin") && messageContent[1].equals("image") && Perms.checkOwner(message)) {
-                    Message.sendMessage(message.getChannel(), Admin.setProfilePic(messageContent));
-                } else if (messageContent[0].equals(prefix + "@admin") && messageContent[1].equals("leaveGuild") && Perms.checkOwner(message)) {
-                    Message.sendMessage(message.getChannel(), Admin.leaveGuild(messageContent));
-                } else if (messageContent[0].equals(prefix + "@admin") && messageContent[1].equals("perms") && Perms.checkAdmin(message)) {
-                    Message.sendMessage(message.getChannel(), Admin.changeRolePerm(message, messageContent));
-                } else if (messageContent[0].equals(prefix + "@admin") && messageContent[1].equals("restart")) {
-                    Message.sendMessage(message.getChannel(), Restart.run(message);
-                }
+            }
+
 
 
                 //  else if(messageContent[0].equals(prefix + "trivia")) {
@@ -207,7 +173,7 @@ public class Listener {
         }
     }
 
-    @EventSubscriber
+ /*   @EventSubscriber
     public void onShardReadyEvent(ShardReadyEvent event) {
         client.online(Listener.prefix + "help");
         BaseBot.LOGGER.info("Added playing content");
@@ -240,6 +206,5 @@ public class Listener {
         }
 
 
-    }
+    }*/
 }
-

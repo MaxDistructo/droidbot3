@@ -3,7 +3,6 @@ package maxdistructo.droidbot2.commands;
 import java.util.Arrays;
 import java.util.List;
 
-import com.sun.xml.internal.bind.v2.TODO;
 import javazoom.jl.player.Player;
 import maxdistructo.droidbot2.background.*;
 import sx.blah.discord.handle.obj.*;
