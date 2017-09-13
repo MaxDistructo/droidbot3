@@ -19,6 +19,9 @@ public class BaseBot {
     public static JDA jda;
     public final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     public final static String version = "2.0.1";
+    public final static Listener listener = new Listener();
+    public final static BackupListener bl = new BackupListener();
+    public final static String changeLog = "```Markdown \n + Upon Backup, the bot will lock you out of all commands that will modify files involved in the backup.";
 
     public static void main(String[] args){
         LOGGER.setLevel(Level.INFO);
@@ -32,7 +35,7 @@ public class BaseBot {
         LOGGER.info("Client Created");
         client.getDispatcher().registerListener(new AudioMain());
         LOGGER.info("Registered Audio Commands ");
-        Listener listener = new Listener();
+        
         client.getDispatcher().registerListener(listener);
         LOGGER.info("Registered Listener");
         do {
