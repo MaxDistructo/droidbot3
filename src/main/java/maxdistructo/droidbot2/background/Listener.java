@@ -4,7 +4,6 @@ package maxdistructo.droidbot2.background;
 import maxdistructo.droidbot2.BaseBot;
 import maxdistructo.droidbot2.background.message.Message;
 import maxdistructo.droidbot2.commands.*;
-import net.dv8tion.jda.core.Permission;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.GuildCreateEvent;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -16,7 +15,15 @@ import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RateLimitException;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import static maxdistructo.droidbot2.BaseBot.client;
 
@@ -91,7 +98,7 @@ public class Listener {
                     message.reply("", Message.simpleEmbed(message.getAuthor(), "Shutdown", Shutdown.onShutdownCommand(message), message));
                     message.delete();
                 } else if (messageContent[0].equals(prefix + "help")) {
-                    Message.sendDM(message.getAuthor(), Help.onHelpCommand());
+                   // Message.sendDM(message.getAuthor(), Help.onHelpCommand());
                     message.delete();
                 } else if (messageContent[0].equals(prefix + "allin") && Perms.checkGames(message)) {
                     message.reply("", Message.simpleEmbed(message.getAuthor(), "Allin", Allin.onAllinCommand(messageContent, message), message));
@@ -164,7 +171,13 @@ public class Listener {
                 } else if (messageContent[0].equals(prefix + "@admin") && messageContent[1].equals("perms") && Perms.checkAdmin(message)) {
                     Message.sendMessage(message.getChannel(), Admin.changeRolePerm(message, messageContent));
                 } else if (messageContent[0].equals(prefix + "@admin") && messageContent[1].equals("restart")) {
-                    Message.sendMessage(message.getChannel(), Restart.run(message);
+                    Restart.run(message);
+                } else if (messageContent[0].equals(prefix + "remindme") || messageContent[0].equals(prefix + "reminder")) {
+                    Reminder.onReminderCommand(messageContent, message);
+                    message.delete();
+                } else if (messageContent[0].equals(prefix + "emote")) {
+                    Emote.onEmoteCommand(message, messageContent);
+                    message.delete();
                 }
 
 
@@ -240,6 +253,38 @@ public class Listener {
         }
 
 
+    }
+    @EventSubscriber
+    public static void onGuildJoinEvent(GuildCreateEvent event){
+        IGuild guild = event.getGuild();
+        Path currentRelativePath = Paths.get("");
+        String s = currentRelativePath.toAbsolutePath().toString();
+        File file = new File(s + "/droidbot/config/" + guild.getLongID() + ".txt");
+        file.getParentFile().mkdirs();
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        JSONObject jo = new JSONObject();
+        jo.put("Name", guild.getName());
+        jo.put("Admins", new JSONArray());
+        jo.put("Moderators", new JSONArray());
+        jo.put("GameChannels",new JSONArray());
+        jo.put("INFO","All of the above values use Discord Debug IDs. Just Google how to find these IDs. The above IDs will throw an error in the program so please remove/change them. You do NOT have to put your ID in more than one of the categories (EX. Admins do not need to have their ID put in the Admins set and the Moderators set. Just the Admins set.). Owners do not have to add their ID in anything as they will be given full perms. This file is auto-generated via the program and an example version of this file can be found at https://github.com/MaxDistructo/droidbot2/blob/master/droidbot2/config/ExampleServerIdConfig.txt");
+        try (FileWriter fileW = new FileWriter(s + "/droidbot/config/" + guild.getLongID() + ".txt")) {
+            fileW.write(jo.toString());
+            System.out.println("Successfully Copied JSON Object to File...");
+            System.out.println("\nJSON Object: " + jo);
+        } catch (IOException e) {
+            BaseBot.LOGGER.warning("Listener.newServer Error.");
+            Message.sendDM(BaseBot.client.getApplicationOwner(), e.toString());
+            e.printStackTrace();
+        }
+        
+        Message.sendMessage(guild.getGeneralChannel(), "Thank you for letting me join your server. I am " + client.getOurUser().getName() + " and my features can be found by using the command " + prefix + "help. Please DM " + client.getApplicationOwner().mention() + " to add additional moderators/admins for your server.");
+        
+        
     }
 }
 

@@ -8,8 +8,9 @@ import sx.blah.discord.handle.obj.*;
 import sx.blah.discord.util.*;
 
 import java.awt.*;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 import static maxdistructo.droidbot2.BaseBot.jda;
 
@@ -31,7 +32,7 @@ public class Message {
        // builder.appendField("fieldTitleNotInline", "fieldContentNotInline", false);
       //  builder.appendField(":tada: fieldWithCoolThings :tada:", "[hiddenLink](http://i.imgur.com/Y9utuDe.png)", false);
 
-        builder.withAuthorName(message.getAuthor().getName() + "#" + message.getAuthor().getDiscriminator());
+        builder.withAuthorName(user.getName() + "#" + user.getDiscriminator());
         builder.withAuthorIcon(authorAvatar);
 
         //builder.withDesc("withDesc");
@@ -75,4 +76,13 @@ public class Message {
     public static void sendMessage(IChannel channel, EmbedObject embedded){
             new MessageBuilder(BaseBot.client).withChannel(channel).withEmbed(embedded).build();
     }
+    public static void sendMessage(IChannel channel, File file){
+        try {
+            new MessageBuilder(BaseBot.client).withChannel(channel).withFile(file).build();
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+}
 }

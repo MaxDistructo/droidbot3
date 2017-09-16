@@ -2,20 +2,19 @@ package maxdistructo.droidbot2.background;
 
 import java.io.*;
 import java.net.URI;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 import maxdistructo.droidbot2.BaseBot;
 import maxdistructo.droidbot2.background.message.Message;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-import sx.blah.discord.handle.obj.IChannel;
+
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IUser;
@@ -178,7 +177,8 @@ public class Config{
        File file = new File(s + "/droidbot/config/" + message.getGuild().getLongID() + "/blackjack/" + message.getAuthor().getLongID());
        file.delete();
     }
-  public static String triviaReadLine(String file, int line){
+  @SuppressWarnings("resource")
+public static String triviaReadLine(String file, int line){
       Scanner input = null;
       Path currentRelativePath = Paths.get("");
       String s = currentRelativePath.toAbsolutePath().toString();
@@ -369,8 +369,6 @@ public class Config{
     public static void writeBlackjackFields(int playerScore, String playerHand, int dealerScore, String dealerHand,int bet, IMessage message){
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
-        IUser user = message.getAuthor();
-        String stringUser = user.getName();
         JSONObject root = new JSONObject();
         root.put("BJ_playerScore", playerScore);
         root.put("BJ_playerHand", playerHand);

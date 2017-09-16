@@ -1,14 +1,22 @@
 package maxdistructo.droidbot2.commands;
 
+import java.io.IOException;
+
+import maxdistructo.droidbot2.background.Perms;
+import maxdistructo.droidbot2.background.message.Message;
+import sx.blah.discord.handle.obj.IMessage;
+
 public class Restart {
-    public static String run(IMessage message){
+    public static void run(IMessage message){
         if(Perms.checkAdmin(message)){
-         Process ps = Runtime.getRuntime().exec(new String[] {"java", "-jar", "droidbot2.jar"});
-         return "Reboot in progress.";
-         System.exit(0);
+         try {
+            Process ps = Runtime.getRuntime().exec(new String[] {"java", "-jar", "droidbot2.jar"});
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
-        else{
-            return "You do not have the perms to run this command. If you would like this bot to be restarted, please ask the owner of this server or owner of this bot to restart it.";
+         Message.sendMessage(message.getChannel(),"Reboot in progress.");
+         System.exit(0);
         }
     }
 }
