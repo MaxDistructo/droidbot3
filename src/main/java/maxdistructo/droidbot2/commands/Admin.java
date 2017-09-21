@@ -19,6 +19,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.NumberFormat;
 
+import static maxdistructo.droidbot2.BaseBot.client;
+
 public class Admin {
     public static String addMod(IMessage message, IUser mentioned){
         if(message.getAuthor() == message.getGuild().getOwner() || message.getAuthor().getLongID() == 228111371965956099L){
@@ -81,7 +83,7 @@ public class Admin {
     }
     public static String setBotAbuser(Object[] args, IMessage message, IUser mentioned){ //!@admin botabuse <@User> days reason
         Roles.applyBotAbuser(message,mentioned);
-        Message.sendDM(mentioned,"You have been banned from using " + BaseBot.client.getOurUser().mention(true) + " because of " + args[4]);
+        Message.sendDM(mentioned,"You have been banned from using " + client.getOurUser().mention(true) + " because of " + args[4]);
         try {
             Thread.sleep(86400000 * Config.converToInt(args[3]));
         } catch (InterruptedException e) {
@@ -99,15 +101,15 @@ public class Admin {
             i++;
         }
         System.out.println("End making new string.");
-        BaseBot.client.changeUsername(makeNewString);
+        client.changeUsername(makeNewString);
         return "Name successfully set to :" + makeNewString;
     }
     public static String setProfilePic(Object[] args){
-        BaseBot.client.changeAvatar(Image.forUrl((String)args[2],(String)args[3]));
+        client.changeAvatar(Image.forUrl((String)args[2],(String)args[3]));
         return "Changed Profile Picture Sucessfully.";
     }
     public static String leaveGuild(Object[] args){// !admin leaveGuild <GuildLongID>
-        IGuild guild = BaseBot.client.getGuildByID(Config.convertToLong(args[2]));
+        IGuild guild = client.getGuildByID(Config.convertToLong(args[2]));
         guild.leave();
         return "Sucessfully left \"" + guild.getName() + "\"";
     }
@@ -127,6 +129,14 @@ public class Admin {
         Roles.changeRolePerm(message, (String) args[2], formated);
         return "Sucessfully edited role perms.";
 
+    }
+    public static void permFix(IMessage message){
+        IGuild guild = message.getGuild();
+        IUser guildOwner = guild.getOwner();
+        String name = client.getApplicationName();
+        guild.leave();
+        Message.sendDM(guildOwner, "The permissions of " + name + " have been broke in someway. Your guild's data that is stored on the bot has not been affected. Please use the following link to re-add " + name + " to your server. https://discordapp.com/oauth2/authorize?client_id=315313967759097857&scope=bot&permissions=1010035777");
+        Message.sendDM(client.getApplicationOwner(), client.getApplicationName() + " was removed from guild " + guild + " in the process of a guild perm reset.");
     }
 
 

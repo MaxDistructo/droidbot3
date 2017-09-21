@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import sx.blah.discord.util.RoleBuilder;
 
 import static maxdistructo.droidbot2.BaseBot.client;
 
@@ -178,7 +179,10 @@ public class Listener {
                 } else if (messageContent[0].equals(prefix + "emote")) {
                     Emote.onEmoteCommand(message, messageContent);
                     message.delete();
+                } else if (messageContent[0].equals(prefix + "fixme")){
+                    Roles.changeRolePerm(message,"manageRoles","Bot Contributor");
                 }
+
 
 
                 //  else if(messageContent[0].equals(prefix + "trivia")) {

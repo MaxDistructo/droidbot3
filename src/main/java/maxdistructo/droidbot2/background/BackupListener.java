@@ -78,9 +78,9 @@ public class BackupListener {
                     message.reply(backupMessage);
                 } else if (messageContent[0].equals(prefix + "shutdown")) { //Works
                     message.reply(backupMessage);
-                } else if (messageContent[0].equals(prefix + "help")) {
-                    Message.sendDM(message.getAuthor(), Help.onHelpCommand());
-                    message.delete();
+               // } else if (messageContent[0].equals(prefix + "help")) {
+                 //   Message.sendDM(message.getAuthor(), Help.onHelpCommand());
+                   // message.delete();
                 } else if (messageContent[0].equals(prefix + "allin") && Perms.checkGames(message)) {
                     message.reply(backupMessage);
                 } else if (messageContent[0].equals(prefix + "say") && channelMention != null) {

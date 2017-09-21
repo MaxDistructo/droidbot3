@@ -11,7 +11,7 @@ public class Reminder {
         String reminder = null;
         int i = 2;
         while(i < args.length){
-            if(i == args.length){
+            if(i == args.length - 1){
                 reminder = reminder + args[i];
                 }
                 else{

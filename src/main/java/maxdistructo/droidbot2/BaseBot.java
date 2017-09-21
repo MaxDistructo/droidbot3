@@ -16,9 +16,9 @@ import javax.security.auth.login.LoginException;
 
 public class BaseBot {
     public static IDiscordClient client;
-    public static JDA jda;
+    //public static JDA jda;
     public final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-    public final static String version = "2.0.1";
+    public final static String version = "2.0.3_BETA";
     public final static Listener listener = new Listener();
     public final static BackupListener bl = new BackupListener();
     public final static String changeLog = "```Markdown \n + Upon Backup, the bot will lock you out of all commands that will modify files involved in the backup.";
@@ -26,11 +26,11 @@ public class BaseBot {
     public static void main(String[] args){
         LOGGER.setLevel(Level.INFO);
         String token = Config.readToken();
-        try {
+       /* try {
             jda = new JDABuilder(AccountType.BOT).setToken(token).buildBlocking();
         } catch (LoginException | InterruptedException | RateLimitedException e) {
             e.printStackTrace();
-        }
+        }*/
         client = Client.createClient(token);
         LOGGER.info("Client Created");
         client.getDispatcher().registerListener(new AudioMain());

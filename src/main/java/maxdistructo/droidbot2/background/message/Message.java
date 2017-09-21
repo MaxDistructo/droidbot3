@@ -12,7 +12,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
 
-import static maxdistructo.droidbot2.BaseBot.jda;
+//import static maxdistructo.droidbot2.BaseBot.jda;
 
 public class Message {
     public IPrivateChannel channel;
@@ -20,11 +20,14 @@ public class Message {
     public static EmbedObject simpleEmbed(IUser user, String title, String description, IMessage message){
         EmbedBuilder builder = new EmbedBuilder();
         String authorAvatar = user.getAvatarURL();
-        Guild guild = jda.getGuildById(message.getGuild().getLongID());
-        Member member = guild.getMemberById(user.getLongID());
-        Color color = member.getColor();
-        String guildImage = guild.getIconUrl();
+        IGuild guild = message.getGuild();
+        //Guild guild = jda.getGuildById(message.getGuild().getLongID());
+        //Member member = guild.getMemberById(user.getLongID());
+        //Color color = member.getColor();
+        String guildImage = guild.getIconURL();
+        //String guildImage = guild.getIconUrl();
         String guildName = guild.getName();
+        //String guildName = guild.getName();
 
 
         //builder.appendField(title1, content1, true);
@@ -44,7 +47,7 @@ public class Message {
 
         builder.withFooterIcon(guildImage);
         builder.withFooterText(guildName);
-        builder.withColor(color);
+       // builder.withColor(color);
        // builder.withFooterIcon("http://i.imgur.com/TELh8OT.png");
         //builder.withThumbnail("http://i.imgur.com/7heQOCt.png");
 

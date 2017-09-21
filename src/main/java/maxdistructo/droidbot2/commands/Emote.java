@@ -13,7 +13,7 @@ public class Emote {
     try{
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
-        Message.sendMessage(message.getChannel(), new File(s + "/droidbot2/config/emotes/" + args[1] + ".png"));
+        Message.sendMessage(message.getChannel(), new File(s + "/droidbot/config/emotes/" + args[1] + ".png"));
     }
     catch(Exception e){
         Message.sendMessage(message.getChannel(), "Command Error \n Common Causes \n - Emote Not Found (You entered an Invalid Emote Name) \n - Bot Does Not Have perms to upload files.");
