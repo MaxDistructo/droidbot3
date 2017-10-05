@@ -1,5 +1,7 @@
 package maxdistructo.droidbot2;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,10 +20,12 @@ public class BaseBot {
     public static IDiscordClient client;
     //public static JDA jda;
     public final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-    public final static String version = "2.0.3_BETA";
+    public final static String version = "2.0.3";
     public final static Listener listener = new Listener();
     public final static BackupListener bl = new BackupListener();
-    public final static String changeLog = "```Markdown \n + Upon Backup, the bot will lock you out of all commands that will modify files involved in the backup.";
+    public final static String changeLog = "";
+    private final static Path currentRelativePath = Paths.get("");
+    public final static String s = currentRelativePath.toAbsolutePath().toString();
 
     public static void main(String[] args){
         LOGGER.setLevel(Level.INFO);
@@ -44,12 +48,8 @@ public class BaseBot {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            try{
                 ZIPBackup.startBackup();
-            }
-            catch(Exception e){
 
-            }
 
         }
         while (client.isLoggedIn());

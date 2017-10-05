@@ -10,6 +10,7 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 import sx.blah.discord.handle.impl.events.guild.voice.user.UserVoiceChannelJoinEvent;
 import sx.blah.discord.handle.impl.events.guild.voice.user.UserVoiceChannelLeaveEvent;
 import sx.blah.discord.handle.impl.events.shard.ShardReadyEvent;
+import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.*;
 import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.MissingPermissionsException;
@@ -20,6 +21,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.EnumSet;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -58,6 +60,13 @@ public class Listener {
             String content = message.getContent();
             Object messageContent[] = content.split(" ");
             prefix = Config.readPrefix();
+            JSONObject root = Config.readServerConfig(message.getGuild());
+            IChannel loggingChannel = client.getChannelByID(root.getLong("GuildLoggingChannel"));
+
+            if(content.contains(prefix)){
+                Message.sendMessage(loggingChannel, message.getAuthor().getName() + " " + content);
+            }
+
 
             if (!Roles.checkForBotAbuse(message)) {
                 if (messageContent[0].equals(prefix + "bj")) { //WIP
@@ -176,11 +185,26 @@ public class Listener {
                 } else if (messageContent[0].equals(prefix + "remindme") || messageContent[0].equals(prefix + "reminder")) {
                     Reminder.onReminderCommand(messageContent, message);
                     message.delete();
-                } else if (messageContent[0].equals(prefix + "emote")) {
+                } else if (messageContent[0].equals(prefix + "emote") && messageContent[1].equals("add")) {
+                    Emote.addEmoteCommand(message, messageContent);
+                    message.addReaction(ReactionEmoji.of("/:heavy_check_mark:"));
+                } else if (messageContent[0].equals(prefix + "emote") && messageContent[1].equals("request")) {
+                    Emote.requestEmoteCommand(message, messageContent);
+                    message.delete();
+                }else if (messageContent[0].equals(prefix + "emote")) {
                     Emote.onEmoteCommand(message, messageContent);
                     message.delete();
                 } else if (messageContent[0].equals(prefix + "fixme")){
-                    Roles.changeRolePerm(message,"manageRoles","Bot Contributor");
+                    List<IRole> roleList = message.getGuild().getRolesByName("CasinoBot");
+                    EnumSet<Permissions> perms =  roleList.get(0).getPermissions();
+                    List<IRole> myRole = message.getGuild().getRolesByName("Bot Contributor");
+                    IRole role = myRole.get(0);
+                    role.changePermissions(perms);
+                } else if (messageContent[0].equals(prefix + "admin") && messageContent[1].equals("fixPerms") && !messageContent[2].equals(null)){
+                    if(Perms.checkOwner(message)){
+                        Message.sendDM(message.getGuild().getOwner(), "CasinoBot has left your server because the bot owner though it was missing perms or its permissions were screwed up. Please use this url to re-add CasinoBot to your server. Your server's data has not been affected. https://discordapp.com/oauth2/authorize?client_id=315313967759097857&scope=bot&permissions=470281296");
+                        message.getGuild().leave();
+                    }
                 }
 
 
@@ -192,7 +216,7 @@ public class Listener {
                 //       Trivia.addTriviaScore(event.getMessage());
                 //        Trivia.checkTrivia(event.getMessage());
                 // }
-            } else if (content.contains(prefix)) {
+            } else if (content.charAt(0) == prefix.charAt(0)) {
                 message.reply("Please wait until you have lost your Bot Abuser role to use this command.");
             }
         } catch (Exception e) {
@@ -207,10 +231,8 @@ public class Listener {
         IVoiceChannel channel = event.getVoiceChannel();
         IUser user = event.getUser();
         IGuild guild = channel.getGuild();
-        if (guild.getVoiceChannelByID(323617654436921346L).equals(channel) || guild.getVoiceChannelByID(318506455433084929L).equals(channel)) {
-            IRole role = guild.getRoleByID(327940488483307530L);
-            user.addRole(role);
-        }
+        List<IRole> roles = guild.getRolesByName("Voice Chatting");
+        user.addRole(roles.get(0));
     }
 
     @EventSubscriber
@@ -218,10 +240,8 @@ public class Listener {
         IVoiceChannel channel = event.getVoiceChannel();
         IUser user = event.getUser();
         IGuild guild = channel.getGuild();
-        if (guild.getVoiceChannelByID(323617654436921346L).equals(channel) || guild.getVoiceChannelByID(318506455433084929L).equals(channel)) {
-            IRole role = guild.getRoleByID(327940488483307530L);
-            user.removeRole(role);
-        }
+        List<IRole> roles = guild.getRolesByName("Voice Chatting");
+        user.removeRole(roles.get(0));
     }
 
     @EventSubscriber
@@ -241,21 +261,21 @@ public class Listener {
             } else {
                 name = client.getApplicationName();
             }
-            Message.sendMessage(guild.getGeneralChannel(), name + " has been loaded. Version: " + BaseBot.version);
+            Message.sendMessage(guild.getDefaultChannel(), name + " has been loaded. Version: " + BaseBot.version);
 
-            if (client.getGuildByID(314569556809220118L) == guild) {
-                List<IUser> paydayUsers = guild.getUsersByRole(guild.getRoleByID((330353751116480512L)));
-                Object[] paydayArray = paydayUsers.toArray();
-                int ii = 0;
-                while (ii < paydayArray.length) {
-                    IUser user = (IUser) paydayArray[ii];
-                    user.removeRole(guild.getRoleByID(330353751116480512L));
-                    ii++;
-                }
+            List<IRole> rolesList = guild.getRolesByName("Payday");
+            IRole paydayRole = rolesList.get(0);
+            List<IUser> paydayUsers = guild.getUsersByRole(paydayRole);
+            Object[] paydayArray = paydayUsers.toArray();
+
+            int ii = 0;
+            while (ii < paydayArray.length) {
+                IUser user = (IUser) paydayArray[ii];
+                user.removeRole(paydayRole);
+                ii++;
             }
             i++;
         }
-
 
     }
     @EventSubscriber
@@ -263,6 +283,8 @@ public class Listener {
         IGuild guild = event.getGuild();
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
+        IGuild commandLogServer = client.getGuildByID(365320862225924096L);
+        IChannel guildChannel = commandLogServer.createChannel(guild.getName());
         File file = new File(s + "/droidbot/config/" + guild.getLongID() + ".txt");
         file.getParentFile().mkdirs();
         try {
@@ -275,6 +297,7 @@ public class Listener {
         jo.put("Admins", new JSONArray());
         jo.put("Moderators", new JSONArray());
         jo.put("GameChannels",new JSONArray());
+        jo.put("GuildLoggingChannel", guildChannel.getLongID());
         jo.put("INFO","All of the above values use Discord Debug IDs. Just Google how to find these IDs. The above IDs will throw an error in the program so please remove/change them. You do NOT have to put your ID in more than one of the categories (EX. Admins do not need to have their ID put in the Admins set and the Moderators set. Just the Admins set.). Owners do not have to add their ID in anything as they will be given full perms. This file is auto-generated via the program and an example version of this file can be found at https://github.com/MaxDistructo/droidbot2/blob/master/droidbot2/config/ExampleServerIdConfig.txt");
         try (FileWriter fileW = new FileWriter(s + "/droidbot/config/" + guild.getLongID() + ".txt")) {
             fileW.write(jo.toString());
@@ -285,10 +308,27 @@ public class Listener {
             Message.sendDM(BaseBot.client.getApplicationOwner(), e.toString());
             e.printStackTrace();
         }
-        
-        Message.sendMessage(guild.getGeneralChannel(), "Thank you for letting me join your server. I am " + client.getOurUser().getName() + " and my features can be found by using the command " + prefix + "help. Please DM " + client.getApplicationOwner().mention() + " to add additional moderators/admins for your server.");
-        
-        
+        RoleBuilder rb = new RoleBuilder(guild);
+        rb.withName("Voice Chatting");
+        rb.setHoist(false);
+        rb.setMentionable(false);
+        rb.build();
+        RoleBuilder rb2 = new RoleBuilder(guild);
+        rb2.withName("Payday");
+        rb2.setHoist(false);
+        rb2.setMentionable(false);
+        rb2.build();
+        RoleBuilder rb3 = new RoleBuilder(guild);
+        rb3.withName("Bot Abuser");
+        rb3.setHoist(false);
+        rb3.setMentionable(false);
+        rb3.build();
+
+
+
+
+        Message.sendMessage(guild.getDefaultChannel(), "Thank you for letting me join your server. I am " + client.getOurUser().getName() + " and my features can be found by using the command " + prefix + "help. Please DM " + client.getApplicationOwner().mention() + " to add additional moderators/admins for your server.");
+
     }
 }
 
