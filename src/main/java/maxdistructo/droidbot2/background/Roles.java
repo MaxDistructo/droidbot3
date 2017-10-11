@@ -5,6 +5,7 @@ import sx.blah.discord.handle.obj.*;
 
 import java.util.EnumSet;
 import java.util.List;
+import java.awt.*;
 
 public class Roles {
     public static boolean checkForBotAbuse(IMessage message){
@@ -138,6 +139,16 @@ public class Roles {
         roleNew.changePermissions(set);
 
 
+        }
+        public static void changeColor(IRole role, String color){
+            Color hex;
+            if(color.contains("#")){
+                hex = Color.decode(color);
+            }
+            else{
+                hex = Color.decode("#" + color);
+            }
+            role.changeColor(hex);
         }
     }
 

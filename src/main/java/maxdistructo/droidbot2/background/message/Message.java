@@ -1,8 +1,6 @@
 package maxdistructo.droidbot2.background.message;
 
 import maxdistructo.droidbot2.BaseBot;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Member;
 import sx.blah.discord.api.internal.json.objects.EmbedObject;
 import sx.blah.discord.handle.obj.*;
 import sx.blah.discord.util.*;
@@ -12,7 +10,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
 
-//import static maxdistructo.droidbot2.BaseBot.jda;
+import static maxdistructo.droidbot2.BaseBot.jda;
 
 public class Message {
     public IPrivateChannel channel;
@@ -21,9 +19,9 @@ public class Message {
         EmbedBuilder builder = new EmbedBuilder();
         String authorAvatar = user.getAvatarURL();
         IGuild guild = message.getGuild();
-        //Guild guild = jda.getGuildById(message.getGuild().getLongID());
-        //Member member = guild.getMemberById(user.getLongID());
-        //Color color = member.getColor();
+        //Guild guildJDA = jda.getGuildById(message.getGuild().getLongID());
+        //Member member = guildJDA.getMemberById(user.getLongID());
+        Color color = user.getColorForGuild(message.getGuild());
         String guildImage = guild.getIconURL();
         //String guildImage = guild.getIconUrl();
         String guildName = guild.getName();
@@ -47,7 +45,7 @@ public class Message {
 
         builder.withFooterIcon(guildImage);
         builder.withFooterText(guildName);
-       // builder.withColor(color);
+        builder.withColor(color);
        // builder.withFooterIcon("http://i.imgur.com/TELh8OT.png");
         //builder.withThumbnail("http://i.imgur.com/7heQOCt.png");
 
@@ -69,6 +67,18 @@ public class Message {
             e.printStackTrace();
         }
     }
+    public static void react(IMessage message, Emote emote){
+        message.addReaction(emote);
+    }
+    public static void react(IMessage message, IEmote emote){
+        message.react(ReactionEmoji.of(emote));
+    }
+    public static void react(IMessage message, String emote){
+        message.react(ReactionEmoji.of(emote));
+    }
+    public static void react(IMessage message, IGuild guild, String emote){
+        message.react(ReactionEmoji.of(emote, guild.getLongID()));
+    }
     public static void sendMessage(IChannel channel, String content){
         try {
             new MessageBuilder(BaseBot.client).withChannel(channel).withContent(content).build();
@@ -83,9 +93,9 @@ public class Message {
         try {
             new MessageBuilder(BaseBot.client).withChannel(channel).withFile(file).build();
         } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
 }
+
 }

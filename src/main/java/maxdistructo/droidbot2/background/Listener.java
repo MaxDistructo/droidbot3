@@ -261,7 +261,7 @@ public class Listener {
             } else {
                 name = client.getApplicationName();
             }
-            Message.sendMessage(guild.getDefaultChannel(), name + " has been loaded. Version: " + BaseBot.version);
+            //Message.sendMessage(guild.getDefaultChannel(), name + " has been loaded. Version: " + BaseBot.version);
 
             List<IRole> rolesList = guild.getRolesByName("Payday");
             IRole paydayRole = rolesList.get(0);

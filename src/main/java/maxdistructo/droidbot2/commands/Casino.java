@@ -164,10 +164,10 @@ public class Casino{
     public static EmbedObject onCasinoInfo(IMessage message){
         Config.readCasino(message);
         EmbedBuilder builder = new EmbedBuilder();
-        //Member member = Compatability.convertToJDA(message.getGuild()).getMember(Compatability.convertToJDA(message.getAuthor()));
+        Member member = Compatability.convertToJDA(message.getGuild()).getMember(Compatability.convertToJDA(message.getAuthor()));
         builder.withTitle("Casino");
         builder.withDesc(".");
-        //builder.withColor(member.getColor());
+        builder.withColor(message.getAuthor().getColorForGuild(message.getGuild()));
         builder.withAuthorName(message.getAuthor().getName() + "#" + message.getAuthor().getDiscriminator());
         builder.withAuthorIcon(message.getAuthor().getAvatarURL());
         builder.withTimestamp(LocalDateTime.now());
@@ -181,8 +181,8 @@ public class Casino{
     public static EmbedObject onCasinoInfo(IMessage message, IUser mentioned){
         Config.readCasino(mentioned, message.getGuild());
         EmbedBuilder builder = new EmbedBuilder();
-        //Member member = Compatability.convertToJDA(message.getGuild()).getMember(Compatability.convertToJDA(message.getAuthor()));
-        //builder.withColor(member.getColor());
+        Member member = Compatability.convertToJDA(message.getGuild()).getMember(Compatability.convertToJDA(message.getAuthor()));
+        builder.withColor(message.getAuthor().getColorForGuild(message.getGuild());
         builder.withAuthorName(message.getAuthor().getName() + "#" + message.getAuthor().getDiscriminator());
         builder.withAuthorIcon(message.getAuthor().getAvatarURL());
         builder.withTimestamp(LocalDateTime.now(ZoneId.systemDefault()));

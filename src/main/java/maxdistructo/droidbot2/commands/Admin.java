@@ -1,8 +1,6 @@
 package maxdistructo.droidbot2.commands;
 
 
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import maxdistructo.droidbot2.BaseBot;
 import maxdistructo.droidbot2.background.Config;
 import maxdistructo.droidbot2.background.Roles;
 import maxdistructo.droidbot2.background.message.Message;
@@ -25,9 +23,9 @@ public class Admin {
     public static String addMod(IMessage message, IUser mentioned){
         if(message.getAuthor() == message.getGuild().getOwner() || message.getAuthor().getLongID() == 228111371965956099L){
                JSONObject root = Config.readServerConfig(message.getGuild());
-               JSONArray list = new JSONArray();
+               JSONArray list = root.getJSONArray("Moderators");
                list.put(mentioned.getLongID());
-               root.append("Moderators", list);
+               root.put("Moderators", list);
             Path currentRelativePath = Paths.get("");
             String s = currentRelativePath.toAbsolutePath().toString();
             try (FileWriter file = new FileWriter(s + "/droidbot/config/" + message.getGuild().getLongID() + ".txt")) {

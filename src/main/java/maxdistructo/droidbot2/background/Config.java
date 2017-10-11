@@ -211,7 +211,7 @@ public static String triviaReadLine(String file, int line){
            tokener = new JSONTokener(uri.toURL().openStream());
            System.out.println("Successfully read file config.txt");
        } catch (IOException e) {
-           Message.sendDM(BaseBot.client.getApplicationOwner(), e.toString());
+           //Message.sendDM(BaseBot.client.getApplicationOwner(), e.toString());
            e.printStackTrace();
        }
        JSONObject root = new JSONObject(tokener);
@@ -225,6 +225,7 @@ public static String triviaReadLine(String file, int line){
         File file = new File (s + "/droidbot/config.txt");
         URI uri = file.toURI();
         JSONTokener tokener = null;
+        System.out.println("Reading from " + file);
         try {
             tokener = new JSONTokener(uri.toURL().openStream());
         } catch (IOException e) {

@@ -8,8 +8,6 @@ import net.dv8tion.jda.core.entities.Role;
 import sx.blah.discord.handle.obj.*;
 import sx.blah.discord.util.PermissionUtils;
 
-//import static maxdistructo.droidbot2.BaseBot.jda;
-
 public class Perms {
     public static boolean checkMod(IMessage message){
         IUser author = message.getAuthor();

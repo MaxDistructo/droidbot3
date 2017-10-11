@@ -18,7 +18,7 @@ import javax.security.auth.login.LoginException;
 
 public class BaseBot {
     public static IDiscordClient client;
-    //public static JDA jda;
+    public static JDA jda;
     public final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     public final static String version = "2.0.3";
     public final static Listener listener = new Listener();
@@ -30,11 +30,11 @@ public class BaseBot {
     public static void main(String[] args){
         LOGGER.setLevel(Level.INFO);
         String token = Config.readToken();
-       /* try {
+        try {
             jda = new JDABuilder(AccountType.BOT).setToken(token).buildBlocking();
         } catch (LoginException | InterruptedException | RateLimitedException e) {
             e.printStackTrace();
-        }*/
+        }
         client = Client.createClient(token);
         LOGGER.info("Client Created");
         client.getDispatcher().registerListener(new AudioMain());
