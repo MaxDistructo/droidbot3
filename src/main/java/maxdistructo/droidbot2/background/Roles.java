@@ -51,6 +51,20 @@ public class Roles {
         IRole role = message.getGuild().getRoleByID(330353751116480512L);
         mentioned.removeRole(role);
     }
+    public static IRole getRole(IMessage message, String role){
+        List<IRole> roles = message.getGuild().getRolesByName(role);
+        if(roles.size() != 0){
+            return roles.get(0);
+        }
+        else{
+            return null;
+        }
+    }
+    public static void copyRolePerms(IRole copy, IRole paste){
+        EnumSet<Permissions> permissions = copy.getPermissions();
+        paste.getPermissions().addAll(permissions);
+        paste.changePermissions(permissions);
+    }
     public static void applyRole(IMessage message, IUser mentioned, String role){
         List<IRole> roleList = message.getGuild().getRolesByName(role);
         if(roleList == null){

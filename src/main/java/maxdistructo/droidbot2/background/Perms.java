@@ -1,10 +1,7 @@
 package maxdistructo.droidbot2.background;
 
-import java.util.List;
 
 import maxdistructo.droidbot2.BaseBot;
-import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.Role;
 import sx.blah.discord.handle.obj.*;
 import sx.blah.discord.util.PermissionUtils;
 
@@ -35,6 +32,12 @@ public class Perms {
             i++;
         }
         return false;
+    }
+
+    public static boolean checkOwner_Guild(IMessage message){
+        IUser author = message.getAuthor();
+
+        return author.getLongID() == BaseBot.client.getApplicationOwner().getLongID() || author.getLongID() == message.getGuild().getOwnerLongID();
     }
     public static boolean checkOwner(IMessage message){
        IUser author = message.getAuthor();

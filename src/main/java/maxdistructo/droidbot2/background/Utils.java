@@ -36,4 +36,20 @@ public class Utils {
         System.exit(0);
     }
 
+    public static String makeNewString(Object[] input, int startAt){
+        StringBuilder stringBuilder = new StringBuilder();
+        int i = startAt;
+        while (i < input.length) {
+            if(i + 1 > input.length) {
+                stringBuilder.append(input[i]);
+            }
+            else{
+                stringBuilder.append(input[i]);
+                stringBuilder.append("");
+            }
+            i++;
+        }
+        return stringBuilder.toString();
+    }
+
 }

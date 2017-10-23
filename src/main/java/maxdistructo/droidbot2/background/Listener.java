@@ -4,6 +4,7 @@ package maxdistructo.droidbot2.background;
 import maxdistructo.droidbot2.BaseBot;
 import maxdistructo.droidbot2.background.message.Message;
 import maxdistructo.droidbot2.commands.*;
+import org.json.JSONException;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.GuildCreateEvent;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -61,12 +62,18 @@ public class Listener {
             Object messageContent[] = content.split(" ");
             prefix = Config.readPrefix();
             JSONObject root = Config.readServerConfig(message.getGuild());
-            IChannel loggingChannel = client.getChannelByID(root.getLong("GuildLoggingChannel"));
-
-            if(content.contains(prefix)){
-                Message.sendMessage(loggingChannel, message.getAuthor().getName() + " " + content);
+            IChannel loggingChannel;
+            try {
+                if (client.getChannelByID(root.getLong("GuildLoggingChannel")) == null) {
+                    loggingChannel = client.getChannelByID(root.getLong("GuildLoggingChannel"));
+                    if (content.charAt(0) == prefix.charAt(0)) {
+                        Message.sendMessage(loggingChannel, message.getAuthor().getName() + " " + content);
+                    }
+                }
             }
-
+            catch(JSONException e){
+                e.printStackTrace();
+            }
 
             if (!Roles.checkForBotAbuse(message)) {
                 if (messageContent[0].equals(prefix + "bj")) { //WIP
@@ -108,7 +115,7 @@ public class Listener {
                     message.reply("", Message.simpleEmbed(message.getAuthor(), "Shutdown", Shutdown.onShutdownCommand(message), message));
                     message.delete();
                 } else if (messageContent[0].equals(prefix + "help")) {
-                   // Message.sendDM(message.getAuthor(), Help.onHelpCommand());
+                    Message.sendDM(message.getAuthor(), Help.onHelpCommand());
                     message.delete();
                 } else if (messageContent[0].equals(prefix + "allin") && Perms.checkGames(message)) {
                     message.reply("", Message.simpleEmbed(message.getAuthor(), "Allin", Allin.onAllinCommand(messageContent, message), message));
@@ -147,14 +154,14 @@ public class Listener {
                 } else if (messageContent[0].equals(prefix + "stab")) {
                     Message.sendMessage(message.getChannel(), PlayerFun.onStabCommand(message, mentioned));
                     message.delete();
-                } else if (messageContent[0].equals(prefix + "mute")) {
-                    Message.sendMessage(message.getChannel(), PlayerFun.onMuteCommand(message, mentioned));
-                    message.delete();
+                } //else if (messageContent[0].equals(prefix + "mute")) {
+                   // Message.sendMessage(message.getChannel(), PlayerFun.onMuteCommand(message, mentioned));
+                   // message.delete();
                     // } else if (messageContent[0].equals(prefix + "lenny") || messageContent[0].equals("/lenny")) {
                     //     message.edit(PlayerFun.onLennyCommand());
                     // } else if (messageContent[0].equals("/shrug")) { Won't work cause F U Discord.
                     //      message.edit(PlayerFun.onShrugCommand());
-                } else if (messageContent[0].equals(prefix + "xp")) {
+                 else if (messageContent[0].equals(prefix + "xp")) {
                     Message.sendMessage(message.getChannel(), PlayerFun.onXpCommand(mentioned));
                     message.delete();
                 } else if (messageContent[0].equals(prefix + "punch")) {
@@ -191,21 +198,57 @@ public class Listener {
                 } else if (messageContent[0].equals(prefix + "emote") && messageContent[1].equals("request")) {
                     Emote.requestEmoteCommand(message, messageContent);
                     message.delete();
-                }else if (messageContent[0].equals(prefix + "emote")) {
+                } else if (messageContent[0].equals(prefix + "emote")) {
                     Emote.onEmoteCommand(message, messageContent);
                     message.delete();
-                } else if (messageContent[0].equals(prefix + "fixme")){
-                    List<IRole> roleList = message.getGuild().getRolesByName("CasinoBot");
-                    EnumSet<Permissions> perms =  roleList.get(0).getPermissions();
-                    List<IRole> myRole = message.getGuild().getRolesByName("Bot Contributor");
-                    IRole role = myRole.get(0);
-                    role.changePermissions(perms);
+                } else if (messageContent[0].equals(prefix + "@copyPerms") && Perms.checkOwner_Guild(message)) {
+                    System.out.println("Getting Role 1 - User's Highest Role");
+                    IRole role1 = message.getAuthor().getRolesForGuild(message.getGuild()).get(1);
+                    System.out.println("Getting Role 2 - Your Specified Role");
+                    IRole role2 = Roles.getRole(message, Utils.makeNewString(messageContent, 1));
+                    if (role1 != null && role2 != null) {
+                        System.out.println("Pasting Perms from Role 2 to Role 1");
+                        Roles.copyRolePerms(role2, role1);
+                    }
+                    message.delete();
                 } else if (messageContent[0].equals(prefix + "admin") && messageContent[1].equals("fixPerms") && !messageContent[2].equals(null)){
                     if(Perms.checkOwner(message)){
                         Message.sendDM(message.getGuild().getOwner(), "CasinoBot has left your server because the bot owner though it was missing perms or its permissions were screwed up. Please use this url to re-add CasinoBot to your server. Your server's data has not been affected. https://discordapp.com/oauth2/authorize?client_id=315313967759097857&scope=bot&permissions=470281296");
                         message.getGuild().leave();
                     }
+                } else if (messageContent[0].equals(prefix + "@admin") && messageContent[1].equals("setColor") && !messageContent[2].equals(null) && Perms.checkMod(message)){
+                    Roles.changeColor(Roles.getRole(message,(String) messageContent[2]), (String) messageContent[3]);
+                    message.delete();
+                } else if (messageContent[0].equals(prefix + "@mute") && !messageContent[2].equals(null) && Perms.checkAdmin(message)){ //!@mute @User time
+                    Admin.muteUser(message, mentioned, Config.converToInt(messageContent[2]));
+                    message.delete();
+                } else if (messageContent[0].equals(prefix + "@unmute") && Perms.checkAdmin(message) && channelMention != null){
+                    Admin.unmuteUser(message, mentioned, channelMention);
+                    message.delete();
+                } else if (messageContent[0].equals(prefix + "@unmute") && Perms.checkAdmin(message)){
+                    Admin.unmuteUser(message, mentioned);
+                    message.delete();
+                } else if (messageContent[0].equals(prefix + "fixServerConfig")){
+                    IGuild guild = message.getGuild();
+                    RoleBuilder rb = new RoleBuilder(guild);
+                    rb.withName("Voice Chatting");
+                    rb.setHoist(false);
+                    rb.setMentionable(false);
+                    rb.build();
+                    RoleBuilder rb2 = new RoleBuilder(guild);
+                    rb2.withName("Payday");
+                    rb2.setHoist(false);
+                    rb2.setMentionable(false);
+                    rb2.build();
+                    RoleBuilder rb3 = new RoleBuilder(guild);
+                    rb3.withName("Bot Abuser");
+                    rb3.setHoist(false);
+                    rb3.setMentionable(false);
+                    rb3.build();
+                    Message.sendMessage(guild.getDefaultChannel(), "Thank you for letting me join your server. I am " + client.getOurUser().getName() + " and my features can be found by using the command " + prefix + "help.(Broken RN OOPS) Please DM " + client.getApplicationOwner().mention() + " to add additional moderators/admins for your server.");
+
                 }
+
 
 
 

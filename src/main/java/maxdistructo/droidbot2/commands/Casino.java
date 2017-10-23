@@ -2,33 +2,26 @@ package maxdistructo.droidbot2.commands;
 
 import maxdistructo.droidbot2.background.*;
 import maxdistructo.droidbot2.background.message.Message;
-import net.dv8tion.jda.core.entities.Member;
 import sx.blah.discord.api.internal.json.objects.EmbedObject;
 import sx.blah.discord.handle.obj.*;
 import sx.blah.discord.util.EmbedBuilder;
 
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.SimpleTimeZone;
-import java.util.TimeZone;
-
 
 public class Casino{
     //@Command(aliases = {"/casino" }, description = "Casino Commands.", usage = "/casino [payday|balance]")
-    public static NumberFormat nf = NumberFormat.getInstance();
+    private static NumberFormat nf = NumberFormat.getInstance();
     public static String onCasinoCommand(Object[] args, IMessage message, IUser mentioned) {
         IUser author = message.getAuthor();
 
         if(args[1].equals("join")){
             Config.newCasino(message);
-            return "You have been registered to join Doggo Casino";
+            message.delete();
+            return "You have been registered to join "+ message.getGuild().getName() + " Casino";
         }
+
         else if(args.length == 2){
             if(args[1].equals("payday") && !Roles.checkForPayday(message)){
                 checkMembership(message);
@@ -164,7 +157,6 @@ public class Casino{
     public static EmbedObject onCasinoInfo(IMessage message){
         Config.readCasino(message);
         EmbedBuilder builder = new EmbedBuilder();
-        Member member = Compatability.convertToJDA(message.getGuild()).getMember(Compatability.convertToJDA(message.getAuthor()));
         builder.withTitle("Casino");
         builder.withDesc(".");
         builder.withColor(message.getAuthor().getColorForGuild(message.getGuild()));
@@ -181,8 +173,7 @@ public class Casino{
     public static EmbedObject onCasinoInfo(IMessage message, IUser mentioned){
         Config.readCasino(mentioned, message.getGuild());
         EmbedBuilder builder = new EmbedBuilder();
-        Member member = Compatability.convertToJDA(message.getGuild()).getMember(Compatability.convertToJDA(message.getAuthor()));
-        builder.withColor(message.getAuthor().getColorForGuild(message.getGuild());
+        builder.withColor(message.getAuthor().getColorForGuild(message.getGuild()));
         builder.withAuthorName(message.getAuthor().getName() + "#" + message.getAuthor().getDiscriminator());
         builder.withAuthorIcon(message.getAuthor().getAvatarURL());
         builder.withTimestamp(LocalDateTime.now(ZoneId.systemDefault()));

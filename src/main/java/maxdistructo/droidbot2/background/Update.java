@@ -26,8 +26,11 @@ public class Update {
         System.out.println("Converted JSON file to JSONObject");
         String currentVersion = root.getString("version");
         URL url = null;
+        if(root.getString("releaseChannel").equals("NONE")){
+
+        }
         try {
-            url = new URL("https://maxdistructo.github.io/droidbot2/downloads/latest/" + root.getString("releaseChannel") + "/" + "VERSIONS.json");
+            url = new URL("https://maxdistructo.github.io/droidbot2/downloads/latest/" + root.getString("releaseChannel") + "/" + "VERSION.json");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (JSONException e) {

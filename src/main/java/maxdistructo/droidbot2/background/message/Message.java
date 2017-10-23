@@ -2,6 +2,7 @@ package maxdistructo.droidbot2.background.message;
 
 import maxdistructo.droidbot2.BaseBot;
 import sx.blah.discord.api.internal.json.objects.EmbedObject;
+import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.*;
 import sx.blah.discord.util.*;
 
@@ -10,7 +11,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
 
-import static maxdistructo.droidbot2.BaseBot.jda;
 
 public class Message {
     public IPrivateChannel channel;
@@ -67,17 +67,14 @@ public class Message {
             e.printStackTrace();
         }
     }
-    public static void react(IMessage message, Emote emote){
-        message.addReaction(emote);
-    }
-    public static void react(IMessage message, IEmote emote){
-        message.react(ReactionEmoji.of(emote));
+    public static void react(IMessage message, IEmoji emote){
+        message.addReaction(ReactionEmoji.of(emote));
     }
     public static void react(IMessage message, String emote){
-        message.react(ReactionEmoji.of(emote));
+        message.addReaction(ReactionEmoji.of(emote));
     }
     public static void react(IMessage message, IGuild guild, String emote){
-        message.react(ReactionEmoji.of(emote, guild.getLongID()));
+        message.addReaction(ReactionEmoji.of(emote, guild.getLongID()));
     }
     public static void sendMessage(IChannel channel, String content){
         try {

@@ -1,5 +1,6 @@
 package maxdistructo.droidbot2.commands;
 
+import maxdistructo.droidbot2.BaseBot;
 import maxdistructo.droidbot2.background.Config;
 import maxdistructo.droidbot2.background.Perms;
 import maxdistructo.droidbot2.background.message.Message;
@@ -17,7 +18,7 @@ public class Spam {
         else{
             return "You did not enter enough arguments to run this command.";
         }
-        if(mentioned.isBot() && Perms.checkMod(message)){
+        if(mentioned == BaseBot.client.getOurUser() && !Perms.checkMod(message)){
             spamPlayer = author;
         }
         int i = 0;
