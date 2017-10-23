@@ -167,9 +167,9 @@ public class Listener {
                 } else if (messageContent[0].equals(prefix + "punch")) {
                     Message.sendMessage(message.getChannel(), PlayerFun.onPunchCommand(message, mentioned));
                     message.delete();
-                } else if (messageContent[0].equals(prefix + "@admin") && messageContent[1].equals("addmod") && Perms.checkAdmin(message)) {
+                } else if (messageContent[0].equals(prefix + "@admin") && messageContent[1].equals("addMod") && Perms.checkAdmin(message)) {
                     Message.sendMessage(message.getChannel(), Admin.addMod(message, mentioned));
-                } else if (messageContent[0].equals(prefix + "@admin") && messageContent[1].equals("addadmin") && Perms.checkAdmin(message)) {
+                } else if (messageContent[0].equals(prefix + "@admin") && messageContent[1].equals("addAdmin") && Perms.checkAdmin(message)) {
                     Message.sendMessage(message.getChannel(), Admin.addAdmin(message, mentioned));
                 } else if (messageContent[0].equals(prefix + "@casino") && messageContent[1].equals("balance") && messageContent[2].equals("add") && Config.converToInt(messageContent[4]) != 0 && mentioned != null && Perms.checkAdmin(message)) {
                     Message.sendMessage(message.getChannel(), Admin.addCasinoBalance(messageContent, message, mentioned));
@@ -177,7 +177,7 @@ public class Listener {
                     Message.sendMessage(message.getChannel(), Admin.subtractCasinoBalance(messageContent, message, mentioned));
                 } else if (messageContent[0].equals(prefix + "@casino") && messageContent[1].equals("balance") && messageContent[2].equals("set") && Config.converToInt(messageContent[4]) != 0 && mentioned != null && Perms.checkAdmin(message)) {
                     Message.sendMessage(message.getChannel(), Admin.setCasinoBalance(messageContent, message, mentioned));
-                } else if (messageContent[0].equals(prefix + "@admin") && messageContent[1].equals("botabuse") && Perms.checkAdmin(message)) {
+                } else if (messageContent[0].equals(prefix + "@admin") && messageContent[1].equals("botAbuse") && Perms.checkAdmin(message)) {
                     Message.sendMessage(message.getChannel(), Admin.setBotAbuser(messageContent, message, mentioned));
                 } else if (messageContent[0].equals(prefix + "@admin") && messageContent[1].equals("name") && Perms.checkOwner(message)) {
                     Message.sendMessage(message.getChannel(), Admin.setNickname(messageContent));

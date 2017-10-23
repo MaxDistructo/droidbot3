@@ -2,6 +2,8 @@ package maxdistructo.droidbot2.commands;
 
 import maxdistructo.droidbot2.BaseBot;
 import maxdistructo.droidbot2.background.Listener;
+import maxdistructo.droidbot2.background.message.Message;
+import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IUser;
 
 
@@ -34,5 +36,12 @@ public class Help {
                 Listener.prefix + "stab <@user>: Stabs a user\n"+
                 Listener.prefix + "tnt <@user>: Blow up another user." +
                 Listener.prefix + "xp [@user]: Shows the rules on Tatsu XP system. Can have a user mention to show another user.\n";
+    }
+    public static void onAdminHelpCommand(IMessage message){
+        Message.sendDM(message.getAuthor(),onHelpCommand());
+        String sendMessage = "Admin Commands List for " + BaseBot.client.getOurUser().mention(true) + "\n \n"+
+                Listener.prefix + "@addMod <@User> ";
+        Message.sendDM(message.getAuthor(),sendMessage);
+
     }
 }
