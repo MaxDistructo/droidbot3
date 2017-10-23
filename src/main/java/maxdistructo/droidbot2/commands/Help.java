@@ -40,7 +40,12 @@ public class Help {
     public static void onAdminHelpCommand(IMessage message){
         Message.sendDM(message.getAuthor(),onHelpCommand());
         String sendMessage = "Admin Commands List for " + BaseBot.client.getOurUser().mention(true) + "\n \n"+
-                Listener.prefix + "@addMod <@User> ";
+                Listener.prefix + "@admin addMod <@User>: Adds a user as a Moderator" +
+                Listener.prefix + "@admin addAdmin <@User>: Adds a user as a Administrator"+
+                Listener.prefix + "@casino balance add|remove|set <@User> <balanceChange: Changes a Users Casino balance."+
+                Listener.prefix + "@admin botAbuse <@User>: Marks a user as a bot abuser and denies them access to bot commands." +
+                Listener.prefix + "@admin perms "
+                ;
         Message.sendDM(message.getAuthor(),sendMessage);
 
     }
