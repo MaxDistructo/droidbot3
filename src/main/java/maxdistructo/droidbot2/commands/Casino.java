@@ -95,6 +95,37 @@ public class Casino{
                     payday(message,message.getAuthor());
                     return author.mention(true) + "Your payday is ready!";
                 }
+                else if(Config.MEMBERSHIP.equals(":star:")){
+                    Config.CHIPS += 7500;
+                    Config.writeCasino(message);
+                    Message.sendMessage(message.getChannel(), casinoPayday(message, 7500));
+                    payday(message,message.getAuthor());
+                    return author.mention(true) + "Your payday is ready!";
+                }
+                else if(Config.MEMBERSHIP.equals(":star::star:")){
+                    Config.CHIPS += 9000;
+                    Config.writeCasino(message);
+                    Message.sendMessage(message.getChannel(), casinoPayday(message, 9000));
+                    payday(message,message.getAuthor());
+                    return author.mention(true) + "Your payday is ready!";
+                }
+                else if(Config.MEMBERSHIP.equals(":star::star::star:")){
+                    Config.CHIPS += 9000;
+                    Config.writeCasino(message);
+                    Message.sendMessage(message.getChannel(), casinoPayday(message, 9000));
+                    payday(message, message.getAuthor());
+                    return author.mention(true) + "Your payday is ready!";
+                }
+                else if(Config.MEMBERSHIP.equals(":star::star::star::star:")){
+                    Config.CHIPS += 12000;
+                    Config.writeCasino(message);
+                    Message.sendMessage(message.getChannel(), casinoPayday(message, 12000));
+                    payday(message, message.getAuthor());
+                    return author.mention(true)+ "Your payday is ready!";
+                }
+                else if(Config.MEMBERSHIP.equals(":star::star::star::star::star:")){
+
+                }
                 else{
                     return "Command "+ Listener.prefix +"casino payday has errored. Your balance has not been affected.";
                 }
@@ -139,8 +170,26 @@ public class Casino{
         else if(Config.CHIPS > 800000 && Config.CHIPS < 1000000){
             Config.MEMBERSHIP = "H";
         }
-        else{
+        else if(Config.CHIPS > 1000000 && Config.CHIPS < 1200000){
             Config.MEMBERSHIP = "I";
+        }
+        else if(Config.CHIPS > 1200000 && Config.CHIPS < 1500000){
+            Config.MEMBERSHIP = ":star:";
+        }
+        else if(Config.CHIPS > 1500000 && Config.CHIPS < 1800000){
+            Config.MEMBERSHIP = ":star::star:";
+        }
+        else if(Config.CHIPS > 1800000 && Config.CHIPS < 2100000){
+            Config.MEMBERSHIP = ":star::star::star:";
+        }
+        else if(Config.CHIPS > 2100000 && Config.CHIPS < 2500000){
+            Config.MEMBERSHIP = ":star::star::star::star:";
+        }
+        else if(Config.CHIPS > 2500000 && Config.CHIPS < 2900000){
+            Config.MEMBERSHIP = ":star::star::star::star::star:";
+        }
+        else{
+            Config.MEMBERSHIP = ":crown:";
         }
     }
     private static void payday(IMessage message, IUser mentioned){
@@ -184,6 +233,20 @@ public class Casino{
         builder.appendField("Casino Membership", Config.MEMBERSHIP, false);
 
         return builder.build();
+    }
+    public static EmbedObject casinoPayday(IMessage message, Object payday){
+        EmbedBuilder builder = new EmbedBuilder();
+        builder.withTitle("Casino");
+        builder.withDesc("You have collected your " + nf.format(payday) + " payday");
+        builder.withColor(message.getAuthor().getColorForGuild(message.getGuild()));
+        builder.withAuthorName(message.getAuthor().getName() + "#" + message.getAuthor().getDiscriminator());
+        builder.withAuthorIcon(message.getAuthor().getAvatarURL());
+        builder.withTimestamp(LocalDateTime.now());
+        builder.withFooterIcon(message.getGuild().getIconURL());
+        builder.withFooterText(message.getGuild().getName());
+
+        return builder.build();
+
     }
 
 

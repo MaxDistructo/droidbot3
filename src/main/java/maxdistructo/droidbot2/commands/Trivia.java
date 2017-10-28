@@ -2,9 +2,6 @@ package maxdistructo.droidbot2.commands;
 
 import maxdistructo.droidbot2.BaseBot;
 import maxdistructo.droidbot2.background.Config;
-import maxdistructo.droidbot2.background.Listener;
-import maxdistructo.droidbot2.background.Perms;
-import maxdistructo.droidbot2.background.PlayerScoreList;
 import maxdistructo.droidbot2.background.message.Message;
 import org.json.JSONArray;
 import org.json.JSONObject;

@@ -11,44 +11,36 @@ public class Roles {
     public static boolean checkForBotAbuse(IMessage message){
         IUser user = message.getAuthor();
         List<IRole> rolesList = user.getRolesForGuild(message.getGuild());
-        IRole[] roles = rolesList.toArray(new IRole[rolesList.size()]);
-        int i = 0;
-        while(i < roles.length){
-            if(roles[i].getLongID() == 330346559093080067L){
-                return true;
-            }
-            i++;
-        }
-        return false;
+        List<IRole> guildRoles = message.getGuild().getRolesByName("Bot Abuser");
+        IRole botAbuser = guildRoles.get(0);
+        return rolesList.contains(botAbuser);
     }
     public static boolean checkForPayday(IMessage message){
         IUser user = message.getAuthor();
         List<IRole> rolesList = user.getRolesForGuild(message.getGuild());
-        IRole[] roles = rolesList.toArray(new IRole[rolesList.size()]);
-        int i = 0;
-        while(i < roles.length){
-            if(roles[i].getLongID() == 330353751116480512L){
-                i = roles.length;
-                return true;
-            }
-            i++;
-        }
-        return false;
+        List<IRole> guildRoles = message.getGuild().getRolesByName("Payday");
+        IRole payday = guildRoles.get(0);
+        return rolesList.contains(payday);
     }
     public static void applyBotAbuser(IMessage message, IUser mentioned){
-        IRole role = message.getGuild().getRoleByID(330346559093080067L);
+        List<IRole> guildRoles = message.getGuild().getRolesByName("Bot Abuser");
+        IRole role = guildRoles.get(0);
         mentioned.addRole(role);
     }
     public static void applyPayday(IMessage message, IUser mentioned){
-        IRole role = message.getGuild().getRoleByID(330353751116480512L);
+        IGuild guild = message.getGuild();
+        List<IRole> channelList = guild.getRolesByName("Payday");
+        IRole role = channelList.get(0);
         mentioned.addRole(role);
     }
     public static void removeBotAbuser(IMessage message, IUser mentioned){
-        IRole role = message.getGuild().getRoleByID(330346559093080067L);
+        List<IRole> guildRoles = message.getGuild().getRolesByName("Bot Abuser");
+        IRole role = guildRoles.get(0);
         mentioned.removeRole(role);
     }
     public static void removePayday(IMessage message, IUser mentioned) {
-        IRole role = message.getGuild().getRoleByID(330353751116480512L);
+        List<IRole> guildRoles = message.getGuild().getRolesByName("Payday");
+        IRole role = guildRoles.get(0);
         mentioned.removeRole(role);
     }
     public static IRole getRole(IMessage message, String role){

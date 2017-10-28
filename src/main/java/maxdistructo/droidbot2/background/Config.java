@@ -52,7 +52,7 @@ public class Config{
             System.out.println("Successfully Copied JSON Object to File...");
             System.out.println("\nJSON Object: " + newUser);
         } catch (IOException e) {
-            BaseBot.LOGGER.warning("Config.newCasino Error.");
+            BaseBot.LOGGER.warn("Config.newCasino Error.");
             Message.sendDM(BaseBot.client.getApplicationOwner(), e.toString());
             e.printStackTrace();
         }
@@ -81,7 +81,7 @@ public class Config{
             System.out.println("Successfully Copied JSON Object to File...");
             System.out.println("\nJSON Object: " + newUser);
         } catch (IOException e) {
-            BaseBot.LOGGER.warning("Config.newCasino Error.");
+            BaseBot.LOGGER.warn("Config.newCasino Error.");
             Message.sendDM(BaseBot.client.getApplicationOwner(), e.toString());
             e.printStackTrace();
         }

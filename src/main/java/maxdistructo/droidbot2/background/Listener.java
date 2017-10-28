@@ -347,7 +347,7 @@ public class Listener {
             System.out.println("Successfully Copied JSON Object to File...");
             System.out.println("\nJSON Object: " + jo);
         } catch (IOException e) {
-            BaseBot.LOGGER.warning("Listener.newServer Error.");
+            BaseBot.LOGGER.warn("Listener.newServer Error.");
             Message.sendDM(BaseBot.client.getApplicationOwner(), e.toString());
             e.printStackTrace();
         }
