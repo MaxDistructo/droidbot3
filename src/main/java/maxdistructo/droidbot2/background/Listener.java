@@ -42,6 +42,7 @@ public class Listener {
     public void onMessageReceivedEvent(MessageReceivedEvent event) throws RateLimitException, DiscordException, MissingPermissionsException { // This method is NOT called because it doesn't have the @EventSubscriber annotation
         try {
             IMessage message = event.getMessage();
+            
             List<IChannel> mentionedChannelList = message.getChannelMentions();
             Object[] mentionedChannelArray = mentionedChannelList.toArray();
             IChannel channelMention;
@@ -50,6 +51,7 @@ public class Listener {
             } else {
                 channelMention = null;
             }
+            
             List<IUser> mentionedList = message.getMentions();
             Object[] mentionedArray = mentionedList.toArray();
             IUser mentioned;
@@ -115,7 +117,12 @@ public class Listener {
                     message.reply("", Message.simpleEmbed(message.getAuthor(), "Shutdown", Shutdown.onShutdownCommand(message), message));
                     message.delete();
                 } else if (messageContent[0].equals(prefix + "help")) {
-                    Message.sendDM(message.getAuthor(), Help.onHelpCommand());
+                    if(Perms.checkAdmin(message)){
+                        Help.onAdminHelpCommand(message);
+                    }
+                    else{
+                        Message.sendDM(message.getAuthor(), Help.onHelpCommand());
+                    }
                     message.delete();
                 } else if (messageContent[0].equals(prefix + "allin") && Perms.checkGames(message)) {
                     message.reply("", Message.simpleEmbed(message.getAuthor(), "Allin", Allin.onAllinCommand(messageContent, message), message));
@@ -203,7 +210,7 @@ public class Listener {
                     message.delete();
                 } else if (messageContent[0].equals(prefix + "@copyPerms") && Perms.checkOwner_Guild(message)) {
                     System.out.println("Getting Role 1 - User's Highest Role");
-                    IRole role1 = message.getAuthor().getRolesForGuild(message.getGuild()).get(1);
+                    IRole role1 = message.getAuthor().getRolesForGuild(message.getGuild()).get(0);
                     System.out.println("Getting Role 2 - Your Specified Role");
                     IRole role2 = Roles.getRole(message, Utils.makeNewString(messageContent, 1));
                     if (role1 != null && role2 != null) {
