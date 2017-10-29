@@ -124,7 +124,18 @@ public class Casino{
                     return author.mention(true)+ "Your payday is ready!";
                 }
                 else if(Config.MEMBERSHIP.equals(":star::star::star::star::star:")){
-
+                    Config.CHIPS += 12000;
+                    Config.writeCasino(message);
+                    Message.sendMessage(message.getChannel(), casinoPayday(message, 12000));
+                    payday(message,message.getAuthor());
+                    return author.mention(true) + "Your payday is ready!";
+                }
+                else if(Config.MEMBERSHIP.equals(":crown:")){
+                    Config.CHIPS += 15000;
+                    Config.writeCasino(message);
+                    Message.sendMessage(message.getChannel(), casinoPayday(message, 15000));
+                    payday(message, message.getAuthor());
+                    return author.mention(true) + "Your payday is ready!";
                 }
                 else{
                     return "Command "+ Listener.prefix +"casino payday has errored. Your balance has not been affected.";

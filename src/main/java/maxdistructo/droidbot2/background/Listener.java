@@ -161,7 +161,10 @@ public class Listener {
                 } else if (messageContent[0].equals(prefix + "stab")) {
                     Message.sendMessage(message.getChannel(), PlayerFun.onStabCommand(message, mentioned));
                     message.delete();
-                } //else if (messageContent[0].equals(prefix + "mute")) {
+                } else if (messageContent[0].equals(prefix + "ping")) {
+                    Ping.onPingCommand(message);
+                    message.delete();
+                }//else if (messageContent[0].equals(prefix + "mute")) {
                    // Message.sendMessage(message.getChannel(), PlayerFun.onMuteCommand(message, mentioned));
                    // message.delete();
                     // } else if (messageContent[0].equals(prefix + "lenny") || messageContent[0].equals("/lenny")) {
@@ -234,6 +237,9 @@ public class Listener {
                     message.delete();
                 } else if (messageContent[0].equals(prefix + "@unmute") && Perms.checkAdmin(message)){
                     Admin.unmuteUser(message, mentioned);
+                    message.delete();
+                } else if (messageContent[0].equals(prefix + "@announce")){
+                    Admin.onAnnounceCommand(messageContent, message);
                     message.delete();
                 } else if (messageContent[0].equals(prefix + "fixServerConfig")){
                     IGuild guild = message.getGuild();

@@ -40,12 +40,12 @@ public class Utils {
         StringBuilder stringBuilder = new StringBuilder();
         int i = startAt;
         while (i < input.length) {
-            if(i + 1 > input.length) {
+            if(i - 1 == input.length) {
                 stringBuilder.append(input[i]);
             }
             else{
                 stringBuilder.append(input[i]);
-                stringBuilder.append("");
+                stringBuilder.append(" ");
             }
             i++;
         }

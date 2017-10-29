@@ -3,6 +3,7 @@ package maxdistructo.droidbot2.commands;
 
 import maxdistructo.droidbot2.background.Config;
 import maxdistructo.droidbot2.background.Roles;
+import maxdistructo.droidbot2.background.Utils;
 import maxdistructo.droidbot2.background.message.Message;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -175,6 +176,21 @@ public class Admin {
     public static void unmuteUser(IMessage message, IUser mentioned, IChannel channel){
         channel.removePermissionsOverride(mentioned);
         Message.sendMessage(message.getChannel(),Message.simpleEmbed(message.getAuthor(), "Mute", mentioned.getDisplayName(message.getGuild()) + " has been unmuted", message));
+    }
+
+    public static void onAnnounceCommand(Object[] args, IMessage message){
+        if(message.getAuthor() == client.getApplicationOwner()){
+            String sendMessage = Utils.makeNewString(args, 1);
+            List<IGuild> guilds = client.getGuilds();
+            Object[] guildArray = guilds.toArray();
+            int i = 0;
+            while(i < guildArray.length){
+                IGuild guild = (IGuild) guildArray[i];
+                Message.sendMessage(guild.getDefaultChannel(), "@here " + sendMessage);
+                i++;
+            }
+        }
+
     }
 
 
