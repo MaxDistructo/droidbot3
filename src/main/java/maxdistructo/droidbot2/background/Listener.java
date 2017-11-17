@@ -3,6 +3,7 @@ package maxdistructo.droidbot2.background;
 
 import maxdistructo.droidbot2.BaseBot;
 import maxdistructo.droidbot2.background.message.Message;
+import maxdistructo.droidbot2.background.private_client.ClientSocket;
 import maxdistructo.droidbot2.commands.*;
 import org.json.JSONException;
 import sx.blah.discord.api.events.EventSubscriber;
@@ -22,7 +23,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.EnumSet;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -37,11 +37,14 @@ public class Listener {
     public static String prefix = "!"; //Change back to ! for release!
     public static String triviaAnswer;
     public static boolean triviaRunning = true;
+    public ClientSocket clientSocket;
 
     @EventSubscriber
     public void onMessageReceivedEvent(MessageReceivedEvent event) throws RateLimitException, DiscordException, MissingPermissionsException { // This method is NOT called because it doesn't have the @EventSubscriber annotation
         try {
             IMessage message = event.getMessage();
+           // maxdistructo.droidbot2.background.private_client.Message translate = new maxdistructo.droidbot2.background.private_client.Message("message", message.getAuthor().getName(), message.getContent(), message.getChannel().getName());
+            //clientSocket.send(translate);
             
             List<IChannel> mentionedChannelList = message.getChannelMentions();
             Object[] mentionedChannelArray = mentionedChannelList.toArray();
@@ -129,8 +132,10 @@ public class Listener {
                     message.delete();
                 } else if (messageContent[0].equals(prefix + "say") && channelMention != null) {
                     Message.sendMessage(channelMention, Say.onSayCommand(messageContent, message, channelMention));
+                    message.delete();
                 } else if (messageContent[0].equals(prefix + "say")) {
                     Message.sendMessage(message.getChannel(), Say.onSayCommand(messageContent, message, channelMention));
+                    message.delete();
                 } else if (messageContent[0].equals(prefix + "spam")) {
                     Message.sendMessage(message.getChannel(), Spam.onSpamCommand(messageContent, message, mentioned));
                     message.delete();
@@ -241,6 +246,10 @@ public class Listener {
                 } else if (messageContent[0].equals(prefix + "@announce")){
                     Admin.onAnnounceCommand(messageContent, message);
                     message.delete();
+                } else if (messageContent[0].equals(prefix + "@roles") && messageContent[1].equals("name") && Perms.checkAdmin(message)){
+                    IRole role = Roles.getRole(message, (String)messageContent[2]);
+                    role.changeName((String)messageContent[3]);
+                    message.delete();
                 } else if (messageContent[0].equals(prefix + "fixServerConfig")){
                     IGuild guild = message.getGuild();
                     RoleBuilder rb = new RoleBuilder(guild);
@@ -276,7 +285,8 @@ public class Listener {
                 message.reply("Please wait until you have lost your Bot Abuser role to use this command.");
             }
         } catch (Exception e) {
-            Message.sendDM(client.getApplicationOwner(), e.getLocalizedMessage());
+            e.printStackTrace();
+            Message.sendDM(client.getUserByID(374517920505790464L), e.getLocalizedMessage());
         }
 
     }
@@ -304,13 +314,12 @@ public class Listener {
     public void onShardReadyEvent(ShardReadyEvent event) {
         client.online(Listener.prefix + "help");
         BaseBot.LOGGER.info("Added playing content");
-
         List<IGuild> guildsList = client.getGuilds();
         Object[] guilds = guildsList.toArray();
         int i = 0;
-
+        IGuild guild = null;
         while (i < guilds.length) {
-            IGuild guild = (IGuild) guilds[i];
+            guild = (IGuild) guilds[i];
             String name;
             if (client.getOurUser().getNicknameForGuild(guild) != null) {
                 name = client.getOurUser().getNicknameForGuild(guild);
@@ -332,6 +341,7 @@ public class Listener {
             }
             i++;
         }
+
 
     }
     @EventSubscriber

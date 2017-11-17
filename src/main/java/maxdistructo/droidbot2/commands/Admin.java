@@ -134,7 +134,7 @@ public class Admin {
         IUser guildOwner = guild.getOwner();
         String name = client.getApplicationName();
         guild.leave();
-        Message.sendDM(guildOwner, "The permissions of " + name + " have been broke in someway. Your guild's data that is stored on the bot has not been affected. Please use the following link to re-add " + name + " to your server. https://discordapp.com/oauth2/authorize?client_id=315313967759097857&scope=bot&permissions=1010035777");
+        Message.sendDM(guildOwner, "The permissions of " + name + " have been broke in someway. Your guild's data that is stored on the bot has not been affected. Please use the following link to re-add " + name + " to your server. https://discordapp.com/oauth2/authorize?client_id=315313967759097857&scope=bot&permissions=470281304");
         Message.sendDM(client.getApplicationOwner(), client.getApplicationName() + " was removed from guild " + guild + " in the process of a guild perm reset.");
     }
     public static void muteUser(IMessage message, IUser mentioned, int time){

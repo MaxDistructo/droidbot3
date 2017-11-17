@@ -62,6 +62,7 @@ public class Message {
             e.printStackTrace();
         }
         try {
+            assert pm != null;
             pm.sendMessage(message);
         } catch (MissingPermissionsException | DiscordException | RateLimitException e) {
             e.printStackTrace();

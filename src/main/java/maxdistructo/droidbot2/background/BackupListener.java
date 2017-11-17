@@ -2,14 +2,12 @@ package maxdistructo.droidbot2.background;
 
 import java.util.List;
 
-import maxdistructo.droidbot2.BaseBot;
+import maxdistructo.droidbot2.background.message.Message;
 import maxdistructo.droidbot2.commands.*;
-import maxdistructo.droidbot2.background.message.*;
 import sx.blah.discord.api.events.*;
 import sx.blah.discord.handle.impl.events.guild.voice.user.UserVoiceChannelJoinEvent;
 import sx.blah.discord.handle.impl.events.guild.channel.message.*;
 import sx.blah.discord.handle.impl.events.guild.voice.user.UserVoiceChannelLeaveEvent;
-import sx.blah.discord.handle.impl.events.shard.ShardReadyEvent;
 import sx.blah.discord.handle.obj.*;
 import sx.blah.discord.util.*;
 import static maxdistructo.droidbot2.BaseBot.client;
@@ -57,7 +55,7 @@ public class BackupListener {
                 } else if (messageContent[0].equals(prefix + "casino") && messageContent[1].equals("info") && mentioned != null && Perms.checkGames(message)) { //Works except for admin commands
                     message.reply(backupMessage);
                 } else if (messageContent[0].equals(prefix + "casino") && messageContent[1].equals("info") && Perms.checkGames(message)) { //Works except for admin commands
-                   message.reply(backupMessage);
+                    message.reply(backupMessage);
                 } else if (messageContent[0].equals(prefix + "casino") && Perms.checkGames(message)) { //Works except for admin commands
                     message.reply(backupMessage);
                 } else if (messageContent[0].equals(prefix + "50") || messageContent[0].equals(prefix + "fifty") && Perms.checkGames(message)) { //Works
@@ -72,15 +70,15 @@ public class BackupListener {
                 else if (messageContent[0].equals(prefix + "info")) { //Works Well
                     message.reply(backupMessage);
                 } else if (messageContent[0].equals(prefix + "insult")) { //Works
-                    Message.sendMessage(message.getChannel(), Message.simpleEmbed(message.getAuthor(), "Insult", Insult.onInsultCommand(messageContent, message, mentioned), message));
+                    Message.sendMessage(message.getChannel(),  Message.simpleEmbed(message.getAuthor(), "Insult", Insult.onInsultCommand(messageContent, message, mentioned), message));
                     message.delete();
                 } else if (messageContent[0].equals(prefix + "debug")) { //Needs perms set.
                     message.reply(backupMessage);
                 } else if (messageContent[0].equals(prefix + "shutdown")) { //Works
                     message.reply(backupMessage);
-               // } else if (messageContent[0].equals(prefix + "help")) {
-                 //   Message.sendDM(message.getAuthor(), Help.onHelpCommand());
-                   // message.delete();
+                    // } else if (messageContent[0].equals(prefix + "help")) {
+                    //   Message.sendDM(message.getAuthor(), Help.onHelpCommand());
+                    // message.delete();
                 } else if (messageContent[0].equals(prefix + "allin") && Perms.checkGames(message)) {
                     message.reply(backupMessage);
                 } else if (messageContent[0].equals(prefix + "say") && channelMention != null) {
@@ -130,7 +128,7 @@ public class BackupListener {
                 } else if (messageContent[0].equals(prefix + "punch")) {
                     Message.sendMessage(message.getChannel(), PlayerFun.onPunchCommand(message, mentioned));
                     message.delete();
-            }
+                }
 
 
 
