@@ -24,8 +24,6 @@ public class Config{
     public static String PLAYER = "null";
     public static int CHIPS;
     public static String MEMBERSHIP;
-    public static int PAYDAY;
-    public static int ALLIN;
     public static String[] trivia = new String[2];
 
     public static void newCasino(IMessage message){
@@ -44,8 +42,6 @@ public class Config{
         newUser.put("User",stringUser);
         newUser.put("Chips",100);
         newUser.put("Membership","null");
-        newUser.put("Payday",0);
-        newUser.put("Allin",0);
 
         try (FileWriter file = new FileWriter(s+"/droidbot/config/" + message.getGuild().getLongID() +"/casino/"+ user.getLongID() + ".txt")) {
             file.write(newUser.toString());
@@ -73,8 +69,6 @@ public class Config{
         newUser.put("User",stringUser);
         newUser.put("Chips",100);
         newUser.put("Membership","null");
-        newUser.put("Payday",0);
-        newUser.put("Allin",0);
 
         try (FileWriter file = new FileWriter(s+"/droidbot/config/" + guild.getLongID() +"/casino/"+ user.getLongID() + ".txt")) {
             file.write(newUser.toString());
@@ -87,7 +81,7 @@ public class Config{
         }
 
     }
-    public static void readCasino(IMessage message){
+    public static Object[] readCasino(IMessage message){
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
         IUser user = message.getAuthor();
@@ -106,12 +100,9 @@ public class Config{
             }
             JSONObject root = new JSONObject(tokener);
             System.out.println("Converted JSON file to JSONObject");
-            PLAYER = root.getString("User");
-            CHIPS = root.getInt("Chips");
-            MEMBERSHIP = root.getString("Membership");
-            PAYDAY = root.getInt("Payday");
-            ALLIN = root.getInt("Allin");
+            Object[] casinoValues = {root.getString("User"), root.getInt("Chips"), root.getString("Membership")};
             System.out.println("Successfully read values from file.");
+            return casinoValues;
         }
         else{
             Casino.onCasinoCommand(new Object[] {Listener.prefix + "casino", "join"},message,null);
@@ -140,8 +131,6 @@ public class Config{
             PLAYER = root.getString("User");
             CHIPS = root.getInt("Chips");
             MEMBERSHIP = root.getString("Membership");
-            PAYDAY = root.getInt("Payday");
-            ALLIN = root.getInt("Allin");
             System.out.println("Successfully read values from file.");
         }
         else{
@@ -170,8 +159,6 @@ public class Config{
         newUser.put("User", PLAYER);
         newUser.put("Chips", CHIPS);
         newUser.put("Membership",MEMBERSHIP);
-        newUser.put("Payday",PAYDAY);
-        newUser.put("Allin",ALLIN);
 
         try (FileWriter fileWriter = new FileWriter(s+"/droidbot/config/" + message.getGuild().getLongID() +"/casino/"+ user.getLongID() + ".txt")) {
             fileWriter.write(newUser.toString());
@@ -200,9 +187,7 @@ public class Config{
         newUser.put("User", PLAYER);
         newUser.put("Chips", CHIPS);
         newUser.put("Membership",MEMBERSHIP);
-        newUser.put("Payday",PAYDAY);
-        newUser.put("Allin",ALLIN);
-
+        
         try (FileWriter fileWriter = new FileWriter(s+"/droidbot/config/" + guild.getLongID() +"/casino/"+ user.getLongID() + ".txt")) {
             fileWriter.write(newUser.toString());
             System.out.println("Successfully Copied JSON Object to File...");
