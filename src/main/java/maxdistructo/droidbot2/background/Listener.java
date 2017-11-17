@@ -3,7 +3,6 @@ package maxdistructo.droidbot2.background;
 
 import maxdistructo.droidbot2.BaseBot;
 import maxdistructo.droidbot2.background.message.Message;
-import maxdistructo.droidbot2.background.private_client.ClientSocket;
 import maxdistructo.droidbot2.commands.*;
 import org.json.JSONException;
 import sx.blah.discord.api.events.EventSubscriber;
@@ -37,15 +36,12 @@ public class Listener {
     public static String prefix = "!"; //Change back to ! for release!
     public static String triviaAnswer;
     public static boolean triviaRunning = true;
-    public ClientSocket clientSocket;
 
     @EventSubscriber
-    public void onMessageReceivedEvent(MessageReceivedEvent event) throws RateLimitException, DiscordException, MissingPermissionsException { // This method is NOT called because it doesn't have the @EventSubscriber annotation
+    public void onMessageReceivedEvent(MessageReceivedEvent event) throws RateLimitException, DiscordException, MissingPermissionsException {
         try {
             IMessage message = event.getMessage();
-           // maxdistructo.droidbot2.background.private_client.Message translate = new maxdistructo.droidbot2.background.private_client.Message("message", message.getAuthor().getName(), message.getContent(), message.getChannel().getName());
-            //clientSocket.send(translate);
-            
+
             List<IChannel> mentionedChannelList = message.getChannelMentions();
             Object[] mentionedChannelArray = mentionedChannelList.toArray();
             IChannel channelMention;
@@ -329,17 +325,24 @@ public class Listener {
             //Message.sendMessage(guild.getDefaultChannel(), name + " has been loaded. Version: " + BaseBot.version);
 
             List<IRole> rolesList = guild.getRolesByName("Payday");
-            IRole paydayRole = rolesList.get(0);
-            List<IUser> paydayUsers = guild.getUsersByRole(paydayRole);
-            Object[] paydayArray = paydayUsers.toArray();
-
-            int ii = 0;
-            while (ii < paydayArray.length) {
-                IUser user = (IUser) paydayArray[ii];
-                user.removeRole(paydayRole);
-                ii++;
+            IRole paydayRole = null;
+            try {
+                paydayRole = rolesList.get(0);
             }
-            i++;
+            catch (Exception e){
+                System.out.println("Could not find Payday role for server - " + guild.getName());
+            }
+            if(paydayRole != null) {
+                List<IUser> paydayUsers = guild.getUsersByRole(paydayRole);
+                Object[] paydayArray = paydayUsers.toArray();
+
+                int ii = 0;
+                while (ii < paydayArray.length) {
+                    IUser user = (IUser) paydayArray[ii];
+                    user.removeRole(paydayRole);
+                    ii++;
+                }
+            }            i++;
         }
 
 

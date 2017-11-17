@@ -6,8 +6,6 @@ import java.nio.file.Paths;
 import maxdistructo.droidbot2.background.*;
 import maxdistructo.droidbot2.background.Config;
 import maxdistructo.droidbot2.background.audio.AudioMain;
-import maxdistructo.droidbot2.background.private_client.socket.ServerFrame;
-import maxdistructo.droidbot2.background.private_client.socket.SocketServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sx.blah.discord.api.IDiscordClient;
