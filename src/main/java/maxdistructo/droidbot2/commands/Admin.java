@@ -2,6 +2,7 @@ package maxdistructo.droidbot2.commands;
 
 
 import maxdistructo.droidbot2.background.Config;
+import maxdistructo.droidbot2.background.Perms;
 import maxdistructo.droidbot2.background.Roles;
 import maxdistructo.droidbot2.background.Utils;
 import maxdistructo.droidbot2.background.message.Message;
@@ -179,7 +180,7 @@ public class Admin {
     }
 
     public static void onAnnounceCommand(Object[] args, IMessage message){
-        if(message.getAuthor() == client.getApplicationOwner()){
+        if(Perms.checkOwner(message)){
             String sendMessage = Utils.makeNewString(args, 1);
             List<IGuild> guilds = client.getGuilds();
             Object[] guildArray = guilds.toArray();
