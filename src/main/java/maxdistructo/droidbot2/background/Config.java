@@ -202,7 +202,7 @@ public class Config{
        File file = new File(s + "/droidbot/config/" + message.getGuild().getLongID() + "/blackjack/" + message.getAuthor().getLongID());
        file.delete();
     }
-  @SuppressWarnings("resource")
+  @SuppressWarnings("resource") @Deprecated //Unused method cause trivia is on backburner for me.
 public static String triviaReadLine(String file, int line){
       Scanner input = null;
       Path currentRelativePath = Paths.get("");
@@ -222,6 +222,7 @@ public static String triviaReadLine(String file, int line){
       }
       return "Is this bot broken?`yes";
   }
+  @Deprecated //Use Utils.convertToInt instead. Method still exists for legacy support
    public static int converToInt(Object in){
        return Integer.valueOf(in.toString());
    }
@@ -351,31 +352,6 @@ public static String triviaReadLine(String file, int line){
         }
         return new JSONObject(tokener);
     }
-    public static int readBotAbuse(IGuild guild, IUser user){
-        Path currentRelativePath = Paths.get("");
-        String s = currentRelativePath.toAbsolutePath().toString();
-        File file = new File (s + "/droidbot/config/" + guild.getLongID() + "/" + user.getLongID() + ".txt");
-        URI uri = file.toURI();
-        JSONTokener tokener = null;
-        try {
-            tokener = new JSONTokener(uri.toURL().openStream());
-            System.out.println("Successfully read file "+ user.getLongID() + ".txt");
-        } catch (IOException e) {
-            Message.sendDM(BaseBot.client.getApplicationOwner(), e.toString());
-            e.printStackTrace();
-        }
-        JSONObject root = new JSONObject(tokener);
-        int i;
-        try{
-                i = root.getInt("BotAbuse");
-        }
-        catch(NullPointerException e){
-            Message.sendDM(BaseBot.client.getApplicationOwner(), e.toString());
-            writeBotAbuse(guild,user,1);
-            i = 1;
-        }
-        return i;
-    }
     public static void writeBotAbuse(IGuild guild, IUser user, int abuse){
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
@@ -427,6 +403,7 @@ public static String triviaReadLine(String file, int line){
         }
         return new JSONObject(tokener);
     }
+    @Deprecated //Use Utils.convertToLong instead. This is here for legacy support.
     public static long convertToLong(Object o){
         return Long.valueOf(o.toString());
     }

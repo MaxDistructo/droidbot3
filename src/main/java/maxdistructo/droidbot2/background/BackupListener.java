@@ -11,7 +11,7 @@ import sx.blah.discord.handle.impl.events.guild.voice.user.UserVoiceChannelLeave
 import sx.blah.discord.handle.obj.*;
 import sx.blah.discord.util.*;
 import static maxdistructo.droidbot2.BaseBot.client;
-
+@Deprecated //Unused due to removal of backup system. May be reimplemented at a later date as a bot lockdown.
 public class BackupListener {
     public static boolean blackJackRunning = false;
     public static String blackjackAnswer;
