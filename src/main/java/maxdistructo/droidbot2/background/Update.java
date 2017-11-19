@@ -9,6 +9,7 @@ import java.nio.file.*;
 import org.apache.commons.io.FileUtils;
 import org.json.*;
 
+@Deprecated //Update was a hopefully addition but it didn't work out. As such, I am depreciating the methods but leaving them here if someone else wants to fix it or use it.
 public class Update {
     public static void checkUpdate(){
         Path currentRelativePath = Paths.get("");

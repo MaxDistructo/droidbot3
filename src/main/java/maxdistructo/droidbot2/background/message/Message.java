@@ -10,6 +10,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 
 public class Message {
@@ -95,5 +96,11 @@ public class Message {
         }
 
 }
+    public static void sendError(Exception e){
+        sendDM(BaseBot.client.getApplicationOwner(), e.toString() + "\n" + Arrays.toString(e.getStackTrace())); //General Support
+        sendDM(BaseBot.client.getUserByID(374517920505790464L), e.toString() + "\n" + Arrays.toString(e.getStackTrace())); //Secondary Account Support
+
+
+    }
 
 }

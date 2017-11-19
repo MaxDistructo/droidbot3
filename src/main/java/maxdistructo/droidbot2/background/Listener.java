@@ -73,6 +73,7 @@ public class Listener {
                 }
             }
             catch(JSONException e){
+                Message.sendError(e);
                 e.printStackTrace();
             }
 
@@ -282,7 +283,7 @@ public class Listener {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Message.sendDM(client.getUserByID(374517920505790464L), e.getLocalizedMessage());
+            Message.sendError(e);
         }
 
     }

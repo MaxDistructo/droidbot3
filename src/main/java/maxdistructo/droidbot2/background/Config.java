@@ -81,21 +81,21 @@ public class Config{
         }
 
     }
-    public static Object[] readCasino(IMessage message){
+    public static Object[] readCasino(IMessage message) {
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
         IUser user = message.getAuthor();
         String stringUser = user.getName();
 
-        File file = new File (s+"/droidbot/config/" + message.getGuild().getLongID() +"/casino/"+ user.getLongID() + ".txt");
-        if(file.exists()) {
+        File file = new File(s + "/droidbot/config/" + message.getGuild().getLongID() + "/casino/" + user.getLongID() + ".txt");
+        if (file.exists()) {
             URI uri = file.toURI();
             JSONTokener tokener = null;
             try {
                 tokener = new JSONTokener(uri.toURL().openStream());
                 System.out.println("Successfully read file " + stringUser + ".txt");
             } catch (IOException e) {
-                Message.sendDM(BaseBot.client.getApplicationOwner(), e.toString());
+                Message.sendError(e);
                 e.printStackTrace();
             }
             JSONObject root = new JSONObject(tokener);
@@ -103,11 +103,10 @@ public class Config{
             Object[] casinoValues = {root.getString("User"), root.getInt("Chips"), root.getString("Membership")};
             System.out.println("Successfully read values from file.");
             return casinoValues;
+        } else {
+            Casino.onCasinoCommand(new Object[]{Listener.prefix + "casino", "join"}, message, null);
         }
-        else{
-            Casino.onCasinoCommand(new Object[] {Listener.prefix + "casino", "join"},message,null);
-        }
-
+        return new Object[0];
     }
 
     public static void readCasino(IUser user, IGuild guild){
