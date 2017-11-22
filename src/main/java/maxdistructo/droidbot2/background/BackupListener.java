@@ -4,6 +4,8 @@ import java.util.List;
 
 import maxdistructo.droidbot2.background.message.Message;
 import maxdistructo.droidbot2.commands.*;
+import maxdistructo.droidbot2.core.Perms;
+import maxdistructo.droidbot2.core.Roles;
 import sx.blah.discord.api.events.*;
 import sx.blah.discord.handle.impl.events.guild.voice.user.UserVoiceChannelJoinEvent;
 import sx.blah.discord.handle.impl.events.guild.channel.message.*;

@@ -1,7 +1,6 @@
 package maxdistructo.droidbot2.commands;
 
-import maxdistructo.droidbot2.background.Perms;
-import sx.blah.discord.api.internal.json.objects.EmbedObject;
+import maxdistructo.droidbot2.core.Perms;
 import sx.blah.discord.handle.obj.IMessage;
 
 public class Shutdown {

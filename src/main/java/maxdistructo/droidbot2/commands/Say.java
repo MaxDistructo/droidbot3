@@ -6,9 +6,7 @@ import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RateLimitException;
 
-import java.util.List;
-
-import maxdistructo.droidbot2.background.Utils;
+import maxdistructo.droidbot2.core.Utils;
 
 public class Say {
     public static String onSayCommand(Object[] args, IMessage message, IChannel mentionedChannel) throws RateLimitException, DiscordException, MissingPermissionsException {

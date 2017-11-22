@@ -1,4 +1,4 @@
-package maxdistructo.droidbot2.background;
+package maxdistructo.droidbot2.core;
 
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;

@@ -3,7 +3,7 @@ package maxdistructo.droidbot2.commands;
 
 import java.util.List;
 
-import maxdistructo.droidbot2.background.Perms;
+import maxdistructo.droidbot2.core.Perms;
 import sx.blah.discord.handle.obj.*;
 
 public class Debug{

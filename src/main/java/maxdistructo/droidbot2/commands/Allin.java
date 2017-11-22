@@ -1,7 +1,8 @@
 package maxdistructo.droidbot2.commands;
 
 import maxdistructo.droidbot2.background.Config;
-import maxdistructo.droidbot2.background.Perms;
+import maxdistructo.droidbot2.commands.casino.Casino;
+import maxdistructo.droidbot2.core.Perms;
 import maxdistructo.droidbot2.background.message.Message;
 import sx.blah.discord.handle.obj.IMessage;
 

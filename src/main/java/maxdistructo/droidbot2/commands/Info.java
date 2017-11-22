@@ -1,11 +1,8 @@
 package maxdistructo.droidbot2.commands;
 
 import java.util.List;
-import java.util.Optional;
 
-import maxdistructo.droidbot2.background.Config;
-import maxdistructo.droidbot2.background.Perms;
-import sx.blah.discord.handle.impl.obj.Message;
+import maxdistructo.droidbot2.core.Perms;
 import sx.blah.discord.handle.obj.*;
 
 

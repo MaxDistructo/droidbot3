@@ -1,11 +1,7 @@
 package maxdistructo.droidbot2.commands;
 
-import maxdistructo.droidbot2.background.Config;
-import maxdistructo.droidbot2.background.Perms;
-import sx.blah.discord.handle.impl.obj.Message;
-import sx.blah.discord.handle.obj.IChannel;
+import maxdistructo.droidbot2.core.Perms;
 import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.handle.obj.IUser;
 
 public class Check{
    // @Command(aliases = {"/check"}, description = "Checks if you have perms for a role", usage = "/check")

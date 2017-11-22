@@ -1,7 +1,8 @@
-package maxdistructo.droidbot2.background;
+package maxdistructo.droidbot2.core;
 
 
 import maxdistructo.droidbot2.BaseBot;
+import maxdistructo.droidbot2.background.Config;
 import sx.blah.discord.handle.obj.*;
 import sx.blah.discord.util.PermissionUtils;
 

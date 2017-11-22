@@ -1,4 +1,4 @@
-package maxdistructo.droidbot2.background;
+package maxdistructo.droidbot2.core;
 
 import java.io.File;
 import java.io.IOException;

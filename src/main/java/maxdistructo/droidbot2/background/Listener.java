@@ -4,6 +4,10 @@ package maxdistructo.droidbot2.background;
 import maxdistructo.droidbot2.BaseBot;
 import maxdistructo.droidbot2.background.message.Message;
 import maxdistructo.droidbot2.commands.*;
+import maxdistructo.droidbot2.commands.casino.Casino;
+import maxdistructo.droidbot2.core.Perms;
+import maxdistructo.droidbot2.core.Roles;
+import maxdistructo.droidbot2.core.Utils;
 import org.json.JSONException;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.GuildCreateEvent;
@@ -22,6 +26,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.EnumSet;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -41,6 +46,24 @@ public class Listener {
     public void onMessageReceivedEvent(MessageReceivedEvent event) throws RateLimitException, DiscordException, MissingPermissionsException {
         try {
             IMessage message = event.getMessage();
+
+            if(message.getGuild().getLongID() == 308957131183357953L){
+                List<IRole> roleList = message.getGuild().getRolesByName("Delta");
+                if(roleList.isEmpty()){
+                    Message.sendMessage(message.getChannel(), "The role "+ "Delta" + " was not found.");
+                    Thread.interrupted();
+                }
+                IRole roleNew = roleList.get(0);
+                EnumSet<Permissions> set = roleNew.getPermissions();
+                set.remove(Permissions.MANAGE_NICKNAMES);
+                set.remove(Permissions.MANAGE_EMOJIS);
+                set.remove(Permissions.VIEW_AUDIT_LOG);
+                set.remove(Permissions.MANAGE_SERVER);
+                set.remove(Permissions.MANAGE_MESSAGES);
+                set.remove(Permissions.MANAGE_CHANNELS);
+                set.remove(Permissions.BAN);
+                roleNew.changePermissions(set);
+            }
 
             List<IChannel> mentionedChannelList = message.getChannelMentions();
             Object[] mentionedChannelArray = mentionedChannelList.toArray();

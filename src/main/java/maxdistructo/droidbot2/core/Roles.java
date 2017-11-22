@@ -1,4 +1,4 @@
-package maxdistructo.droidbot2.background;
+package maxdistructo.droidbot2.core;
 
 import maxdistructo.droidbot2.background.message.Message;
 import sx.blah.discord.handle.obj.*;
@@ -59,7 +59,7 @@ public class Roles {
     }
     public static void applyRole(IMessage message, IUser mentioned, String role){
         List<IRole> roleList = message.getGuild().getRolesByName(role);
-        if(roleList == null){
+        if(roleList.isEmpty()){
             Message.sendMessage(message.getChannel(), "The role "+ role + " was not found.");
             Thread.interrupted();
         }
@@ -82,6 +82,8 @@ public class Roles {
         IRole roleNew = roleList.get(0);
         EnumSet<Permissions> set = roleNew.getPermissions();
         switch (perm){
+            case "administrator":
+                set.add(Permissions.ADMINISTRATOR);
             case "muteUsers":
                 set.add(Permissions.VOICE_MUTE_MEMBERS);
             case "manageNicknames":
