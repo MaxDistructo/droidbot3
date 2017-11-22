@@ -2,6 +2,7 @@ package maxdistructo.droidbot2.core;
 
 import maxdistructo.droidbot2.background.message.Message;
 import sx.blah.discord.handle.obj.*;
+import sx.blah.discord.util.DiscordException;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -12,6 +13,10 @@ public class Roles {
         IUser user = message.getAuthor();
         List<IRole> rolesList = user.getRolesForGuild(message.getGuild());
         List<IRole> guildRoles = message.getGuild().getRolesByName("Bot Abuser");
+        if(guildRoles.isEmpty()){
+            System.out.println("Could not find role Bot Abuser for server " + message.getGuild().getName());
+            return false;
+        }
         IRole botAbuser = guildRoles.get(0);
         return rolesList.contains(botAbuser);
     }
@@ -19,13 +24,22 @@ public class Roles {
         IUser user = message.getAuthor();
         List<IRole> rolesList = user.getRolesForGuild(message.getGuild());
         List<IRole> guildRoles = message.getGuild().getRolesByName("Payday");
+        if(guildRoles.isEmpty()){
+            System.out.println("Could not find role Payday for server " + message.getGuild().getName());
+            return false;
+        }
         IRole payday = guildRoles.get(0);
         return rolesList.contains(payday);
     }
     public static void applyBotAbuser(IMessage message, IUser mentioned){
         List<IRole> guildRoles = message.getGuild().getRolesByName("Bot Abuser");
-        IRole role = guildRoles.get(0);
-        mentioned.addRole(role);
+        if(guildRoles.isEmpty()) {
+            System.out.println("Could not find role Bot Abuser for server " + message.getGuild().getName());
+        }
+        else {
+            IRole role = guildRoles.get(0);
+            mentioned.addRole(role);
+        }
     }
     public static void applyPayday(IMessage message, IUser mentioned){
         IGuild guild = message.getGuild();
@@ -35,8 +49,13 @@ public class Roles {
     }
     public static void removeBotAbuser(IMessage message, IUser mentioned){
         List<IRole> guildRoles = message.getGuild().getRolesByName("Bot Abuser");
+        if(guildRoles.isEmpty()) {
+            System.out.println("Could not find role Bot Abuser for server " + message.getGuild().getName());
+        }
+        else {
         IRole role = guildRoles.get(0);
         mentioned.removeRole(role);
+        }
     }
     public static void removePayday(IMessage message, IUser mentioned) {
         List<IRole> guildRoles = message.getGuild().getRolesByName("Payday");
@@ -63,7 +82,9 @@ public class Roles {
             Message.sendMessage(message.getChannel(), "The role "+ role + " was not found.");
             Thread.interrupted();
         }
-        mentioned.addRole(roleList.get(0));
+        if(!roleList.isEmpty()) {
+            mentioned.addRole(roleList.get(0));
+        }
     }
     public static void applyRole(IMessage message, IUser mentioned, long roleL){
         IRole role = message.getGuild().getRoleByID(roleL);

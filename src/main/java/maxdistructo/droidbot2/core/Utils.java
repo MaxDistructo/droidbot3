@@ -52,4 +52,12 @@ public class Utils {
         return stringBuilder.toString();
     }
 
+    public static long convertToLong(Object o){
+        return Long.valueOf(o.toString());
+    }
+
+    public static int convertToInt(Object in){
+        return Integer.valueOf(in.toString());
+    }
+
 }
