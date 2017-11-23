@@ -1,13 +1,11 @@
-package maxdistructo.droidbot2.background;
+package maxdistructo.droidbot2.core;
 
-import maxdistructo.droidbot2.BaseBot;
-import maxdistructo.droidbot2.background.message.Message;
+import maxdistructo.droidbot2.core.Client;
+import maxdistructo.droidbot2.core.message.Message;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import sx.blah.discord.handle.obj.IGuild;
-import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.handle.obj.IUser;
 
 import java.io.*;
 import java.net.URI;
@@ -27,7 +25,7 @@ public static String triviaReadLine(String file, int line){
       try {
           input = new Scanner(new FileReader(s + "/droidbot/config/trivia/" + file + ".txt"));
       } catch (FileNotFoundException e) {
-          Message.sendDM(BaseBot.client.getApplicationOwner(), e.toString());
+          Message.sendDM(Client.client.getApplicationOwner(), e.toString());
           e.printStackTrace();
       }
       int i = 0;
@@ -54,7 +52,7 @@ public static String triviaReadLine(String file, int line){
            tokener = new JSONTokener(uri.toURL().openStream());
            System.out.println("Successfully read file config.txt");
        } catch (IOException e) {
-           //Message.sendDM(BaseBot.client.getApplicationOwner(), e.toString());
+           //Message.sendDM(Client.client.getApplicationOwner(), e.toString());
            e.printStackTrace();
        }
        JSONObject root = new JSONObject(tokener);
@@ -71,7 +69,7 @@ public static String triviaReadLine(String file, int line){
         try {
             tokener = new JSONTokener(uri.toURL().openStream());
         } catch (IOException e) {
-            Message.sendDM(BaseBot.client.getApplicationOwner(), e.toString());
+            Message.sendDM(Client.client.getApplicationOwner(), e.toString());
             e.printStackTrace();
         }
         JSONObject root = new JSONObject(tokener);
@@ -88,7 +86,7 @@ public static String triviaReadLine(String file, int line){
             tokener = new JSONTokener(uri.toURL().openStream());
             System.out.println("Successfully read file "+ guild.getLongID() + ".txt");
         } catch (IOException e) {
-            Message.sendDM(BaseBot.client.getApplicationOwner(), e.toString());
+            Message.sendDM(Client.client.getApplicationOwner(), e.toString());
             e.printStackTrace();
         }
         JSONObject root = new JSONObject(tokener);
@@ -115,7 +113,7 @@ public static String triviaReadLine(String file, int line){
             tokener = new JSONTokener(uri.toURL().openStream());
             System.out.println("Successfully read file "+ guild.getLongID() + ".txt");
         } catch (IOException e) {
-            Message.sendDM(BaseBot.client.getApplicationOwner(), e.toString());
+            Message.sendDM(Client.client.getApplicationOwner(), e.toString());
             e.printStackTrace();
         }
         JSONObject root = new JSONObject(tokener);
@@ -140,7 +138,7 @@ public static String triviaReadLine(String file, int line){
             tokener = new JSONTokener(uri.toURL().openStream());
             System.out.println("Successfully read file "+ guild.getLongID() + ".txt");
         } catch (IOException e) {
-            Message.sendDM(BaseBot.client.getApplicationOwner(), e.toString());
+            Message.sendDM(Client.client.getApplicationOwner(), e.toString());
             e.printStackTrace();
         }
         JSONObject root = new JSONObject(tokener);
@@ -164,7 +162,7 @@ public static String triviaReadLine(String file, int line){
         try {
             tokener = new JSONTokener(uri.toURL().openStream());
         } catch (IOException e) {
-            Message.sendDM(BaseBot.client.getApplicationOwner(), e.toString());
+            Message.sendDM(Client.client.getApplicationOwner(), e.toString());
             e.printStackTrace();
         }
         return new JSONObject(tokener);
@@ -181,7 +179,7 @@ public static String triviaReadLine(String file, int line){
             lines = Files.readAllLines(Paths.get(file.toURI()));
         }
         catch(Exception e){
-            Message.sendDM(BaseBot.client.getApplicationOwner(), e.getLocalizedMessage());
+            Message.sendDM(Client.client.getApplicationOwner(), e.getLocalizedMessage());
             e.printStackTrace();
         }
         return lines;

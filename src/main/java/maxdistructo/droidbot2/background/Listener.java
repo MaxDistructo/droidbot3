@@ -2,9 +2,12 @@ package maxdistructo.droidbot2.background;
 
 
 import maxdistructo.droidbot2.BaseBot;
-import maxdistructo.droidbot2.background.message.Message;
+import maxdistructo.droidbot2.background.filter.SwearFilter;
+import maxdistructo.droidbot2.core.message.Message;
 import maxdistructo.droidbot2.commands.*;
 import maxdistructo.droidbot2.commands.casino.Casino;
+import maxdistructo.droidbot2.commands.casino.CasinoConfig;
+import maxdistructo.droidbot2.core.Config;
 import maxdistructo.droidbot2.core.Perms;
 import maxdistructo.droidbot2.core.Roles;
 import maxdistructo.droidbot2.core.Utils;
@@ -47,24 +50,6 @@ public class Listener {
         try {
             IMessage message = event.getMessage();
 
-            if(message.getGuild().getLongID() == 308957131183357953L){
-                List<IRole> roleList = message.getGuild().getRolesByName("Delta");
-                if(roleList.isEmpty()){
-                    Message.sendMessage(message.getChannel(), "The role "+ "Delta" + " was not found.");
-                    Thread.interrupted();
-                }
-                IRole roleNew = roleList.get(0);
-                EnumSet<Permissions> set = roleNew.getPermissions();
-                set.remove(Permissions.MANAGE_NICKNAMES);
-                set.remove(Permissions.MANAGE_EMOJIS);
-                set.remove(Permissions.VIEW_AUDIT_LOG);
-                set.remove(Permissions.MANAGE_SERVER);
-                set.remove(Permissions.MANAGE_MESSAGES);
-                set.remove(Permissions.MANAGE_CHANNELS);
-                set.remove(Permissions.BAN);
-                roleNew.changePermissions(set);
-            }
-
             List<IChannel> mentionedChannelList = message.getChannelMentions();
             Object[] mentionedChannelArray = mentionedChannelList.toArray();
             IChannel channelMention;
@@ -84,6 +69,7 @@ public class Listener {
             }
             String content = message.getContent();
             Object messageContent[] = content.split(" ");
+            SwearFilter.filter(message, messageContent);
             prefix = Config.readPrefix();
             JSONObject root = Config.readServerConfig(message.getGuild());
             IChannel loggingChannel;
@@ -104,7 +90,7 @@ public class Listener {
                 if (messageContent[0].equals(prefix + "bj")) { //WIP
                     message.reply(BlackJack.blackjack(messageContent, message));
                 } else if (messageContent[0].toString().toLowerCase().equals("hit") && Perms.checkGames(message) || messageContent[0].toString().toLowerCase().equals("stay") && Perms.checkGames(message)) {
-                    message.reply(BlackJack.continueGame(message, (String[]) messageContent, Config.readBJFields(message)));
+                    message.reply(BlackJack.continueGame(message, (String[]) messageContent, CasinoConfig.readBJFields(message)));
                 } else if (messageContent[0].equals(prefix + "check")) { //Works
                     Message.sendMessage(message.getChannel(), Message.simpleEmbed(message.getAuthor(), "Check", Check.onCheckCommand(messageContent, message), message));
                     message.delete();

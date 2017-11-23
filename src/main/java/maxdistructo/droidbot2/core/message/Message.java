@@ -1,6 +1,6 @@
-package maxdistructo.droidbot2.background.message;
+package maxdistructo.droidbot2.core.message;
 
-import maxdistructo.droidbot2.BaseBot;
+import maxdistructo.droidbot2.core.Client;
 import sx.blah.discord.api.internal.json.objects.EmbedObject;
 import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.*;
@@ -80,25 +80,25 @@ public class Message {
     }
     public static void sendMessage(IChannel channel, String content){
         try {
-            new MessageBuilder(BaseBot.client).withChannel(channel).withContent(content).build();
+            new MessageBuilder(Client.client).withChannel(channel).withContent(content).build();
         } catch (RateLimitException | DiscordException | MissingPermissionsException e) {
             e.printStackTrace();
         }
     }
     public static void sendMessage(IChannel channel, EmbedObject embedded){
-            new MessageBuilder(BaseBot.client).withChannel(channel).withEmbed(embedded).build();
+            new MessageBuilder(Client.client).withChannel(channel).withEmbed(embedded).build();
     }
     public static void sendMessage(IChannel channel, File file){
         try {
-            new MessageBuilder(BaseBot.client).withChannel(channel).withFile(file).build();
+            new MessageBuilder(Client.client).withChannel(channel).withFile(file).build();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
 
 }
     public static void sendError(Exception e){
-        sendDM(BaseBot.client.getApplicationOwner(), e.toString() + "\n" + Arrays.toString(e.getStackTrace())); //General Support
-        sendDM(BaseBot.client.getUserByID(374517920505790464L), e.toString() + "\n" + Arrays.toString(e.getStackTrace())); //Secondary Account Support
+        sendDM(Client.client.getApplicationOwner(), e.toString() + "\n" + Arrays.toString(e.getStackTrace())); //General Support
+        sendDM(Client.client.getUserByID(374517920505790464L), e.toString() + "\n" + Arrays.toString(e.getStackTrace())); //Secondary Account Support
 
 
     }

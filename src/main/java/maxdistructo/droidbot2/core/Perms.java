@@ -1,8 +1,8 @@
 package maxdistructo.droidbot2.core;
 
 
-import maxdistructo.droidbot2.BaseBot;
-import maxdistructo.droidbot2.background.Config;
+import static maxdistructo.droidbot2.core.Client.client;
+
 import sx.blah.discord.handle.obj.*;
 import sx.blah.discord.util.PermissionUtils;
 
@@ -13,7 +13,7 @@ public class Perms {
         long[] moderators = Config.readServerModConfig(message.getGuild());
         int i = 0;
         while(i < moderators.length){
-            if(author.getLongID() == moderators[i] || author == message.getGuild().getOwner() || author == BaseBot.client.getApplicationOwner() || checkAdmin(message) || author.getLongID() == 374517920505790464L){
+            if(author.getLongID() == moderators[i] || author == message.getGuild().getOwner() || author == client.getApplicationOwner() || checkAdmin(message) || author.getLongID() == 374517920505790464L){
                 return true;
             }
             i++;
@@ -27,7 +27,7 @@ public class Perms {
         long[] admins = Config.readServerAdminConfig(message.getGuild());
         int i = 0;
         while(i < admins.length){
-            if(author.getLongID() == admins[i] || author == message.getGuild().getOwner() || author == BaseBot.client.getApplicationOwner()|| author.getLongID() == 374517920505790464L){
+            if(author.getLongID() == admins[i] || author == message.getGuild().getOwner() || author == client.getApplicationOwner()|| author.getLongID() == 374517920505790464L){
                 return true;
             }
             i++;
@@ -38,11 +38,11 @@ public class Perms {
     public static boolean checkOwner_Guild(IMessage message){
         IUser author = message.getAuthor();
 
-        return author.getLongID() == BaseBot.client.getApplicationOwner().getLongID() || author.getLongID() == message.getGuild().getOwnerLongID()|| author.getLongID() == 374517920505790464L;
+        return author.getLongID() == client.getApplicationOwner().getLongID() || author.getLongID() == message.getGuild().getOwnerLongID()|| author.getLongID() == 374517920505790464L;
     }
     public static boolean checkOwner(IMessage message){
        IUser author = message.getAuthor();
-        return author.getLongID() == BaseBot.client.getApplicationOwner().getLongID() || author.getLongID() == 374517920505790464L;
+        return author.getLongID() == client.getApplicationOwner().getLongID() || author.getLongID() == 374517920505790464L;
     }
 
     public static boolean checkGames(IMessage message){

@@ -1,14 +1,14 @@
 package maxdistructo.droidbot2.commands;
 
-import maxdistructo.droidbot2.background.Config;
+import maxdistructo.droidbot2.commands.casino.CasinoConfig;
 import maxdistructo.droidbot2.commands.casino.Casino;
 import maxdistructo.droidbot2.core.Perms;
-import maxdistructo.droidbot2.background.message.Message;
+import maxdistructo.droidbot2.core.message.Message;
 import sx.blah.discord.handle.obj.IMessage;
 
 public class Allin {
     public static String onAllinCommand(Object[] args, IMessage message){
-        Config.readCasino(message);
+        CasinoConfig.readCasino(message);
         if (args.length != 2) {
             return "Please specify the amount to multiply your balance by if you win.";
         }
@@ -19,13 +19,13 @@ public class Allin {
             int random2 = (int) (Math.random() * multipy + 1);
 
             if (random == random2) {
-                Config.CHIPS = Config.CHIPS * multipy;
-                Config.writeCasino(message);
+                CasinoConfig.CHIPS = CasinoConfig.CHIPS * multipy;
+                CasinoConfig.writeCasino(message);
                 Casino.checkMembership(message);
                 return "You win and have multiplied your chips by " + multipy;
             } else {
-                Config.CHIPS = 0;
-                Config.writeCasino(message);
+                CasinoConfig.CHIPS = 0;
+                CasinoConfig.writeCasino(message);
                 Casino.checkMembership(message);
                 return "You lose and have lost all your chips.";
             }

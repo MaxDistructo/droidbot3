@@ -2,7 +2,7 @@ package maxdistructo.droidbot2.commands.casino;
 
 import maxdistructo.droidbot2.BaseBot;
 import maxdistructo.droidbot2.background.Listener;
-import maxdistructo.droidbot2.background.message.Message;
+import maxdistructo.droidbot2.core.message.Message;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import sx.blah.discord.handle.obj.IGuild;
@@ -199,6 +199,44 @@ public class CasinoConfig {
         String s = currentRelativePath.toAbsolutePath().toString();
         File file = new File(s + "/droidbot/config/" + message.getGuild().getLongID() + "/blackjack/" + message.getAuthor().getLongID());
         file.delete();
+    }
+
+    public static void writeBlackjackFields(int playerScore, String playerHand, int dealerScore, String dealerHand,int bet, IMessage message){
+        Path currentRelativePath = Paths.get("");
+        String s = currentRelativePath.toAbsolutePath().toString();
+        JSONObject root = new JSONObject();
+        root.put("BJ_playerScore", playerScore);
+        root.put("BJ_playerHand", playerHand);
+        root.put("BJ_dealerScore",dealerScore);
+        root.put("BJ_dealerHand",dealerHand);
+        root.put("BJ_bet",bet);
+        try (FileWriter fileWriter = new FileWriter(s + "/droidbot/config/" + message.getGuild().getLongID() + "/blackjack/" + message.getAuthor().getLongID() + ".txt")) {
+            fileWriter.write(root.toString());
+            System.out.println("Successfully Copied JSON Object to File...");
+            System.out.println("\nJSON Object: " + root);
+        } catch (IOException e) {
+            Message.sendDM(BaseBot.client.getApplicationOwner(), e.toString());
+            e.printStackTrace();
+        }
+
+    }
+    public static JSONObject readBJFields(IMessage message){
+        Path currentRelativePath = Paths.get("");
+        String s = currentRelativePath.toAbsolutePath().toString();
+        IUser user = message.getAuthor();
+        String stringUser = user.getName();
+
+        File file = new File (s + "/droidbot/config/" + message.getGuild().getLongID() + "/blackjack/" + message.getAuthor().getLongID() +  ".txt");
+        URI uri = file.toURI();
+        JSONTokener tokener = null;
+        try {
+            tokener = new JSONTokener(uri.toURL().openStream());
+            System.out.println("Successfully read file " + stringUser + ".txt");
+        } catch (IOException e) {
+            Message.sendDM(BaseBot.client.getApplicationOwner(), e.toString());
+            e.printStackTrace();
+        }
+        return new JSONObject(tokener);
     }
 
 }

@@ -1,7 +1,7 @@
 package maxdistructo.droidbot2.commands.casino;
 
 import maxdistructo.droidbot2.background.*;
-import maxdistructo.droidbot2.background.message.Message;
+import maxdistructo.droidbot2.core.message.Message;
 import maxdistructo.droidbot2.core.Roles;
 import sx.blah.discord.api.internal.json.objects.EmbedObject;
 import sx.blah.discord.handle.obj.*;

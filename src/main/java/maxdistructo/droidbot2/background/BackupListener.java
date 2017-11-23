@@ -2,8 +2,9 @@ package maxdistructo.droidbot2.background;
 
 import java.util.List;
 
-import maxdistructo.droidbot2.background.message.Message;
+import maxdistructo.droidbot2.core.message.Message;
 import maxdistructo.droidbot2.commands.*;
+import maxdistructo.droidbot2.core.Config;
 import maxdistructo.droidbot2.core.Perms;
 import maxdistructo.droidbot2.core.Roles;
 import sx.blah.discord.api.events.*;

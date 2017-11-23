@@ -2,8 +2,9 @@ package maxdistructo.droidbot2.commands;
 
 
 import maxdistructo.droidbot2.BaseBot;
-import maxdistructo.droidbot2.background.Config;
-import maxdistructo.droidbot2.background.message.Message;
+import maxdistructo.droidbot2.commands.casino.CasinoConfig;
+import maxdistructo.droidbot2.core.message.Message;
+import maxdistructo.droidbot2.core.Utils;
 import org.json.JSONObject;
 import sx.blah.discord.handle.obj.IMessage;
 
@@ -21,11 +22,11 @@ public class BlackJack {
     private static int bet;
 
     public static String blackjack(Object[] args, IMessage message) { //!blackjack <bet>
-        Config.readCasino(message);
-        if(Config.converToInt(args[1]) > 1 && Config.converToInt(args[1]) < 500000 && Config.converToInt(args[1]) < Config.CHIPS) {
-            Config.CHIPS -= Config.converToInt(args[1]);
+        CasinoConfig.readCasino(message);
+        if(Utils.convertToInt(args[1]) > 1 && Utils.convertToInt(args[1]) < 500000 && Utils.convertToInt(args[1]) < CasinoConfig.CHIPS) {
+            CasinoConfig.CHIPS -= Utils.convertToInt(args[1]);
             //Initial Hands
-            bet = Config.converToInt(args[1]);
+            bet = Utils.convertToInt(args[1]);
             playerHand = drawCard(main_deck, playerHand);
             dealerHand = drawCard(main_deck, dealerHand);
             playerHand = drawCard(main_deck, playerHand);
@@ -61,29 +62,29 @@ public class BlackJack {
             String end = checkEnd(playerScore, dealerScore);
             switch (checkEnd(playerScore, dealerScore)) {
                 case "Continue":
-                    Config.writeBlackjackFields(playerScore,playerHand,dealerScore,dealerHand,Config.converToInt(args[1]),message);
-                    Config.writeCasino(message);
+                    CasinoConfig.writeBlackjackFields(playerScore,playerHand,dealerScore,dealerHand,Utils.convertToInt(args[1]),message);
+                    CasinoConfig.writeCasino(message);
                     return "Would you like to Hit or Stay ?";
                 case "Push":
-                    Config.CHIPS += bet;
-                    Config.resetBJ(message);
+                    CasinoConfig.CHIPS += bet;
+                    CasinoConfig.resetBJ(message);
                     playerHand = null;
                     dealerHand = null;
-                    Config.writeCasino(message);
+                    CasinoConfig.writeCasino(message);
                     return end;
                 case "Bust! Dealer Wins!":
-                    Config.resetBJ(message);
+                    CasinoConfig.resetBJ(message);
                     playerHand = null;
                     dealerHand = null;
-                    Config.writeCasino(message);
+                    CasinoConfig.writeCasino(message);
                     return end;
                 case "Player Wins!":
-                    Config.CHIPS += bet;
-                    Config.CHIPS += bet;
-                    Config.resetBJ(message);
+                    CasinoConfig.CHIPS += bet;
+                    CasinoConfig.CHIPS += bet;
+                    CasinoConfig.resetBJ(message);
                     playerHand = null;
                     dealerHand = null;
-                    Config.writeCasino(message);
+                    CasinoConfig.writeCasino(message);
                     return end;
             }
 
@@ -204,7 +205,7 @@ public class BlackJack {
                 Message.sendMessage(message.getChannel(), Message.simpleEmbed(message.getAuthor(), "BlackJack", "Your hand: " + playerHand + "\nYour Score: " + playerScore + "\nDealer Hand: " + dealerHand + "\nDealer Score: " + dealerScore, message));
                 switch (checkEnd(playerScore, dealerScore)) {
                     case "Continue":
-                        Config.writeBlackjackFields(playerScore, playerHand, dealerScore, dealerHand, bet, message);
+                        CasinoConfig.writeBlackjackFields(playerScore, playerHand, dealerScore, dealerHand, bet, message);
                         try {
                             Thread.sleep(1250L);
                         } catch (InterruptedException e) {
@@ -212,25 +213,25 @@ public class BlackJack {
                         }
                         return "Would you like to Hit or Stay ?";
                     case "Push":
-                        Config.CHIPS += bet;
-                        Config.resetBJ(message);
+                        CasinoConfig.CHIPS += bet;
+                        CasinoConfig.resetBJ(message);
                         playerHand = null;
                         dealerHand = null;
-                        Config.writeCasino(message);
+                        CasinoConfig.writeCasino(message);
                         return checkEnd(playerScore, dealerScore);
                     case "Bust! Dealer Wins!":
-                        Config.resetBJ(message);
+                        CasinoConfig.resetBJ(message);
                         playerHand = null;
                         dealerHand = null;
-                        Config.writeCasino(message);
+                        CasinoConfig.writeCasino(message);
                         return checkEnd(playerScore, dealerScore);
                     case "Player Wins!":
-                        Config.CHIPS += bet;
-                        Config.CHIPS += bet;
-                        Config.resetBJ(message);
+                        CasinoConfig.CHIPS += bet;
+                        CasinoConfig.CHIPS += bet;
+                        CasinoConfig.resetBJ(message);
                         playerHand = null;
                         dealerHand = null;
-                        Config.writeCasino(message);
+                        CasinoConfig.writeCasino(message);
                         return checkEnd(playerScore, dealerScore);
                 }
 
@@ -251,29 +252,29 @@ public class BlackJack {
         Message.sendMessage(message.getChannel(), Message.simpleEmbed(message.getAuthor(), "BlackJack", "Your hand: " + playerHand + "\nYour Score: " + playerScore + "\nDealer Hand: " + dealerHand + "\nDealer Score: " + dealerScore, message));
         switch (checkEnd(playerScore, dealerScore)) {
             case "Push":
-                Config.CHIPS += bet;
-                Config.resetBJ(message);
+                CasinoConfig.CHIPS += bet;
+                CasinoConfig.resetBJ(message);
                 playerHand = null;
                 dealerHand = null;
-                Config.writeCasino(message);
+                CasinoConfig.writeCasino(message);
                 return checkEnd(playerScore, dealerScore);
             case "Bust! Dealer Wins!":
-                Config.resetBJ(message);
+                CasinoConfig.resetBJ(message);
                 playerHand = null;
                 dealerHand = null;
-                Config.writeCasino(message);
+                CasinoConfig.writeCasino(message);
                 return checkEnd(playerScore, dealerScore);
             case "Player Wins!":
-                Config.CHIPS += bet;
-                Config.CHIPS += bet;
-                Config.resetBJ(message);
+                CasinoConfig.CHIPS += bet;
+                CasinoConfig.CHIPS += bet;
+                CasinoConfig.resetBJ(message);
                 playerHand = null;
                 dealerHand = null;
-                Config.writeCasino(message);
+                CasinoConfig.writeCasino(message);
                 return checkEnd(playerScore, dealerScore);
         }
-        Config.CHIPS += bet;
-        Config.writeCasino(message);
+        CasinoConfig.CHIPS += bet;
+        CasinoConfig.writeCasino(message);
         return "Command Error. Your balance has not been affected.";
      }
 }

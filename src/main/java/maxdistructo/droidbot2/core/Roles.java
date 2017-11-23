@@ -1,8 +1,7 @@
 package maxdistructo.droidbot2.core;
 
-import maxdistructo.droidbot2.background.message.Message;
+import maxdistructo.droidbot2.core.message.Message;
 import sx.blah.discord.handle.obj.*;
-import sx.blah.discord.util.DiscordException;
 
 import java.util.EnumSet;
 import java.util.List;

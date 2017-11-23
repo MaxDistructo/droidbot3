@@ -1,6 +1,6 @@
 package maxdistructo.droidbot2.commands;
 
-import maxdistructo.droidbot2.background.message.Message;
+import maxdistructo.droidbot2.core.message.Message;
 import sx.blah.discord.handle.obj.IMessage;
 
 public class Ping{

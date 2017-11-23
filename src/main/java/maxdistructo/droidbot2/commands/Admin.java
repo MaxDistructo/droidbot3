@@ -1,11 +1,11 @@
 package maxdistructo.droidbot2.commands;
 
 
-import maxdistructo.droidbot2.background.Config;
+import maxdistructo.droidbot2.core.Config;
 import maxdistructo.droidbot2.commands.casino.CasinoConfig;
 import maxdistructo.droidbot2.core.Roles;
 import maxdistructo.droidbot2.core.Utils;
-import maxdistructo.droidbot2.background.message.Message;
+import maxdistructo.droidbot2.core.message.Message;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import sx.blah.discord.handle.obj.*;
@@ -62,30 +62,30 @@ public class Admin {
     }
     public static String addCasinoBalance(Object[] args, IMessage message, IUser mentioned){ // !@casino balance add @user <numofchips>
         CasinoConfig.readCasino(mentioned,message.getGuild());
-        CasinoConfig.CHIPS = CasinoConfig.CHIPS + Config.converToInt(args[4]);
+        CasinoConfig.CHIPS = CasinoConfig.CHIPS + Utils.convertToInt(args[4]);
         CasinoConfig.writeCasino(mentioned,message.getGuild());
         NumberFormat nf = NumberFormat.getInstance();
-        return "Successfully added " + nf.format(CasinoConfig.converToInt(args[4])) + " chips to " + mentioned.getDisplayName(message.getGuild()) + "'s casino balance.";
+        return "Successfully added " + nf.format(Utils.convertToInt(args[4])) + " chips to " + mentioned.getDisplayName(message.getGuild()) + "'s casino balance.";
     }
     public static String subtractCasinoBalance(Object[] args, IMessage message, IUser mentioned){ // !@casino balance add @user <numofchips>
         CasinoConfig.readCasino(mentioned,message.getGuild());
-        CasinoConfig.CHIPS = CasinoConfig.CHIPS - CasinoConfig.converToInt(args[4]);
+        CasinoConfig.CHIPS = CasinoConfig.CHIPS - Utils.convertToInt(args[4]);
         CasinoConfig.writeCasino(mentioned,message.getGuild());
         NumberFormat nf = NumberFormat.getInstance();
-        return "Successfully removed " + nf.format(CasinoConfig.converToInt(args[4])) + " chips from " + mentioned.getDisplayName(message.getGuild()) + "'s casino balance.";
+        return "Successfully removed " + nf.format(Utils.convertToInt(args[4])) + " chips from " + mentioned.getDisplayName(message.getGuild()) + "'s casino balance.";
     }
     public static String setCasinoBalance(Object[] args, IMessage message, IUser mentioned){ // !@casino balance add @user <numofchips>
         CasinoConfig.readCasino(mentioned,message.getGuild());
-        CasinoConfig.CHIPS = CasinoConfig.converToInt(args[4]);
+        CasinoConfig.CHIPS = Utils.convertToInt(args[4]);
         CasinoConfig.writeCasino(mentioned,message.getGuild());
         NumberFormat nf = NumberFormat.getInstance();
-        return "Successfully set " + mentioned.getDisplayName(message.getGuild()) + "'s casino balance to " + nf.format(CasinoConfig.converToInt(args[4]));
+        return "Successfully set " + mentioned.getDisplayName(message.getGuild()) + "'s casino balance to " + nf.format(Utils.convertToInt(args[4]));
     }
     public static String setBotAbuser(Object[] args, IMessage message, IUser mentioned){ //!@admin botabuse <@User> days reason
         Roles.applyBotAbuser(message,mentioned);
         Message.sendDM(mentioned,"You have been banned from using " + client.getOurUser().mention(true) + " because of " + args[4]);
         try {
-            Thread.sleep(86400000 * CasinoConfig.converToInt(args[3]));
+            Thread.sleep(86400000 * Utils.convertToInt(args[3]));
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -109,7 +109,7 @@ public class Admin {
         return "Changed Profile Picture Sucessfully.";
     }
     public static String leaveGuild(Object[] args){// !admin leaveGuild <GuildLongID>
-        IGuild guild = client.getGuildByID(CasinoConfig.convertToLong(args[2]));
+        IGuild guild = client.getGuildByID(Utils.convertToLong(args[2]));
         guild.leave();
         return "Sucessfully left \"" + guild.getName() + "\"";
     }

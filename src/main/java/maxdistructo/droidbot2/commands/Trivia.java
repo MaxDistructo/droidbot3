@@ -1,8 +1,8 @@
 package maxdistructo.droidbot2.commands;
 
 import maxdistructo.droidbot2.BaseBot;
-import maxdistructo.droidbot2.background.Config;
-import maxdistructo.droidbot2.background.message.Message;
+import maxdistructo.droidbot2.core.Config;
+import maxdistructo.droidbot2.core.message.Message;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;

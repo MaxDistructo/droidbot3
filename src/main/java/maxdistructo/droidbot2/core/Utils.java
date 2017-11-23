@@ -3,9 +3,16 @@ package maxdistructo.droidbot2.core;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
 
 public class Utils {
+
+    private final static Path currentRelativePath = Paths.get("");
+    public final static String s = currentRelativePath.toAbsolutePath().toString();
 
     public static void restartApplication()
     {
@@ -59,5 +66,6 @@ public class Utils {
     public static int convertToInt(Object in){
         return Integer.valueOf(in.toString());
     }
+
 
 }

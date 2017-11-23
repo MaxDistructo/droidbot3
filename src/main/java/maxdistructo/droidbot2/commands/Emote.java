@@ -9,7 +9,7 @@ import java.nio.file.Paths;
 
 import maxdistructo.droidbot2.BaseBot;
 import maxdistructo.droidbot2.core.Perms;
-import maxdistructo.droidbot2.background.message.Message;
+import maxdistructo.droidbot2.core.message.Message;
 import org.apache.commons.io.FileUtils;
 import sx.blah.discord.handle.obj.IMessage;
 

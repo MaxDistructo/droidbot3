@@ -2,7 +2,7 @@ package maxdistructo.droidbot2.commands;
 
 import maxdistructo.droidbot2.BaseBot;
 import maxdistructo.droidbot2.background.Listener;
-import maxdistructo.droidbot2.background.message.Message;
+import maxdistructo.droidbot2.core.message.Message;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IUser;
 

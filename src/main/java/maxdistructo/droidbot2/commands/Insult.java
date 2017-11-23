@@ -1,6 +1,5 @@
 package maxdistructo.droidbot2.commands;
 
-import maxdistructo.droidbot2.background.Config;
 import sx.blah.discord.handle.obj.*;
 
 public class Insult{
