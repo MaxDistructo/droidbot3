@@ -34,7 +34,7 @@
     <dependency>
       <groupId>com.github.MaxDistructo</groupId>
       <artifactId>droidbot2core</artifactId>
-      <version>1.0.4.3</version>
+      <version>v1.0.4.3</version>
     </dependency>
     <dependency>
       <groupId>com.sedmelluq</groupId>
