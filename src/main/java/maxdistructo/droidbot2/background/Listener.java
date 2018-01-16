@@ -11,6 +11,7 @@ import maxdistructo.droidbot2.core.Config;
 import maxdistructo.droidbot2.core.Perms;
 import maxdistructo.droidbot2.core.Roles;
 import maxdistructo.droidbot2.core.Utils;
+import maxdistructo.droidbot2.core.Client;
 import org.json.JSONException;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.GuildCreateEvent;
@@ -37,6 +38,7 @@ import org.json.JSONObject;
 import sx.blah.discord.util.RoleBuilder;
 
 import static maxdistructo.droidbot2.BaseBot.client;
+import static maxdistructo.droidbot2.core.Utils.s;
 
 public class Listener {
     public static boolean blackJackRunning = false;
@@ -49,7 +51,7 @@ public class Listener {
     public void onMessageReceivedEvent(MessageReceivedEvent event) throws RateLimitException, DiscordException, MissingPermissionsException {
         try {
             IMessage message = event.getMessage();
-
+            prefix = Client.prefix; // To allow for easy compatability with old code. All new code will reference #Client.prefix directly.
             List<IChannel> mentionedChannelList = message.getChannelMentions();
             Object[] mentionedChannelArray = mentionedChannelList.toArray();
             IChannel channelMention;
@@ -69,8 +71,35 @@ public class Listener {
             }
             String content = message.getContent();
             Object messageContent[] = content.split(" ");
+            
+            if (messageContent[0].equals(prefix + "fixServer") && Perms.checkOwner_Guild(message)){ //Due to requirement of server configs (Blame Swear Filter), this command is separated so that if errors are being thrown this command can still run.
+                    IGuild guild = message.getGuild();
+                try{
+                    FileUtils.copyURLToFile(new URL("https://maxdistructo.github.io/droidbot2/downloads/config/defaultconfig.txt"), new File(s + "droidbot/config/" + message.getGuild().getID() + ".txt"));
+                }
+                catch(Exception e){
+                    Message.throwError(e, message);
+                }
+                    RoleBuilder rb = new RoleBuilder(guild);
+                    rb.withName("Voice Chatting");
+                    rb.setHoist(false);
+                    rb.setMentionable(false);
+                    rb.build();
+                    RoleBuilder rb2 = new RoleBuilder(guild);
+                    rb2.withName("Payday");
+                    rb2.setHoist(false);
+                    rb2.setMentionable(false);
+                    rb2.build();
+                    RoleBuilder rb3 = new RoleBuilder(guild);
+                    rb3.withName("Bot Abuser");
+                    rb3.setHoist(false);
+                    rb3.setMentionable(false);
+                    rb3.build();
+                    Message.sendMessage(guild.getDefaultChannel(), "Thank you for letting me join your server. I am " + client.getOurUser().getName() + " and my features can be found by using the command " + prefix + "help.(Broken RN OOPS) Please DM " + client.getApplicationOwner().mention() + " to add additional moderators/admins for your server.");
+
+                }
+            
             SwearFilter.filter(message, messageContent);
-            prefix = Config.readPrefix();
             JSONObject root = Config.readServerConfig(message.getGuild());
             IChannel loggingChannel;
             try {
@@ -256,25 +285,6 @@ public class Listener {
                     IRole role = Roles.getRole(message, (String)messageContent[2]);
                     role.changeName((String)messageContent[3]);
                     message.delete();
-                } else if (messageContent[0].equals(prefix + "fixServerConfig")){
-                    IGuild guild = message.getGuild();
-                    RoleBuilder rb = new RoleBuilder(guild);
-                    rb.withName("Voice Chatting");
-                    rb.setHoist(false);
-                    rb.setMentionable(false);
-                    rb.build();
-                    RoleBuilder rb2 = new RoleBuilder(guild);
-                    rb2.withName("Payday");
-                    rb2.setHoist(false);
-                    rb2.setMentionable(false);
-                    rb2.build();
-                    RoleBuilder rb3 = new RoleBuilder(guild);
-                    rb3.withName("Bot Abuser");
-                    rb3.setHoist(false);
-                    rb3.setMentionable(false);
-                    rb3.build();
-                    Message.sendMessage(guild.getDefaultChannel(), "Thank you for letting me join your server. I am " + client.getOurUser().getName() + " and my features can be found by using the command " + prefix + "help.(Broken RN OOPS) Please DM " + client.getApplicationOwner().mention() + " to add additional moderators/admins for your server.");
-
                 }
 
 
