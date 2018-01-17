@@ -67,22 +67,11 @@ public class Listener {
                 catch(Exception e){
                     Message.throwError(e, message);
                 }
-                    RoleBuilder rb = new RoleBuilder(guild);
-                    rb.withName("Voice Chatting");
-                    rb.setHoist(false);
-                    rb.setMentionable(false);
-                    rb.build();
-                    RoleBuilder rb2 = new RoleBuilder(guild);
-                    rb2.withName("Payday");
-                    rb2.setHoist(false);
-                    rb2.setMentionable(false);
-                    rb2.build();
+                    Roles.makeNewRole(guild, "Voice Chatting", false, false);
+                    Roles.makeNewRole(guild, "Payday", false, false);
+                    Roles.makeNewRole(guild, "Bot Abuser", false, false);
                     RoleBuilder rb3 = new RoleBuilder(guild);
-                    rb3.withName("Bot Abuser");
-                    rb3.setHoist(false);
-                    rb3.setMentionable(false);
-                    rb3.build();
-                    Message.sendMessage(guild.getDefaultChannel(), "Thank you for letting me join your server. I am " + client.getOurUser().getName() + " and my features can be found by using the command " + prefix + "help.(Broken RN OOPS) Please DM " + client.getApplicationOwner().mention() + " to add additional moderators/admins for your server.");
+                    Message.sendMessage(guild.getDefaultChannel(), "Thank you for letting me join your server. I am " + client.getOurUser().getName() + " and my features can be found by using the command " + prefix + "help.");
 
                 }
        
@@ -315,33 +304,13 @@ public class Listener {
             } else {
                 name = client.getApplicationName();
             }
-            //Message.sendMessage(guild.getDefaultChannel(), name + " has been loaded. Version: " + BaseBot.version);
-
-            List<IRole> rolesList = guild.getRolesByName("Payday");
-            IRole paydayRole = null;
-            try {
-                paydayRole = rolesList.get(0);
-            }
-            catch (Exception e){
-                System.out.println("Could not find Payday role for server - " + guild.getName());
-            }
-            if(paydayRole != null) {
-                List<IUser> paydayUsers = guild.getUsersByRole(paydayRole);
-                Object[] paydayArray = paydayUsers.toArray();
-
-                int ii = 0;
-                while (ii < paydayArray.length) {
-                    IUser user = (IUser) paydayArray[ii];
-                    user.removeRole(paydayRole);
-                    ii++;
-                }
-            }            i++;
+            CasinoConfig.doPaydayReset(guild);
+            i++;
         }
 
-
     }
-    @EventSubscriber
-    public static void onGuildJoinEvent(GuildCreateEvent event){
+    
+    /*public static void onGuildJoinEvent(GuildCreateEvent event){
         IGuild guild = event.getGuild();
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
@@ -391,6 +360,4 @@ public class Listener {
 
         Message.sendMessage(guild.getDefaultChannel(), "Thank you for letting me join your server. I am " + client.getOurUser().getName() + " and my features can be found by using the command " + prefix + "help. Please DM " + client.getApplicationOwner().mention() + " to add additional moderators/admins for your server.");
 
-    }
-}
-
+    }*/
