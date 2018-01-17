@@ -13,6 +13,7 @@ public class SwearFilter {
     public static void filter(IMessage message, Object[] messageContentIn){
         List<String> messageContent2 = Arrays.asList((String[])messageContentIn);
         List<String> messageContent = Arrays.asList(new String[messageContentIn.length]);
+        boolean doFilter = true;
         int iiii = 0;
         while(iiii < messageContent2.size()){
             messageContent.set(iiii, messageContent2.get(iiii).toLowerCase());
@@ -20,7 +21,15 @@ public class SwearFilter {
         }
 
         JSONObject config = Config.readServerConfig(message.getGuild());
+        
+        try{
         JSONArray array = config.getJSONArray("SwearWords");
+        }
+        catch(Exception e){
+            doFilter = false;
+        }
+        
+        if(doFilter && config.getBoolean("SwearFilter")){
         String[] swearWords = new String[array.length()];
         String[] pronouns = {"u", "you"};
         for (int i = 0; i < array.length(); i++) {
@@ -30,7 +39,7 @@ public class SwearFilter {
         int ii = 0;
         int iii = 0;
         while(ii < swearWords.length) {
-            if (messageContent.contains(swearWords[ii]) && config.getBoolean("SwearFilter")) {
+            if (messageContent.contains(swearWords[ii])) {
                 while(iii < pronouns.length) {
                     if (messageContent.contains(pronouns[iii])) {
                         message.reply("please stop swearing. If you keep swearing, a Mod/Admin will mute/kick/ban you depending on severity.");
@@ -42,6 +51,7 @@ public class SwearFilter {
             iii = 0;
             ii++;
         }
+      }
 
     }
 
