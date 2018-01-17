@@ -238,5 +238,29 @@ public class CasinoConfig {
         }
         return new JSONObject(tokener);
     }
+    public static void doPaydayReset(IGuild guild){
+            List<IRole> rolesList = guild.getRolesByName("Payday");
+            IRole paydayRole = null;
+        
+            try {
+                paydayRole = rolesList.get(0);
+            }
+            catch (Exception e){
+                System.out.println("Could not find Payday role for server - " + guild.getName());
+            }
+        
+            if(paydayRole != null) {
+                List<IUser> paydayUsers = guild.getUsersByRole(paydayRole);
+                Object[] paydayArray = paydayUsers.toArray();
+
+                int ii = 0;
+                while (ii < paydayArray.length) {
+                    IUser user = (IUser) paydayArray[ii];
+                    user.removeRole(paydayRole);
+                    ii++;
+                }
+            }          
+    
+    }
 
 }
