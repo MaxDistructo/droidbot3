@@ -52,23 +52,10 @@ public class Listener {
         try {
             IMessage message = event.getMessage();
             prefix = Client.prefix; // To allow for easy compatability with old code. All new code will reference #Client.prefix directly.
-            List<IChannel> mentionedChannelList = message.getChannelMentions();
-            Object[] mentionedChannelArray = mentionedChannelList.toArray();
-            IChannel channelMention;
-            if (mentionedChannelArray.length > 0) {
-                channelMention = (IChannel) mentionedChannelArray[0];
-            } else {
-                channelMention = null;
-            }
             
-            List<IUser> mentionedList = message.getMentions();
-            Object[] mentionedArray = mentionedList.toArray();
-            IUser mentioned;
-            if (mentionedArray.length > 0) {
-                mentioned = (IUser) mentionedArray[0];
-            } else {
-                mentioned = null;
-            }
+            IChannel channelMention = Utils.getMentionedChannel(message);
+            IUser mentioned = Utils.getMentionedUser(message);
+            
             String content = message.getContent();
             Object messageContent[] = content.split(" ");
             
@@ -98,22 +85,8 @@ public class Listener {
                     Message.sendMessage(guild.getDefaultChannel(), "Thank you for letting me join your server. I am " + client.getOurUser().getName() + " and my features can be found by using the command " + prefix + "help.(Broken RN OOPS) Please DM " + client.getApplicationOwner().mention() + " to add additional moderators/admins for your server.");
 
                 }
-            
+       
             SwearFilter.filter(message, messageContent);
-            JSONObject root = Config.readServerConfig(message.getGuild());
-            IChannel loggingChannel;
-            try {
-                if (client.getChannelByID(root.getLong("GuildLoggingChannel")) == null) {
-                    loggingChannel = client.getChannelByID(root.getLong("GuildLoggingChannel"));
-                    if (content.charAt(0) == prefix.charAt(0)) {
-                        Message.sendMessage(loggingChannel, message.getAuthor().getName() + " " + content);
-                    }
-                }
-            }
-            catch(JSONException e){
-                Message.sendError(e);
-                e.printStackTrace();
-            }
 
             if (!Roles.checkForBotAbuse(message)) {
                 if (messageContent[0].equals(prefix + "bj")) { //WIP
