@@ -51,6 +51,7 @@ public class Listener {
     public void onMessageReceivedEvent(MessageReceivedEvent event) throws RateLimitException, DiscordException, MissingPermissionsException {
         try {
             IMessage message = event.getMessage();
+            IGuild guild = message.getGuild();
             prefix = Client.prefix; // To allow for easy compatability with old code. All new code will reference #Client.prefix directly.
             
             IChannel channelMention = Utils.getMentionedChannel(message);
@@ -58,27 +59,10 @@ public class Listener {
             
             String content = message.getContent();
             Object messageContent[] = content.split(" ");
-            
-            if (messageContent[0].equals(prefix + "fixServer") && Perms.checkOwner_Guild(message)){ //Due to requirement of server configs (Blame Swear Filter), this command is separated so that if errors are being thrown this command can still run.
-                    IGuild guild = message.getGuild();
-                try{
-                    FileUtils.copyURLToFile(new URL("https://maxdistructo.github.io/droidbot2/downloads/config/defaultconfig.txt"), new File(s + "droidbot/config/" + message.getGuild().getID() + ".txt"));
-                }
-                catch(Exception e){
-                    Message.throwError(e, message);
-                }
-                    Roles.makeNewRole(guild, "Voice Chatting", false, false);
-                    Roles.makeNewRole(guild, "Payday", false, false);
-                    Roles.makeNewRole(guild, "Bot Abuser", false, false);
-                    RoleBuilder rb3 = new RoleBuilder(guild);
-                    Message.sendMessage(guild.getDefaultChannel(), "Thank you for letting me join your server. I am " + client.getOurUser().getName() + " and my features can be found by using the command " + prefix + "help.");
-
-                }
-       
             SwearFilter.filter(message, messageContent);
 
             if (!Roles.checkForBotAbuse(message)) {
-                if (messageContent[0].equals(prefix + "bj")) { //WIP
+                if (messageContent[0].equals(prefix + "bj")) { 
                     message.reply(BlackJack.blackjack(messageContent, message));
                 } else if (messageContent[0].toString().toLowerCase().equals("hit") && Perms.checkGames(message) || messageContent[0].toString().toLowerCase().equals("stay") && Perms.checkGames(message)) {
                     message.reply(BlackJack.continueGame(message, (String[]) messageContent, CasinoConfig.readBJFields(message)));
@@ -100,11 +84,7 @@ public class Listener {
                 } else if (messageContent[0].equals(prefix + "fortune")) { //Works
                     message.reply("", Message.simpleEmbed(message.getAuthor(), "Fortune", Fortune.onFortuneCommand(messageContent, message), message));
                     message.delete();
-                }
-                //else if(messageContent[0].equals(prefix + "game")){ //Broke
-                //  message.reply(GameCommand.onGameCommand(messageContent, message));
-                // }
-                else if (messageContent[0].equals(prefix + "info")) { //Works Well
+                } else if (messageContent[0].equals(prefix + "info")) { //Works Well
                     Message.sendMessage(message.getChannel(), Message.simpleEmbed(message.getAuthor(), "Info", Info.onInfoCommand(messageContent, message, mentioned), message));
                     message.delete();
                 } else if (messageContent[0].equals(prefix + "insult")) { //Works
@@ -166,14 +146,7 @@ public class Listener {
                 } else if (messageContent[0].equals(prefix + "ping")) {
                     Ping.onPingCommand(message);
                     message.delete();
-                }//else if (messageContent[0].equals(prefix + "mute")) {
-                   // Message.sendMessage(message.getChannel(), PlayerFun.onMuteCommand(message, mentioned));
-                   // message.delete();
-                    // } else if (messageContent[0].equals(prefix + "lenny") || messageContent[0].equals("/lenny")) {
-                    //     message.edit(PlayerFun.onLennyCommand());
-                    // } else if (messageContent[0].equals("/shrug")) { Won't work cause F U Discord.
-                    //      message.edit(PlayerFun.onShrugCommand());
-                 else if (messageContent[0].equals(prefix + "xp")) {
+                } else if (messageContent[0].equals(prefix + "xp")) {
                     Message.sendMessage(message.getChannel(), PlayerFun.onXpCommand(mentioned));
                     message.delete();
                 } else if (messageContent[0].equals(prefix + "punch")) {
@@ -201,9 +174,6 @@ public class Listener {
                     Message.sendMessage(message.getChannel(), Admin.changeRolePerm(message, messageContent));
                 } else if (messageContent[0].equals(prefix + "@admin") && messageContent[1].equals("restart")) {
                     Restart.run(message);
-                } else if (messageContent[0].equals(prefix + "remindme") || messageContent[0].equals(prefix + "reminder")) {
-                    Reminder.onReminderCommand(messageContent, message);
-                    message.delete();
                 } else if (messageContent[0].equals(prefix + "emote") && messageContent[1].equals("add")) {
                     Emote.addEmoteCommand(message, messageContent);
                     message.addReaction(ReactionEmoji.of("/:heavy_check_mark:"));
@@ -212,16 +182,6 @@ public class Listener {
                     message.delete();
                 } else if (messageContent[0].equals(prefix + "emote")) {
                     Emote.onEmoteCommand(message, messageContent);
-                    message.delete();
-                } else if (messageContent[0].equals(prefix + "@copyPerms") && Perms.checkOwner_Guild(message)) {
-                    System.out.println("Getting Role 1 - User's Highest Role");
-                    IRole role1 = message.getAuthor().getRolesForGuild(message.getGuild()).get(0);
-                    System.out.println("Getting Role 2 - Your Specified Role");
-                    IRole role2 = Roles.getRole(message, Utils.makeNewString(messageContent, 1));
-                    if (role1 != null && role2 != null) {
-                        System.out.println("Pasting Perms from Role 2 to Role 1");
-                        Roles.copyRolePerms(role2, role1);
-                    }
                     message.delete();
                 } else if (messageContent[0].equals(prefix + "admin") && messageContent[1].equals("fixPerms") && !messageContent[2].equals(null)){
                     if(Perms.checkOwner(message)){
@@ -243,22 +203,22 @@ public class Listener {
                 } else if (messageContent[0].equals(prefix + "@announce")){
                     Admin.onAnnounceCommand(messageContent, message);
                     message.delete();
-                } else if (messageContent[0].equals(prefix + "@roles") && messageContent[1].equals("name") && Perms.checkAdmin(message)){
-                    IRole role = Roles.getRole(message, (String)messageContent[2]);
-                    role.changeName((String)messageContent[3]);
-                    message.delete();
+                } else if (messageContent[0].equals(prefix + "fixServer") && Perms.checkOwner_Guild(message)){ //Due to requirement of server configs (Blame Swear Filter), this command is separated so that if errors are being thrown this command can still run.
+                    IGuild guild = message.getGuild();
+                try{
+                    FileUtils.copyURLToFile(new URL("https://maxdistructo.github.io/droidbot2/downloads/config/defaultconfig.txt"), new File(s + "droidbot/config/" + message.getGuild().getID() + ".txt"));
                 }
+                catch(Exception e){
+                    Message.throwError(e, message);
+                }
+                    Roles.makeNewRole(guild, "Voice Chatting", false, false);
+                    Roles.makeNewRole(guild, "Payday", false, false);
+                    Roles.makeNewRole(guild, "Bot Abuser", false, false);
+                    RoleBuilder rb3 = new RoleBuilder(guild);
+                    Message.sendMessage(guild.getDefaultChannel(), "Thank you for letting me join your server. I am " + client.getOurUser().getName() + " and my features can be found by using the command " + prefix + "help.");
 
-
-
-
-                //  else if(messageContent[0].equals(prefix + "trivia")) {
-                //          message.reply(Trivia.onTriviaCommand(messageContent, message));
-                //   }
-                // else if(messageContent[0].equals(triviaAnswer)){
-                //       Trivia.addTriviaScore(event.getMessage());
-                //        Trivia.checkTrivia(event.getMessage());
-                // }
+                }
+                
             } else if (content.charAt(0) == prefix.charAt(0)) {
                 message.reply("Please wait until you have lost your Bot Abuser role to use this command.");
             }
