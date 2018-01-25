@@ -61,7 +61,10 @@ public class Help {
         Help.registerModCommand(prefix + "info <@User>: Displays the info of the mentioned user. \n");
         Help.registerCommand(prefix + "ping: Pings the bot for responce time \n");
         Help.registerCommand(prefix + "say: Has the bot say what you tell it in your channel \n");
-        Help.registerModCommand(prefix + "say <#channel>: Has the bot say what you input but in another channel");                
+        Help.registerModCommand(prefix + "say <#channel>: Has the bot say what you input but in another channel");
+        Help.registerAdminCommand(prefix + "@admin <addMod <@User>|addAdmin <@User>|botAbuse <@User>|perms RoleName addedPerm| setColor RoleName colorCode");
+        Help.registerModCommand(prefix + "@mute <@User>: Mutes a user");
+        Help.registerModCommand(prefix + "@unmute <@User> [#channel]: Unmutes a user in a specified channel or if no channel is specified, all channels.");
     }
     
 }
