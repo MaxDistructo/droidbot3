@@ -10,6 +10,7 @@ import sx.blah.discord.handle.obj.IUser;
 
 public class Help {
 
+    @Depreciated
     public static String onHelpCommand(){
         IUser user = BaseBot.client.getOurUser();
         return "Commands List for " + user.mention(true) + "\n \n" +
@@ -37,6 +38,7 @@ public class Help {
                 Listener.prefix + "tnt <@user>: Blow up another user." +
                 Listener.prefix + "xp [@user]: Shows the rules on Tatsu XP system. Can have a user mention to show another user.\n";
     }
+    @Depreciated
     public static void onAdminHelpCommand(IMessage message){
         Message.sendDM(message.getAuthor(),onHelpCommand());
         String sendMessage = "Admin Commands List for " + BaseBot.client.getOurUser().mention(true) + "\n \n"+
