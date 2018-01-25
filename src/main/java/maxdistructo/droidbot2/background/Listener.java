@@ -74,14 +74,6 @@ public class Listener {
                 } else if (messageContent[0].equals(prefix + "shutdown")) { //Works
                     message.reply("", Message.simpleEmbed(message.getAuthor(), "Shutdown", Shutdown.onShutdownCommand(message), message));
                     message.delete();
-                } else if (messageContent[0].equals(prefix + "help")) {
-                    if(Perms.checkAdmin(message)){
-                        Help.onAdminHelpCommand(message);
-                    }
-                    else{
-                        Message.sendDM(message.getAuthor(), Help.onHelpCommand());
-                    }
-                    message.delete();
                 } else if (messageContent[0].equals(prefix + "say") && channelMention != null) {
                     Message.sendMessage(channelMention, Say.onSayCommand(messageContent, message, channelMention));
                     message.delete();
