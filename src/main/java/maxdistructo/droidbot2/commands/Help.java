@@ -54,13 +54,13 @@ public class Help {
     }
     
     public static void registerHelp(){
-        Help.registerCommand(prefix + "check <@User>: Checks permissions for a user. \n"); //Please tag all commands with \n at the end. This just makes it look better.
+        Help.registerCommand(prefix + "check <@User>: Checks permissions for a user.");
         Help.registerAdminCommand(prefix + "debug: Outputs debug information. (This is locked because of @Everyone mention in it.)");
-        Help.registerCommand(prefix + "emote <request <EmoteURL> |emote name>: Displays the emote or allows you to create a request for one \n");
-        Help.registerCommand(prefix + "info: Gets your info \n");
-        Help.registerModCommand(prefix + "info <@User>: Displays the info of the mentioned user. \n");
-        Help.registerCommand(prefix + "ping: Pings the bot for responce time \n");
-        Help.registerCommand(prefix + "say: Has the bot say what you tell it in your channel \n");
+        Help.registerCommand(prefix + "emote <request <EmoteURL> |emote name>: Displays the emote or allows you to create a request for one");
+        Help.registerCommand(prefix + "info: Gets your info");
+        Help.registerModCommand(prefix + "info <@User>: Displays the info of the mentioned user.");
+        Help.registerCommand(prefix + "ping: Pings the bot for responce time");
+        Help.registerCommand(prefix + "say: Has the bot say what you tell it in your channel");
         Help.registerModCommand(prefix + "say <#channel>: Has the bot say what you input but in another channel");
         Help.registerAdminCommand(prefix + "@admin <addMod <@User>|addAdmin <@User>|botAbuse <@User>|perms RoleName addedPerm| setColor RoleName colorCode");
         Help.registerModCommand(prefix + "@mute <@User>: Mutes a user");
