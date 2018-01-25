@@ -62,33 +62,11 @@ public class Listener {
             SwearFilter.filter(message, messageContent);
 
             if (!Roles.checkForBotAbuse(message)) {
-                if (messageContent[0].equals(prefix + "bj")) { 
-                    message.reply(BlackJack.blackjack(messageContent, message));
-                } else if (messageContent[0].toString().toLowerCase().equals("hit") && Perms.checkGames(message) || messageContent[0].toString().toLowerCase().equals("stay") && Perms.checkGames(message)) {
-                    message.reply(BlackJack.continueGame(message, (String[]) messageContent, CasinoConfig.readBJFields(message)));
-                } else if (messageContent[0].equals(prefix + "check")) { //Works
+                  if (messageContent[0].equals(prefix + "check")) { //Works
                     Message.sendMessage(message.getChannel(), Message.simpleEmbed(message.getAuthor(), "Check", Check.onCheckCommand(messageContent, message), message));
-                    message.delete();
-                } else if (messageContent[0].equals(prefix + "casino") && messageContent[1].equals("info") && mentioned != null && Perms.checkGames(message)) { //Works except for admin commands
-                    message.reply("", Casino.onCasinoInfo(message, mentioned));
-                    message.delete();
-                } else if (messageContent[0].equals(prefix + "casino") && messageContent[1].equals("info") && Perms.checkGames(message)) { //Works except for admin commands
-                    message.reply("", Casino.onCasinoInfo(message));
-                    message.delete();
-                } else if (messageContent[0].equals(prefix + "casino") && Perms.checkGames(message)) { //Works except for admin commands
-                    message.reply("", Message.simpleEmbed(message.getAuthor(), "Casino", Casino.onCasinoCommand(messageContent, message, message.getAuthor()), message));
-                    message.delete();
-                } else if (messageContent[0].equals(prefix + "50") || messageContent[0].equals(prefix + "fifty") && Perms.checkGames(message)) { //Works
-                    message.reply("", Message.simpleEmbed(message.getAuthor(), "FiftyFifty", FiftyFifty.onFiftyCommand(messageContent, message), message));
-                    message.delete();
-                } else if (messageContent[0].equals(prefix + "fortune")) { //Works
-                    message.reply("", Message.simpleEmbed(message.getAuthor(), "Fortune", Fortune.onFortuneCommand(messageContent, message), message));
                     message.delete();
                 } else if (messageContent[0].equals(prefix + "info")) { //Works Well
                     Message.sendMessage(message.getChannel(), Message.simpleEmbed(message.getAuthor(), "Info", Info.onInfoCommand(messageContent, message, mentioned), message));
-                    message.delete();
-                } else if (messageContent[0].equals(prefix + "insult")) { //Works
-                    Message.sendMessage(message.getChannel(), Message.simpleEmbed(message.getAuthor(), "Insult", Insult.onInsultCommand(messageContent, message, mentioned), message));
                     message.delete();
                 } else if (messageContent[0].equals(prefix + "debug")) { //Needs perms set.
                     message.reply("", Message.simpleEmbed(message.getAuthor(), "Debug", Debug.onDebugCommand((String[]) messageContent, message), message));
@@ -104,53 +82,14 @@ public class Listener {
                         Message.sendDM(message.getAuthor(), Help.onHelpCommand());
                     }
                     message.delete();
-                } else if (messageContent[0].equals(prefix + "allin") && Perms.checkGames(message)) {
-                    message.reply("", Message.simpleEmbed(message.getAuthor(), "Allin", Allin.onAllinCommand(messageContent, message), message));
-                    message.delete();
                 } else if (messageContent[0].equals(prefix + "say") && channelMention != null) {
                     Message.sendMessage(channelMention, Say.onSayCommand(messageContent, message, channelMention));
                     message.delete();
                 } else if (messageContent[0].equals(prefix + "say")) {
                     Message.sendMessage(message.getChannel(), Say.onSayCommand(messageContent, message, channelMention));
                     message.delete();
-                } else if (messageContent[0].equals(prefix + "spam")) {
-                    Message.sendMessage(message.getChannel(), Spam.onSpamCommand(messageContent, message, mentioned));
-                    message.delete();
-                } else if (messageContent[0].equals(prefix + "slap")) {
-                    Message.sendMessage(message.getChannel(), PlayerFun.onSlapCommand(message, mentioned));
-                    message.delete();
-                } else if (messageContent[0].equals(prefix + "tnt")) {
-                    Message.sendMessage(message.getChannel(), PlayerFun.onTntCommand(message, mentioned));
-                    message.delete();
-                } else if (messageContent[0].equals(prefix + "kiss")) {
-                    Message.sendMessage(message.getChannel(), PlayerFun.onKissCommand(message, mentioned));
-                    message.delete();
-                } else if (messageContent[0].equals(prefix + "hug")) {
-                    Message.sendMessage(message.getChannel(), PlayerFun.onHugCommand(message, mentioned));
-                    message.delete();
-                } else if (messageContent[0].equals(prefix + "poke")) {
-                    Message.sendMessage(message.getChannel(), PlayerFun.onPokeCommand(message, mentioned));
-                    message.delete();
-                } else if (messageContent[0].equals(prefix + "respect") || messageContent[0].equals("/f")) {
-                    Message.sendMessage(message.getChannel(), PlayerFun.onPayRespects(message, mentioned));
-                    message.delete();
-                } else if (messageContent[0].equals(prefix + "banhammer")) {
-                    Message.sendMessage(message.getChannel(), PlayerFun.onBanHammer(message, mentioned));
-                    message.delete();
-                } else if (messageContent[0].equals(prefix + "shoot")) {
-                    Message.sendMessage(message.getChannel(), PlayerFun.onShootCommand(message, mentioned));
-                    message.delete();
-                } else if (messageContent[0].equals(prefix + "stab")) {
-                    Message.sendMessage(message.getChannel(), PlayerFun.onStabCommand(message, mentioned));
-                    message.delete();
                 } else if (messageContent[0].equals(prefix + "ping")) {
                     Ping.onPingCommand(message);
-                    message.delete();
-                } else if (messageContent[0].equals(prefix + "xp")) {
-                    Message.sendMessage(message.getChannel(), PlayerFun.onXpCommand(mentioned));
-                    message.delete();
-                } else if (messageContent[0].equals(prefix + "punch")) {
-                    Message.sendMessage(message.getChannel(), PlayerFun.onPunchCommand(message, mentioned));
                     message.delete();
                 } else if (messageContent[0].equals(prefix + "@admin") && messageContent[1].equals("addMod") && Perms.checkAdmin(message)) {
                     Message.sendMessage(message.getChannel(), Admin.addMod(message, mentioned));
