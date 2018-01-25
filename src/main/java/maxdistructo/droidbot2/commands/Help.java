@@ -5,6 +5,7 @@ import maxdistructo.droidbot2.background.Listener;
 import maxdistructo.droidbot2.core.message.Message;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IUser;
+import static maxdistructo.droidbot2.background.Listener.prefix;
 
 
 
@@ -51,4 +52,16 @@ public class Help {
         Message.sendDM(message.getAuthor(),sendMessage);
 
     }
+    
+    public static void registerHelp(){
+        Help.registerCommand(prefix + "check <@User>: Checks permissions for a user. \n"); //Please tag all commands with \n at the end. This just makes it look better.
+        Help.registerAdminCommand(prefix + "debug: Outputs debug information. (This is locked because of @Everyone mention in it.)");
+        Help.registerCommand(prefix + "emote <request <EmoteURL> |emote name>: Displays the emote or allows you to create a request for one \n");
+        Help.registerCommand(prefix + "info: Gets your info \n");
+        Help.registerModCommand(prefix + "info <@User>: Displays the info of the mentioned user. \n");
+        Help.registerCommand(prefix + "ping: Pings the bot for responce time \n");
+        Help.registerCommand(prefix + "say: Has the bot say what you tell it in your channel \n");
+        Help.registerModCommand(prefix + "say <#channel>: Has the bot say what you input but in another channel");                
+    }
+    
 }
