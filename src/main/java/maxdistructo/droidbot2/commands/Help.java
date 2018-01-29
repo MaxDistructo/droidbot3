@@ -5,11 +5,13 @@ import maxdistructo.droidbot2.background.Listener;
 import maxdistructo.droidbot2.core.message.Message;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IUser;
+import static maxdistructo.droidbot2.background.Listener.prefix;
 
 
 
 public class Help {
 
+    @Depreciated
     public static String onHelpCommand(){
         IUser user = BaseBot.client.getOurUser();
         return "Commands List for " + user.mention(true) + "\n \n" +
@@ -37,6 +39,7 @@ public class Help {
                 Listener.prefix + "tnt <@user>: Blow up another user." +
                 Listener.prefix + "xp [@user]: Shows the rules on Tatsu XP system. Can have a user mention to show another user.\n";
     }
+    @Depreciated
     public static void onAdminHelpCommand(IMessage message){
         Message.sendDM(message.getAuthor(),onHelpCommand());
         String sendMessage = "Admin Commands List for " + BaseBot.client.getOurUser().mention(true) + "\n \n"+
@@ -49,4 +52,19 @@ public class Help {
         Message.sendDM(message.getAuthor(),sendMessage);
 
     }
+    
+    public static void registerHelp(){
+        Help.registerCommand(prefix + "check <@User>: Checks permissions for a user.");
+        Help.registerAdminCommand(prefix + "debug: Outputs debug information. (This is locked because of @Everyone mention in it.)");
+        Help.registerCommand(prefix + "emote <request <EmoteURL> |emote name>: Displays the emote or allows you to create a request for one");
+        Help.registerCommand(prefix + "info: Gets your info");
+        Help.registerModCommand(prefix + "info <@User>: Displays the info of the mentioned user.");
+        Help.registerCommand(prefix + "ping: Pings the bot for responce time");
+        Help.registerCommand(prefix + "say: Has the bot say what you tell it in your channel");
+        Help.registerModCommand(prefix + "say <#channel>: Has the bot say what you input but in another channel");
+        Help.registerAdminCommand(prefix + "@admin <addMod <@User>|addAdmin <@User>|botAbuse <@User>|perms RoleName addedPerm| setColor RoleName colorCode");
+        Help.registerModCommand(prefix + "@mute <@User>: Mutes a user");
+        Help.registerModCommand(prefix + "@unmute <@User> [#channel]: Unmutes a user in a specified channel or if no channel is specified, all channels.");
+    }
+    
 }

@@ -20,6 +20,7 @@ public class BaseBot {
         LOGGER.info("Client Created");
         //client.getDispatcher().registerListener(new AudioMain());
         //LOGGER.info("Registered Audio Commands ");
+        Help.registerHelp();
         client.getDispatcher().registerListener(listener);
         LOGGER.info("Registered Listener");
     }
