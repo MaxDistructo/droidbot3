@@ -180,13 +180,15 @@ public class Admin {
     }
 
     public static void onAnnounceCommand(Object[] args, IMessage message){
-        if(message.getAuthor() == client.getApplicationOwner()){
+        if(Perms.checkOwner(message)){
             String sendMessage = Utils.makeNewString(args, 1);
             List<IGuild> guilds = client.getGuilds();
             Object[] guildArray = guilds.toArray();
             int i = 0;
             while(i < guildArray.length){
                 IGuild guild = (IGuild) guildArray[i];
+                List<IChannel> announcementsList = guild.getChannelsByName("announcements");
+                
                 Message.sendMessage(guild.getDefaultChannel(), "@here " + sendMessage);
                 i++;
             }
