@@ -60,27 +60,6 @@ public class Admin {
         }
         return "Command Error";
     }
-    public static String addCasinoBalance(Object[] args, IMessage message, IUser mentioned){ // !@casino balance add @user <numofchips>
-        CasinoConfig.readCasino(mentioned,message.getGuild());
-        CasinoConfig.CHIPS = CasinoConfig.CHIPS + Utils.convertToInt(args[4]);
-        CasinoConfig.writeCasino(mentioned,message.getGuild());
-        NumberFormat nf = NumberFormat.getInstance();
-        return "Successfully added " + nf.format(Utils.convertToInt(args[4])) + " chips to " + mentioned.getDisplayName(message.getGuild()) + "'s casino balance.";
-    }
-    public static String subtractCasinoBalance(Object[] args, IMessage message, IUser mentioned){ // !@casino balance add @user <numofchips>
-        CasinoConfig.readCasino(mentioned,message.getGuild());
-        CasinoConfig.CHIPS = CasinoConfig.CHIPS - Utils.convertToInt(args[4]);
-        CasinoConfig.writeCasino(mentioned,message.getGuild());
-        NumberFormat nf = NumberFormat.getInstance();
-        return "Successfully removed " + nf.format(Utils.convertToInt(args[4])) + " chips from " + mentioned.getDisplayName(message.getGuild()) + "'s casino balance.";
-    }
-    public static String setCasinoBalance(Object[] args, IMessage message, IUser mentioned){ // !@casino balance add @user <numofchips>
-        CasinoConfig.readCasino(mentioned,message.getGuild());
-        CasinoConfig.CHIPS = Utils.convertToInt(args[4]);
-        CasinoConfig.writeCasino(mentioned,message.getGuild());
-        NumberFormat nf = NumberFormat.getInstance();
-        return "Successfully set " + mentioned.getDisplayName(message.getGuild()) + "'s casino balance to " + nf.format(Utils.convertToInt(args[4]));
-    }
     public static String setBotAbuser(Object[] args, IMessage message, IUser mentioned){ //!@admin botabuse <@User> days reason
         Roles.applyBotAbuser(message,mentioned);
         Message.sendDM(mentioned,"You have been banned from using " + client.getOurUser().mention(true) + " because of " + args[4]);
