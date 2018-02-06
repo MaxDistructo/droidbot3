@@ -188,8 +188,18 @@ public class Admin {
             while(i < guildArray.length){
                 IGuild guild = (IGuild) guildArray[i];
                 List<IChannel> announcementsList = guild.getChannelsByName("announcements");
+                if(announcementsList != null){
+                    IChannel announcements = announcementsList.get(0);
+                    Message.sendMessage(announcements, "@here " + sendMessage);
+                }
+            long announcementsLong = Config.readAnnouncements(message); // Thanks LufiaGuy2000# for this idea!
+                else if(announcementsLong != null){
+                    Message.sendMessage(guild.getChannelByID(announcementsLong, "@here " + sendMessage);
+                }
+                else{
+                    Message.sendMessage(guild.getDefaultChannel(), "@here " + sendMessage);
+                }
                 
-                Message.sendMessage(guild.getDefaultChannel(), "@here " + sendMessage);
                 i++;
             }
         }
