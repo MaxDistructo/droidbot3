@@ -179,8 +179,8 @@ public class Admin {
         Message.sendMessage(message.getChannel(),Message.simpleEmbed(message.getAuthor(), "Mute", mentioned.getDisplayName(message.getGuild()) + " has been unmuted", message));
     }
 
-    public static void onAnnounceCommand(Object[] args, IMessage message){
-        if(Perms.checkOwner(message)){
+    public static void onAnnounceCommand(Object[] args, IMessage message){ // !announce <Message>
+        if(Perms.checkOwner(message)){ //Channels used will be in the order Specified, Announcements Channel, System Channel, and Default Channel.
             String sendMessage = Utils.makeNewString(args, 1);
             List<IGuild> guilds = client.getGuilds();
             Object[] guildArray = guilds.toArray();
@@ -188,14 +188,18 @@ public class Admin {
             while(i < guildArray.length){
                 IGuild guild = (IGuild) guildArray[i];
                 List<IChannel> announcementsList = guild.getChannelsByName("announcements");
-                if(announcementsList != null){
+                
+                long announcementsLong = Config.readAnnouncements(message); // Thanks LufiaGuy2000# for this idea!
+                if(announcementsLong != null){
+                    Message.sendMessage(guild.getChannelByID(announcementsLong, "@here " + sendMessage);
+                }
+                else if(announcementsList != null){
                     IChannel announcements = announcementsList.get(0);
                     Message.sendMessage(announcements, "@here " + sendMessage);
                 }
-            long announcementsLong = Config.readAnnouncements(message); // Thanks LufiaGuy2000# for this idea!
-                else if(announcementsLong != null){
-                    Message.sendMessage(guild.getChannelByID(announcementsLong, "@here " + sendMessage);
-                }
+                else if(guild.getSystemChannel() != null){//System channel is usually better than default join channel.
+                    Message.sendMessage(guild.getSystemChannel(), "@here " + sendMessage);
+                } 
                 else{
                     Message.sendMessage(guild.getDefaultChannel(), "@here " + sendMessage);
                 }
