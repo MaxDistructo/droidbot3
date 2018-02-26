@@ -22,33 +22,26 @@ public class Trivia{
     private static String list;
     private static long[] players;
     private static int[] scores;
+	private static String gameFile = s + "/droidbot/trivia/" + guild.getLongID() + "/game.txt";
 
-   // @Command(aliases = {"/trivia"}, description = "Trivia Game", usage = "/trivia <listname>|join")
     public static void onTriviaCommand(Object[] args, IMessage message) {
         JSONArray players = new JSONArray();
         players.put(0, message.getAuthor().getLongID());
         JSONArray scores = new JSONArray();
         scores.put(0,0);
-        writeTrivia(players,scores,(String)args[1], 1);
+        writeTrivia(players,scores,(String)args[1], 1, message.getGuild());
         String questionAnswer = triviaReader((String)args[1], 1);
         String[] questionAnswerArray = questionAnswer.split("`");
         sendQuestion(message,questionAnswerArray[0], question);
     }
-    private static String triviaReader(String list, int line){
-        Path currentRelativePath = Paths.get("");
-        String s = currentRelativePath.toAbsolutePath().toString();
-        try {
-            List<String> triviaList = Config.readFileAsList(new File(s + "/droidbot/trivia/" + list + ".txt"));
-            return triviaList.get(line);
-        }
-        catch(Exception e){
-            Message.sendDM(BaseBot.client.getApplicationOwner(), e.getLocalizedMessage());
-            e.printStackTrace();
-        }
-        return "Is this command broken?`YES";
-
+    private static void sendQuestion(IMessage message, String question, int questionNum){
+        Message.sendMessage(message.getChannel(), "Question #" + questionNum + "\n\n" + question);
     }
-    private static void writeTrivia(JSONArray players, JSONArray scores, String list, int question){
+}
+
+private class Config{
+	
+	    private static void writeTrivia(JSONArray players, JSONArray scores, String list, int question, IGuild guild){
         JSONObject root = new JSONObject();
         root.put("list", list);
         root.put("players", players);
@@ -58,7 +51,7 @@ public class Trivia{
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
 
-        try (FileWriter file = new FileWriter(s+"/droidbot/trivia/game.txt")) {
+        try (FileWriter file = new FileWriter(s+"/droidbot/trivia/"+ guild.getLongID() +"/game.txt")) {
             file.write(root.toString());
             System.out.println("Successfully Copied JSON Object to File...");
             System.out.println("\nJSON Object: " + root);
@@ -68,10 +61,10 @@ public class Trivia{
         }
 
     }
-    private static void readTrivia(){
+    private static void readTrivia(IGuild guild){
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
-        File file = new File (s+"/droidbot/trivia/game.txt");
+        File file = new File (s+"/droidbot/trivia/"+ guild.getLongID() + "game.txt");
         URI uri = file.toURI();
         JSONTokener tokener = null;
         try {
@@ -89,7 +82,18 @@ public class Trivia{
 
 
     }
-    private static void sendQuestion(IMessage message, String question, int questionNum){
-        Message.sendMessage(message.getChannel(), "Question #" + questionNum + "\n\n" + question);
+	    private static String triviaReader(String list, int line, IGuild guild){
+        Path currentRelativePath = Paths.get("");
+        String s = currentRelativePath.toAbsolutePath().toString();
+        try {
+            List<String> triviaList = Config.readFileAsList(new File(s + "/droidbot/trivia/" + list + ".txt"));
+            return triviaList.get(line);
+        }
+        catch(Exception e){
+            Message.sendDM(BaseBot.client.getApplicationOwner(), e.getLocalizedMessage());
+            e.printStackTrace();
+        }
+        return "Is this command broken?`YES";
+
     }
 }
