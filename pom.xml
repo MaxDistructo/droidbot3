@@ -39,7 +39,7 @@
     <dependency>
       <groupId>com.github.MaxDistructo</groupId>
       <artifactId>droidbot2core</artifactId>
-      <version>v1.0.6</version>
+      <version>v1.0.8</version>
     </dependency>
     <dependency>
       <groupId>com.github.Discord4J-Addons</groupId>
