@@ -12,6 +12,7 @@ import maxdistructo.droidbot2.core.Perms;
 import maxdistructo.droidbot2.core.Roles;
 import maxdistructo.droidbot2.core.Utils;
 import maxdistructo.droidbot2.core.Client;
+import org.apache.commons.io.FileUtils;
 import org.json.JSONException;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.GuildCreateEvent;
@@ -28,6 +29,7 @@ import sx.blah.discord.util.RateLimitException;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.EnumSet;
@@ -53,16 +55,16 @@ public class Listener {
             IMessage message = event.getMessage();
             IGuild guild = message.getGuild();
             prefix = Client.prefix; // To allow for easy compatability with old code. All new code will reference #Client.prefix directly.
-            
+
             IChannel channelMention = Utils.getMentionedChannel(message);
             IUser mentioned = Utils.getMentionedUser(message);
-            
+
             String content = message.getContent();
             Object messageContent[] = content.split(" ");
             SwearFilter.filter(message, messageContent);
 
-            if (!Roles.checkForBotAbuse(message)) {
-                if (messageContent[0].equals(prefix + "bj")) { 
+            if (!Roles.checkForBotAbuse(message) && content.charAt(0) == prefix.charAt(0)) {
+                if (messageContent[0].equals(prefix + "bj")) {
                     message.reply(BlackJack.blackjack(messageContent, message));
                 } else if (messageContent[0].toString().toLowerCase().equals("hit") && Perms.checkGames(message) || messageContent[0].toString().toLowerCase().equals("stay") && Perms.checkGames(message)) {
                     message.reply(BlackJack.continueGame(message, (String[]) messageContent, CasinoConfig.readBJFields(message)));
@@ -82,7 +84,10 @@ public class Listener {
                     message.reply("", Message.simpleEmbed(message.getAuthor(), "FiftyFifty", FiftyFifty.onFiftyCommand(messageContent, message), message));
                     message.delete();
                 } else if (messageContent[0].equals(prefix + "fortune")) { //Works
-                    message.reply("", Message.simpleEmbed(message.getAuthor(), "Fortune", Fortune.onFortuneCommand(messageContent, message), message));
+                    message.reply("", Message.simpleEmbed(message.getAuthor(), "Fortune", Fortune.onFortuneCommand(message), message));
+                    message.delete();
+                } else if (messageContent[0].equals(prefix + "horoscope")) { //Works
+                    message.reply("", Message.simpleEmbed(message.getAuthor(), "Horoscope", Horoscope.onHoroscopeCommand(messageContent), message));
                     message.delete();
                 } else if (messageContent[0].equals(prefix + "info")) { //Works Well
                     Message.sendMessage(message.getChannel(), Message.simpleEmbed(message.getAuthor(), "Info", Info.onInfoCommand(messageContent, message, mentioned), message));
@@ -97,10 +102,9 @@ public class Listener {
                     message.reply("", Message.simpleEmbed(message.getAuthor(), "Shutdown", Shutdown.onShutdownCommand(message), message));
                     message.delete();
                 } else if (messageContent[0].equals(prefix + "help")) {
-                    if(Perms.checkAdmin(message)){
+                    if (Perms.checkAdmin(message)) {
                         Help.onAdminHelpCommand(message);
-                    }
-                    else{
+                    } else {
                         Message.sendDM(message.getAuthor(), Help.onHelpCommand());
                     }
                     message.delete();
@@ -156,11 +160,11 @@ public class Listener {
                     Message.sendMessage(message.getChannel(), Admin.addMod(message, mentioned));
                 } else if (messageContent[0].equals(prefix + "@admin") && messageContent[1].equals("addAdmin") && Perms.checkAdmin(message)) {
                     Message.sendMessage(message.getChannel(), Admin.addAdmin(message, mentioned));
-                } else if (messageContent[0].equals(prefix + "@casino") && messageContent[1].equals("balance") && messageContent[2].equals("add") && Config.converToInt(messageContent[4]) != 0 && mentioned != null && Perms.checkAdmin(message)) {
+                } else if (messageContent[0].equals(prefix + "@casino") && messageContent[1].equals("balance") && messageContent[2].equals("add") && Utils.convertToInt(messageContent[4]) != 0 && mentioned != null && Perms.checkAdmin(message)) {
                     Message.sendMessage(message.getChannel(), Admin.addCasinoBalance(messageContent, message, mentioned));
-                } else if (messageContent[0].equals(prefix + "@casino") && messageContent[1].equals("balance") && messageContent[2].equals("remove") && Config.converToInt(messageContent[4]) != 0 && mentioned != null && Perms.checkAdmin(message)) {
+                } else if (messageContent[0].equals(prefix + "@casino") && messageContent[1].equals("balance") && messageContent[2].equals("remove") && Utils.convertToInt(messageContent[4]) != 0 && mentioned != null && Perms.checkAdmin(message)) {
                     Message.sendMessage(message.getChannel(), Admin.subtractCasinoBalance(messageContent, message, mentioned));
-                } else if (messageContent[0].equals(prefix + "@casino") && messageContent[1].equals("balance") && messageContent[2].equals("set") && Config.converToInt(messageContent[4]) != 0 && mentioned != null && Perms.checkAdmin(message)) {
+                } else if (messageContent[0].equals(prefix + "@casino") && messageContent[1].equals("balance") && messageContent[2].equals("set") && Utils.convertToInt(messageContent[4]) != 0 && mentioned != null && Perms.checkAdmin(message)) {
                     Message.sendMessage(message.getChannel(), Admin.setCasinoBalance(messageContent, message, mentioned));
                 } else if (messageContent[0].equals(prefix + "@admin") && messageContent[1].equals("botAbuse") && Perms.checkAdmin(message)) {
                     Message.sendMessage(message.getChannel(), Admin.setBotAbuser(messageContent, message, mentioned));
@@ -183,34 +187,32 @@ public class Listener {
                 } else if (messageContent[0].equals(prefix + "emote")) {
                     Emote.onEmoteCommand(message, messageContent);
                     message.delete();
-                } else if (messageContent[0].equals(prefix + "admin") && messageContent[1].equals("fixPerms") && !messageContent[2].equals(null)){
-                    if(Perms.checkOwner(message)){
+                } else if (messageContent[0].equals(prefix + "admin") && messageContent[1].equals("fixPerms") && !messageContent[2].equals(null)) {
+                    if (Perms.checkOwner(message)) {
                         Message.sendDM(message.getGuild().getOwner(), "CasinoBot has left your server because the bot owner though it was missing perms or its permissions were screwed up. Please use this url to re-add CasinoBot to your server. Your server's data has not been affected. https://discordapp.com/oauth2/authorize?client_id=315313967759097857&scope=bot&permissions=470281296");
                         message.getGuild().leave();
                     }
-                } else if (messageContent[0].equals(prefix + "@admin") && messageContent[1].equals("setColor") && !messageContent[2].equals(null) && Perms.checkMod(message)){
-                    Roles.changeColor(Roles.getRole(message,(String) messageContent[2]), (String) messageContent[3]);
+                } else if (messageContent[0].equals(prefix + "@admin") && messageContent[1].equals("setColor") && !messageContent[2].equals(null) && Perms.checkMod(message)) {
+                    Roles.changeColor(Roles.getRole(message, (String) messageContent[2]), (String) messageContent[3]);
                     message.delete();
-                } else if (messageContent[0].equals(prefix + "@mute") && !messageContent[2].equals(null) && Perms.checkAdmin(message)){ //!@mute @User time
-                    Admin.muteUser(message, mentioned, Config.converToInt(messageContent[2]));
+                } else if (messageContent[0].equals(prefix + "@mute") && !messageContent[2].equals(null) && Perms.checkAdmin(message)) { //!@mute @User time
+                    Admin.muteUser(message, mentioned, Utils.convertToInt(messageContent[2]));
                     message.delete();
-                } else if (messageContent[0].equals(prefix + "@unmute") && Perms.checkAdmin(message) && channelMention != null){
+                } else if (messageContent[0].equals(prefix + "@unmute") && Perms.checkAdmin(message) && channelMention != null) {
                     Admin.unmuteUser(message, mentioned, channelMention);
                     message.delete();
-                } else if (messageContent[0].equals(prefix + "@unmute") && Perms.checkAdmin(message)){
+                } else if (messageContent[0].equals(prefix + "@unmute") && Perms.checkAdmin(message)) {
                     Admin.unmuteUser(message, mentioned);
                     message.delete();
-                } else if (messageContent[0].equals(prefix + "@announce")){
+                } else if (messageContent[0].equals(prefix + "@announce")) {
                     Admin.onAnnounceCommand(messageContent, message);
                     message.delete();
-                } else if (messageContent[0].equals(prefix + "fixServer") && Perms.checkOwner_Guild(message)){ //Due to requirement of server configs (Blame Swear Filter), this command is separated so that if errors are being thrown this command can still run.
-                    IGuild guild = message.getGuild();
-                try{
-                    FileUtils.copyURLToFile(new URL("https://maxdistructo.github.io/droidbot2/downloads/config/defaultconfig.txt"), new File(s + "droidbot/config/" + message.getGuild().getID() + ".txt"));
-                }
-                catch(Exception e){
-                    Message.throwError(e, message);
-                }
+                } else if (messageContent[0].equals(prefix + "fixServer") && Perms.checkOwner_Guild(message)) { //Due to requirement of server configs (Blame Swear Filter), this command is separated so that if errors are being thrown this command can still run.
+                    try {
+                        FileUtils.copyURLToFile(new URL("https://maxdistructo.github.io/droidbot2/downloads/config/defaultconfig.txt"), new File(s + "droidbot/config/" + message.getGuild().getLongID() + ".txt"));
+                    } catch (Exception e) {
+                        Message.throwError(e, message);
+                    }
                     Roles.makeNewRole(guild, "Voice Chatting", false, false);
                     Roles.makeNewRole(guild, "Payday", false, false);
                     Roles.makeNewRole(guild, "Bot Abuser", false, false);
@@ -218,13 +220,13 @@ public class Listener {
                     Message.sendMessage(guild.getDefaultChannel(), "Thank you for letting me join your server. I am " + client.getOurUser().getName() + " and my features can be found by using the command " + prefix + "help.");
 
                 }
-                
+
             } else if (content.charAt(0) == prefix.charAt(0)) {
                 message.reply("Please wait until you have lost your Bot Abuser role to use this command.");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Message.sendError(e);
+            Message.throwError(e);
         }
 
     }
@@ -250,7 +252,7 @@ public class Listener {
 
     @EventSubscriber
     public void onShardReadyEvent(ShardReadyEvent event) {
-        client.online(Listener.prefix + "help");
+        client.isLoggedIn();
         BaseBot.LOGGER.info("Added playing content");
         List<IGuild> guildsList = client.getGuilds();
         Object[] guilds = guildsList.toArray();
@@ -269,6 +271,7 @@ public class Listener {
         }
 
     }
+}
     
     /*public static void onGuildJoinEvent(GuildCreateEvent event){
         IGuild guild = event.getGuild();

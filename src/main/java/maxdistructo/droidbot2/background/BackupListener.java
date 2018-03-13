@@ -64,7 +64,7 @@ public class BackupListener {
                 } else if (messageContent[0].equals(prefix + "50") || messageContent[0].equals(prefix + "fifty") && Perms.checkGames(message)) { //Works
                     message.reply(backupMessage);
                 } else if (messageContent[0].equals(prefix + "fortune")) { //Works
-                    message.reply("", Message.simpleEmbed(message.getAuthor(), "Fortune", Fortune.onFortuneCommand(messageContent, message), message));
+                    message.reply("", Message.simpleEmbed(message.getAuthor(), "Fortune", Fortune.onFortuneCommand(message), message));
                     message.delete();
                 }
                 //else if(messageContent[0].equals(prefix + "game")){ //Broke

@@ -8,6 +8,8 @@ import sx.blah.discord.util.RateLimitException;
 
 import maxdistructo.droidbot2.core.Utils;
 
+import java.util.List;
+
 public class Say {
     public static String onSayCommand(Object[] args, IMessage message, IChannel mentionedChannel) throws RateLimitException, DiscordException, MissingPermissionsException {
         boolean anotherChannel = false;
@@ -19,7 +21,7 @@ public class Say {
         
         if (anotherChannel) {
             if(attachments != null){
-            return Utils.makeNewString(args, 2) + attachements.get(0).getUrl();
+            return Utils.makeNewString(args, 2) + attachments.get(0).getUrl();
             }
             else{
                 return Utils.makeNewString(args, 2);

@@ -8,6 +8,7 @@ import sx.blah.discord.handle.obj.*;
 import sx.blah.discord.util.EmbedBuilder;
 
 import java.text.NumberFormat;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
@@ -208,7 +209,7 @@ public class Casino{
         builder.withColor(message.getAuthor().getColorForGuild(message.getGuild()));
         builder.withAuthorName(message.getAuthor().getName() + "#" + message.getAuthor().getDiscriminator());
         builder.withAuthorIcon(message.getAuthor().getAvatarURL());
-        builder.withTimestamp(LocalDateTime.now());
+        builder.withTimestamp(Instant.now());
         builder.withFooterIcon(message.getGuild().getIconURL());
         builder.withFooterText(message.getGuild().getName());
         builder.appendField("Casino Balance", "" + nf.format(CasinoConfig.CHIPS), false);
@@ -222,7 +223,7 @@ public class Casino{
         builder.withColor(message.getAuthor().getColorForGuild(message.getGuild()));
         builder.withAuthorName(message.getAuthor().getName() + "#" + message.getAuthor().getDiscriminator());
         builder.withAuthorIcon(message.getAuthor().getAvatarURL());
-        builder.withTimestamp(LocalDateTime.now(ZoneId.systemDefault()));
+        builder.withTimestamp(Instant.now());
         builder.withFooterIcon(message.getGuild().getIconURL());
         builder.withFooterText(message.getGuild().getName());
         builder.appendField("Casino Member", "" + mentioned.getName(), false);
@@ -238,7 +239,7 @@ public class Casino{
         builder.withColor(message.getAuthor().getColorForGuild(message.getGuild()));
         builder.withAuthorName(message.getAuthor().getName() + "#" + message.getAuthor().getDiscriminator());
         builder.withAuthorIcon(message.getAuthor().getAvatarURL());
-        builder.withTimestamp(LocalDateTime.now());
+        builder.withTimestamp(Instant.now());
         builder.withFooterIcon(message.getGuild().getIconURL());
         builder.withFooterText(message.getGuild().getName());
 

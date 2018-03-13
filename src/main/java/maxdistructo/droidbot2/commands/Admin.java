@@ -3,6 +3,7 @@ package maxdistructo.droidbot2.commands;
 
 import maxdistructo.droidbot2.core.Config;
 import maxdistructo.droidbot2.commands.casino.CasinoConfig;
+import maxdistructo.droidbot2.core.Perms;
 import maxdistructo.droidbot2.core.Roles;
 import maxdistructo.droidbot2.core.Utils;
 import maxdistructo.droidbot2.core.message.Message;
@@ -180,14 +181,25 @@ public class Admin {
     }
 
     public static void onAnnounceCommand(Object[] args, IMessage message){
-        if(message.getAuthor() == client.getApplicationOwner()){
+        if(Perms.checkOwner(message)){
             String sendMessage = Utils.makeNewString(args, 1);
             List<IGuild> guilds = client.getGuilds();
             Object[] guildArray = guilds.toArray();
             int i = 0;
             while(i < guildArray.length){
                 IGuild guild = (IGuild) guildArray[i];
-                Message.sendMessage(guild.getDefaultChannel(), "@here " + sendMessage);
+                List<IChannel> announcementsList = guild.getChannelsByName("announcements");
+
+                if(announcementsList.size() != 0){
+                    IChannel announcements = announcementsList.get(0);
+                    Message.sendMessage(announcements, "@here " + sendMessage);
+                }
+                else if(guild.getSystemChannel() != null){
+                    Message.sendMessage(guild.getSystemChannel(), "@here " + sendMessage);
+                }
+                else {
+                    Message.sendMessage(guild.getDefaultChannel(), "@here " + sendMessage);
+                }
                 i++;
             }
         }

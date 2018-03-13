@@ -21,9 +21,9 @@ public class SwearFilter {
         }
 
         JSONObject config = Config.readServerConfig(message.getGuild());
-        
+        JSONArray array = null;
         try{
-        JSONArray array = config.getJSONArray("SwearWords");
+            array = config.getJSONArray("SwearWords");
         }
         catch(Exception e){
             doFilter = false;

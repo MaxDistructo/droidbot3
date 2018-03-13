@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import sx.blah.discord.handle.obj.*;
+import org.apache.commons.io.*;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -38,7 +39,7 @@ public class Trivia{
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
         try {
-            List<String> triviaList = Config.readFileAsList(new File(s + "/droidbot/trivia/" + list + ".txt"));
+            List<String> triviaList = FileUtils.readLines(new File(s + "/droidbot/trivia/" + list + ".txt"), "UTF-8");
             return triviaList.get(line);
         }
         catch(Exception e){

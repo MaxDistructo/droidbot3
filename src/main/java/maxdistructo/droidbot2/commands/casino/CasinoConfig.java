@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IMessage;
+import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.handle.obj.IUser;
 
 import java.io.File;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 public class CasinoConfig {
 
@@ -28,7 +30,7 @@ public class CasinoConfig {
         String s = currentRelativePath.toAbsolutePath().toString();
         IUser user = message.getAuthor();
         String stringUser = user.getName();
-        File f = new File(s+"/droidbot/config/" + message.getGuild().getLongID() +"/casino/"+ user.getLongID() + ".txt");
+        File f = new File(s+"/droidbot/config/casino/"+ user.getLongID() + ".txt");
         f.getParentFile().mkdirs(); //Create Directories for File
         try {
             f.createNewFile(); //Create file
@@ -40,7 +42,7 @@ public class CasinoConfig {
         newUser.put("Chips",100);
         newUser.put("Membership","null");
 
-        try (FileWriter file = new FileWriter(s+"/droidbot/config/" + message.getGuild().getLongID() +"/casino/"+ user.getLongID() + ".txt")) {
+        try (FileWriter file = new FileWriter(s+"/droidbot/config/casino/"+ user.getLongID() + ".txt")) {
             file.write(newUser.toString());
             System.out.println("Successfully Copied JSON Object to File...");
             System.out.println("\nJSON Object: " + newUser);
@@ -55,7 +57,7 @@ public class CasinoConfig {
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
         String stringUser = user.getName();
-        File f = new File(s+"/droidbot/config/" + guild.getLongID() +"/casino/"+ user.getLongID() + ".txt");
+        File f = new File(s+"/droidbot/config/casino/"+ user.getLongID() + ".txt");
         f.getParentFile().mkdirs(); //Create Directories for File
         try {
             f.createNewFile(); //Create file
@@ -67,7 +69,7 @@ public class CasinoConfig {
         newUser.put("Chips",100);
         newUser.put("Membership","null");
 
-        try (FileWriter file = new FileWriter(s+"/droidbot/config/" + guild.getLongID() +"/casino/"+ user.getLongID() + ".txt")) {
+        try (FileWriter file = new FileWriter(s+"/droidbot/config/casino/"+ user.getLongID() + ".txt")) {
             file.write(newUser.toString());
             System.out.println("Successfully Copied JSON Object to File...");
             System.out.println("\nJSON Object: " + newUser);
@@ -84,7 +86,7 @@ public class CasinoConfig {
         IUser user = message.getAuthor();
         String stringUser = user.getName();
 
-        File file = new File (s+"/droidbot/config/" + message.getGuild().getLongID() +"/casino/"+ user.getLongID() + ".txt");
+        File file = new File (s+"/droidbot/config/casino/"+ user.getLongID() + ".txt");
         if(file.exists()) {
             URI uri = file.toURI();
             JSONTokener tokener = null;
@@ -99,12 +101,47 @@ public class CasinoConfig {
             System.out.println("Converted JSON file to JSONObject");
             Object[] casinoValues = {root.getString("User"), root.getInt("Chips"), root.getString("Membership")};
             System.out.println("Successfully read values from file.");
+            CHIPS = root.getInt("Chips");
+            MEMBERSHIP = root.getString("Membership");
+            PLAYER = root.getString("User");
             return casinoValues;
         }
         else{
-            Casino.onCasinoCommand(new Object[] {Listener.prefix + "casino", "join"},message,null);
+            readLegacyCasino(message);
         }
         return null;
+    }
+    private static void readLegacyCasino(IMessage message) { //This is to allow for a new command to move a person's legacy casino to the new system.
+        Path currentRelativePath = Paths.get("");
+        String s = currentRelativePath.toAbsolutePath().toString();
+        IUser user = message.getAuthor();
+        String stringUser = user.getName();
+
+        File file = new File (s+"/droidbot/config/" + message.getGuild().getLongID() + "/casino/"+ user.getLongID() + ".txt");
+        if(file.exists()) {
+            URI uri = file.toURI();
+            JSONTokener tokener = null;
+            try {
+                tokener = new JSONTokener(uri.toURL().openStream());
+                System.out.println("Successfully read file " + stringUser + ".txt");
+            } catch (IOException e) {
+                Message.sendDM(BaseBot.client.getApplicationOwner(), e.toString());
+                e.printStackTrace();
+            }
+            if(tokener != null){
+                JSONObject root = new JSONObject(tokener);
+                System.out.println("Converted JSON file to JSONObject");
+                Object[] casinoValues = {root.getString("User"), root.getInt("Chips"), root.getString("Membership")};
+                System.out.println("Successfully read values from file.");
+                CHIPS = (int)casinoValues[1];
+                MEMBERSHIP = (String)casinoValues[2];
+                PLAYER = (String)casinoValues[0];
+                writeCasino(message);
+            }
+        }
+        else{
+            newCasino(message);
+        }
     }
 
     public static void readCasino(IUser user, IGuild guild){
@@ -112,7 +149,7 @@ public class CasinoConfig {
         String s = currentRelativePath.toAbsolutePath().toString();
         String stringUser = user.getName();
 
-        File file = new File (s+"/droidbot/config/" + guild.getLongID() +"/casino/"+ user.getLongID() + ".txt");
+        File file = new File (s+"/droidbot/config/casino/"+ user.getLongID() + ".txt");
         if(file.exists()) {
             URI uri = file.toURI();
             JSONTokener tokener = null;
@@ -142,14 +179,21 @@ public class CasinoConfig {
         IUser user = message.getAuthor();
         String stringUser = user.getName();
 
-        File file = new File (s+"/droidbot/config/" + message.getGuild().getLongID() +"/casino/"+ user.getLongID() + ".txt");
+        File file = new File (s+"/droidbot/config/casino/"+ user.getLongID() + ".txt");
+        if(!file.exists()){
+            try {
+                file.mkdirs();
+                file.createNewFile();
+            } catch (IOException e) {
+                Message.throwError(e, message);
+            }
+        }
         URI uri = file.toURI();
         JSONTokener tokener = null;
         try {
             tokener = new JSONTokener(uri.toURL().openStream());
             System.out.println("Successfully read file " + stringUser + ".txt");
         } catch (IOException e) {
-            Message.sendDM(BaseBot.client.getApplicationOwner(), e.toString());
             e.printStackTrace();
         }
         JSONObject newUser = new JSONObject(tokener);
@@ -157,7 +201,7 @@ public class CasinoConfig {
         newUser.put("Chips", CHIPS);
         newUser.put("Membership",MEMBERSHIP);
 
-        try (FileWriter fileWriter = new FileWriter(s+"/droidbot/config/" + message.getGuild().getLongID() +"/casino/"+ user.getLongID() + ".txt")) {
+        try (FileWriter fileWriter = new FileWriter(s+"/droidbot/config/casino/"+ user.getLongID() + ".txt")) {
             fileWriter.write(newUser.toString());
             System.out.println("Successfully Copied JSON Object to File...");
             System.out.println("\nJSON Object: " + newUser);
@@ -170,7 +214,15 @@ public class CasinoConfig {
         String s = currentRelativePath.toAbsolutePath().toString();
         String stringUser = user.getName();
 
-        File file = new File (s+"/droidbot/config/" + guild.getLongID() +"/casino/"+ user.getLongID() + ".txt");
+        File file = new File (s+"/droidbot/config/casino/"+ user.getLongID() + ".txt");
+        if(!file.exists()){
+            try {
+                file.mkdirs();
+                file.createNewFile();
+            } catch (IOException e) {
+                Message.throwError(e);
+            }
+        }
         URI uri = file.toURI();
         JSONTokener tokener = null;
         try {
@@ -185,7 +237,7 @@ public class CasinoConfig {
         newUser.put("Chips", CHIPS);
         newUser.put("Membership",MEMBERSHIP);
 
-        try (FileWriter fileWriter = new FileWriter(s+"/droidbot/config/" + guild.getLongID() +"/casino/"+ user.getLongID() + ".txt")) {
+        try (FileWriter fileWriter = new FileWriter(s+"/droidbot/config/casino/"+ user.getLongID() + ".txt")) {
             fileWriter.write(newUser.toString());
             System.out.println("Successfully Copied JSON Object to File...");
             System.out.println("\nJSON Object: " + newUser);
@@ -197,7 +249,7 @@ public class CasinoConfig {
     public static void resetBJ(IMessage message){
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
-        File file = new File(s + "/droidbot/config/" + message.getGuild().getLongID() + "/blackjack/" + message.getAuthor().getLongID());
+        File file = new File(s + "/droidbot/config/blackjack/" + message.getAuthor().getLongID());
         file.delete();
     }
 
@@ -210,7 +262,7 @@ public class CasinoConfig {
         root.put("BJ_dealerScore",dealerScore);
         root.put("BJ_dealerHand",dealerHand);
         root.put("BJ_bet",bet);
-        try (FileWriter fileWriter = new FileWriter(s + "/droidbot/config/" + message.getGuild().getLongID() + "/blackjack/" + message.getAuthor().getLongID() + ".txt")) {
+        try (FileWriter fileWriter = new FileWriter(s + "/droidbot/config/blackjack/" + message.getAuthor().getLongID() + ".txt")) {
             fileWriter.write(root.toString());
             System.out.println("Successfully Copied JSON Object to File...");
             System.out.println("\nJSON Object: " + root);
@@ -226,7 +278,7 @@ public class CasinoConfig {
         IUser user = message.getAuthor();
         String stringUser = user.getName();
 
-        File file = new File (s + "/droidbot/config/" + message.getGuild().getLongID() + "/blackjack/" + message.getAuthor().getLongID() +  ".txt");
+        File file = new File (s + "/droidbot/config/blackjack/" + message.getAuthor().getLongID() +  ".txt");
         URI uri = file.toURI();
         JSONTokener tokener = null;
         try {

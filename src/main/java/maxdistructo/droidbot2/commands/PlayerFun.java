@@ -6,22 +6,42 @@ import sx.blah.discord.handle.obj.IUser;
 public class PlayerFun //Additions Ideas: Shoot,Stab,Fake mute
 {
     public static String onSlapCommand(IMessage message, IUser mentioned){
-        return mentioned + " you have been slapped by " + message.getAuthor() + ":clap:";
+        if(mentioned != message.getClient().getOurUser()) {
+            return mentioned + " you have been slapped by " + message.getAuthor() + ":clap:";
+        }
+        else{
+            return message.getClient().getOurUser() + " has slapped you " + message.getAuthor() + " :clap:";
+        }
     }
     public static String onTntCommand(IMessage message, IUser mentioned){
-        return mentioned + " you have been blown up by " + message.getAuthor() + " using TNT! :boom:";
+        if(mentioned != message.getClient().getOurUser()) {
+            return mentioned + " you have been blown up by " + message.getAuthor() + " using TNT! :boom:";
+        }
+        else{
+            return message.getClient().getOurUser() + " has blown " + message.getAuthor() + " up using TNT! :boom:";
+        }
     }
     public static String onMarryCommand(IMessage message, IUser mentioned){
         return "This command is WIP";
     }
     public static String onKissCommand(IMessage message, IUser mentioned){
-        return mentioned + " you have been kissed by " + message.getAuthor() + ":lips:";
+        if(mentioned != message.getClient().getOurUser()) {
+            return mentioned + " you have been kissed by " + message.getAuthor() + ":lips:";
+        }
+        else{
+            return message.getClient().getOurUser() + " has slapped you upside the head with a anvil! :anvil:";
+        }
     }
     public static String onHugCommand(IMessage message, IUser mentioned){
         return mentioned + " you have been hugged by " + message.getAuthor() + ":hugging:";
     }
     public static String onPokeCommand(IMessage message, IUser mentioned){
-        return mentioned + " you have been poked by " + message.getAuthor() + ":point_right: ";
+        if(mentioned != message.getClient().getOurUser()) {
+            return mentioned + " you have been poked by " + message.getAuthor() + ":point_right: ";
+        }
+        else{
+            return "You can't poke a bot " + message.getAuthor() + "!";
+        }
     }
     public static String onPayRespects(IMessage message, IUser mentioned){ // /f command.
         return message.getAuthor() + " pays their respects. https://cdn.discordapp.com/emojis/294160585179004928.png";
@@ -30,10 +50,23 @@ public class PlayerFun //Additions Ideas: Shoot,Stab,Fake mute
         return message.getAuthor() + " picks up the <:blobhammer:315285738302341121> and prepares to swing it at " + mentioned + "! It misses " + mentioned + " by a hair and they live to see another day!";
    }
    public static String onShootCommand(IMessage message, IUser mentioned){
-        return message.getAuthor() + " picks up a gun and shoots " + mentioned + "! ";
+        if(mentioned != message.getClient().getOurUser()){
+            return message.getAuthor() + " picks up a gun and shoots " + mentioned + "! ";
+        }
+        else{
+            return "How dare you try to shoot me! \"takes out rocket launcher\" You shall pay! :boom:";
+        }
+
    }
    public static String onStabCommand(IMessage message, IUser mentioned){
-        return mentioned + " was attacked by " + message.getAuthor() + " using a knife!";
+        if(mentioned != message.getClient().getOurUser()) {
+            return mentioned + " was attacked by " + message.getAuthor() + " using a knife!";
+        }
+        else{
+            return "\"breaks knife like a toothpick\" \n \"takes out sword\" \n \"slices " + message.getAuthor() + " in half\" \n GET REKT!!! (John Cena Music plays)";
+        }
+
+
    }
    public static String onMuteCommand(IMessage message, IUser mentioned) {
        return mentioned + " was muted by " + message.getAuthor() + " for 1 second.";
@@ -54,6 +87,11 @@ public class PlayerFun //Additions Ideas: Shoot,Stab,Fake mute
                "```";
    }
    public static String onPunchCommand(IMessage message, IUser mentioned){
-       return mentioned + ", you have been punched by " + message.getAuthor() + "! :punch:";
+        if(mentioned != message.getClient().getOurUser()) {
+            return mentioned + ", you have been punched by " + message.getAuthor() + "! :punch:";
+        }
+        else{
+            return "\"ducks aside\"";
+        }
    }
 }
