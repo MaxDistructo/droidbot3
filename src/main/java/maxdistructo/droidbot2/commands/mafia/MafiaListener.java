@@ -15,16 +15,16 @@ public class MafiaListener {
     public void onMessageReceivedEvent(MessageReceivedEvent event){
         IMessage message = event.getMessage();
         Object[] messageContent = message.getContent().split(" ");
-        if(!MafiaConfig.getDayStatus(message) && message.getChannel() == message.getGuild().getChannelByID(MafiaConfig.getDeadChat(message)) && !message.getAuthor().isBot() ){ //Dead to Medium
-           Message.sendMessage(message.getGuild().getChannelByID(MafiaConfig.getMediumChat(message)), message.getAuthor().getDisplayName(message.getGuild()) + ": " + message.getContent());
-        }
-        if(!MafiaConfig.getDayStatus(message) && message.getChannel() == message.getGuild().getChannelByID(MafiaConfig.getMediumChat(message)) && !message.getAuthor().isBot()){ //Medium to Dead
-            Message.sendMessage(message.getGuild().getChannelByID(MafiaConfig.getDeadChat(message)), "Medium:" + message.getContent());
-        }
-        if(message.getChannel() == message.getGuild().getChannelByID(MafiaConfig.getMafiaChat(message))){ //Mafia to Spy
-            Message.sendMessage(message.getGuild().getChannelByID(MafiaConfig.getSpyChat(message)), "Mafia: " + message.getContent());
-        }
-        if(messageContent[0].equals(prefix + "mafia") && message.getGuild().getLongID() == 249615705517981706L){ //This is all this listener will handle so putting this requirement for the rest of the code to execute.
+        //if(!MafiaConfig.getDayStatus(message) && message.getChannel() == message.getGuild().getChannelByID(MafiaConfig.getDeadChat(message)) && !message.getAuthor().isBot() ){ //Dead to Medium
+        //   Message.sendMessage(message.getGuild().getChannelByID(MafiaConfig.getMediumChat(message)), message.getAuthor().getDisplayName(message.getGuild()) + ": " + message.getContent());
+       // }
+       // if(!MafiaConfig.getDayStatus(message) && message.getChannel() == message.getGuild().getChannelByID(MafiaConfig.getMediumChat(message)) && !message.getAuthor().isBot()){ //Medium to Dead
+       //     Message.sendMessage(message.getGuild().getChannelByID(MafiaConfig.getDeadChat(message)), "Medium:" + message.getContent());
+       // }
+      //  if(message.getChannel() == message.getGuild().getChannelByID(MafiaConfig.getMafiaChat(message))){ //Mafia to Spy
+       //     Message.sendMessage(message.getGuild().getChannelByID(MafiaConfig.getSpyChat(message)), "Mafia: " + message.getContent());
+      //  }
+        if(messageContent[0].equals(prefix + "mafia") && message.getGuild().getLongID() == 249615705517981706L || message.getGuild().getLongID() == 268370862661435392L){ //This is all this listener will handle so putting this requirement for the rest of the code to execute.
             if(messageContent[1].equals("start") && Perms.checkMod(message)){
                 Mafia.onGameStart(message);
                 message.delete();
@@ -45,7 +45,11 @@ public class MafiaListener {
                 Message.sendMessage(message.getGuild().getChannelByID(MafiaConfig.getSpyChat(message)), Utils.makeNewString(messageContent, 3)); //Send PMs to Spy
                 Message.sendDM(Utils.getMentionedUser(message), Utils.makeNewString(messageContent, 3) + "\n To reply, use /mafia pm " + message.getAuthor().mention() + " in the mafia commands channel."); //Send PM to desired recipient
             }
+            else if(messageContent[1].equals("shuffle")){
+                message.reply(Mafia.assignRoles(message).toString());
+            }
         }
+
     }
 
 }

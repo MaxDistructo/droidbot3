@@ -2,13 +2,23 @@ package maxdistructo.droidbot2.commands.mafia;
 
 import maxdistructo.droidbot2.core.Roles;
 import maxdistructo.droidbot2.core.Utils;
+import maxdistructo.droidbot2.core.message.Message;
+import org.apache.commons.lang3.ArrayUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.handle.obj.IUser;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.net.URI;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MafiaConfig {
@@ -52,7 +62,7 @@ public class MafiaConfig {
     }
 
     public static Object[] getPlayerDetails(IMessage message) {
-        JSONObject root1 = Utils.readJSONFromFile("/config/mafia/" + message.getGuild().getLongID() + "_dat.txt");
+        JSONObject root1 = Utils.readJSONFromFile("/config/mafia/" + message.getGuild().getLongID() + "_playerdat.txt");
         JSONObject root = root1.getJSONObject("" + message.getAuthor().getLongID());
         return new Object[] {root.getString("alignment"), root.getString("class"), root.getString("role"), root.getBoolean("dead"), root.getInt("attack"), root.getInt("defence")};
     }
@@ -74,5 +84,35 @@ public class MafiaConfig {
     public static long getDeadChat(IMessage message) {
         JSONObject root1 = Utils.readJSONFromFile("/config/mafia/" + message.getGuild().getLongID() + "_dat.txt");
         return root1.getLong("dead_chat");
+    }
+
+    public static String[] shuffleJSONArray(JSONArray jsonArray){
+        String[] list = new String[jsonArray.length()];
+            for(int i=0; i<jsonArray.length(); i++){
+                list[i] = jsonArray.getString(i);
+            }
+            ArrayUtils.shuffle(list);
+        return list;
+    }
+    public static void writeGame(IMessage message, JSONObject object){
+        Path currentRelativePath = Paths.get("");
+        String s = currentRelativePath.toAbsolutePath().toString();
+
+        File file = new File (s+"/config/mafia/"+ message.getGuild().getLongID() + "_playerdat.txt");
+        if(!file.exists()){
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                Message.throwError(e, message);
+            }
+        }
+
+        try (FileWriter fileWriter = new FileWriter(s+"/config/mafia/"+ message.getGuild().getLongID() + "_playerdat.txt")) {
+            fileWriter.write(object.toString());
+            System.out.println("Successfully Copied JSON Object to File...");
+            System.out.println("JSON Object: " + object);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

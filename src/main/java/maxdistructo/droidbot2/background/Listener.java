@@ -65,9 +65,9 @@ public class Listener {
 
             if (!Roles.checkForBotAbuse(message) && content.charAt(0) == prefix.charAt(0)) {
                 if (messageContent[0].equals(prefix + "bj")) {
-                    message.reply(BlackJack.blackjack(messageContent, message));
+                    //message.reply(BlackJack.blackjack(messageContent, message));
                 } else if (messageContent[0].toString().toLowerCase().equals("hit") && Perms.checkGames(message) || messageContent[0].toString().toLowerCase().equals("stay") && Perms.checkGames(message)) {
-                    message.reply(BlackJack.continueGame(message, (String[]) messageContent, CasinoConfig.readBJFields(message)));
+                    //message.reply(BlackJack.continueGame(message, (String[]) messageContent, CasinoConfig.readBJFields(message)));
                 } else if (messageContent[0].equals(prefix + "check")) { //Works
                     Message.sendMessage(message.getChannel(), Message.simpleEmbed(message.getAuthor(), "Check", Check.onCheckCommand(messageContent, message), message));
                     message.delete();
@@ -81,7 +81,7 @@ public class Listener {
                     message.reply("", Message.simpleEmbed(message.getAuthor(), "Casino", Casino.onCasinoCommand(messageContent, message, message.getAuthor()), message));
                     message.delete();
                 } else if (messageContent[0].equals(prefix + "50") || messageContent[0].equals(prefix + "fifty") && Perms.checkGames(message)) { //Works
-                    message.reply("", Message.simpleEmbed(message.getAuthor(), "FiftyFifty", FiftyFifty.onFiftyCommand(messageContent, message), message));
+                    //message.reply("", Message.simpleEmbed(message.getAuthor(), "FiftyFifty", FiftyFifty.onFiftyCommand(messageContent, message), message));
                     message.delete();
                 } else if (messageContent[0].equals(prefix + "fortune")) { //Works
                     message.reply("", Message.simpleEmbed(message.getAuthor(), "Fortune", Fortune.onFortuneCommand(message), message));
@@ -103,13 +103,13 @@ public class Listener {
                     message.delete();
                 } else if (messageContent[0].equals(prefix + "help")) {
                     if (Perms.checkAdmin(message)) {
-                        Help.onAdminHelpCommand(message);
+                       // Help.onAdminHelpCommand(message);
                     } else {
-                        Message.sendDM(message.getAuthor(), Help.onHelpCommand());
+                      //  Message.sendDM(message.getAuthor(), Help.onHelpCommand());
                     }
                     message.delete();
                 } else if (messageContent[0].equals(prefix + "allin") && Perms.checkGames(message)) {
-                    message.reply("", Message.simpleEmbed(message.getAuthor(), "Allin", Allin.onAllinCommand(messageContent, message), message));
+                    //message.reply("", Message.simpleEmbed(message.getAuthor(), "Allin", Allin.onAllinCommand(messageContent, message), message));
                     message.delete();
                 } else if (messageContent[0].equals(prefix + "say") && channelMention != null) {
                     Message.sendMessage(channelMention, Say.onSayCommand(messageContent, message, channelMention));
@@ -118,7 +118,7 @@ public class Listener {
                     Message.sendMessage(message.getChannel(), Say.onSayCommand(messageContent, message, channelMention));
                     message.delete();
                 } else if (messageContent[0].equals(prefix + "spam")) {
-                    Message.sendMessage(message.getChannel(), Spam.onSpamCommand(messageContent, message, mentioned));
+                    //Message.sendMessage(message.getChannel(), Spam.onSpamCommand(messageContent, message, mentioned));
                     message.delete();
                 } else if (messageContent[0].equals(prefix + "slap")) {
                     Message.sendMessage(message.getChannel(), PlayerFun.onSlapCommand(message, mentioned));
@@ -189,7 +189,7 @@ public class Listener {
                     message.delete();
                 } else if (messageContent[0].equals(prefix + "admin") && messageContent[1].equals("fixPerms") && !messageContent[2].equals(null)) {
                     if (Perms.checkOwner(message)) {
-                        Message.sendDM(message.getGuild().getOwner(), "CasinoBot has left your server because the bot owner though it was missing perms or its permissions were screwed up. Please use this url to re-add CasinoBot to your server. Your server's data has not been affected. https://discordapp.com/oauth2/authorize?client_id=315313967759097857&scope=bot&permissions=470281296");
+                        Message.sendDM(message.getGuild().getOwner(), client.getApplicationName() + "has left your server because the bot owner though it was missing perms or its permissions were screwed up. Please use this url to re-add "+ client.getApplicationName() +" to your server. Your server's data has not been affected. https://discordapp.com/oauth2/authorize?client_id=423268575718014976&scope=bot&permissions=470281296");
                         message.getGuild().leave();
                     }
                 } else if (messageContent[0].equals(prefix + "@admin") && messageContent[1].equals("setColor") && !messageContent[2].equals(null) && Perms.checkMod(message)) {

@@ -89,7 +89,7 @@ public class BackupListener {
                 } else if (messageContent[0].equals(prefix + "say")) {
                     Message.sendMessage(message.getChannel(), Say.onSayCommand(messageContent, message, channelMention));
                 } else if (messageContent[0].equals(prefix + "spam")) {
-                    Message.sendMessage(message.getChannel(), Spam.onSpamCommand(messageContent, message, mentioned));
+                   // Message.sendMessage(message.getChannel(), Spam.onSpamCommand(messageContent, message, mentioned));
                     message.delete();
                 } else if (messageContent[0].equals(prefix + "slap")) {
                     Message.sendMessage(message.getChannel(), PlayerFun.onSlapCommand(message, mentioned));

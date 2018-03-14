@@ -48,13 +48,13 @@
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/ch/qos/logback/logback-classic/1.1.3/logback-classic-1.1.3.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/net/sf/trove4j/trove4j/3.0.3/trove4j-3.0.3.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/vdurmont/emoji-java/3.2.0/emoji-java-3.2.0.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/github/austinv11/Discord4J/2.9.3/Discord4J-2.9.3-shaded.jar" path-in-jar="/" />
       <element id="library" level="project" name="Maven: ch.qos.logback:logback-classic:1.2.3" />
       <element id="module-output" name="droidbot2" />
-      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/github/MaxDistructo/droidbot2core/v1.0.8/droidbot2core-v1.0.8.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/mashape/unirest/unirest-java/1.4.9/unirest-java-1.4.9.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/httpcomponents/httpasyncclient/4.1.1/httpasyncclient-4.1.1.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/httpcomponents/httpcore-nio/4.4.4/httpcore-nio-4.4.4.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/github/austinv11/Discord4J/2.10.0/Discord4J-2.10.0-shaded.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/github/MaxDistructo/droidbot2core/v1.0.11/droidbot2core-v1.0.11.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

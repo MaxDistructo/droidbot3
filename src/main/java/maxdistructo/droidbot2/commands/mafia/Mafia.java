@@ -3,6 +3,7 @@ package maxdistructo.droidbot2.commands.mafia;
 import maxdistructo.droidbot2.core.Roles;
 import maxdistructo.droidbot2.core.Utils;
 import maxdistructo.droidbot2.core.message.Message;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import sx.blah.discord.handle.obj.*;
 
@@ -34,6 +35,7 @@ public class Mafia {
         IChannel adminChannel = message.getGuild().getChannelByID(adminChannelLong);
         long dayChannelLong = MafiaConfig.getDayChat(message);
         IChannel dayChannel = message.getGuild().getChannelByID(dayChannelLong);
+        assignRoles(message);
         Message.sendMessage(dayChannel, "@everyone The Mafia game has started! \n Day 1 has begun!");
         Message.sendMessage(adminChannel, message.getAuthor().getDisplayName(message.getGuild()) + message.getAuthor().getDiscriminator() + " has started the Mafia game.");
         long[] players = MafiaConfig.getPlayers(message, "Mafia Folks");
@@ -48,6 +50,7 @@ public class Mafia {
                 allowMediumChat(message, message.getGuild().getUserByID(player));
             }
         }
+
 
     }
     public static void onGameToggle(IMessage message){
@@ -114,9 +117,28 @@ public class Mafia {
         IChannel channel  = message.getGuild().getChannelByID(deadChatLong);
         channel.overrideUserPermissions(user, EnumSet.of(Permissions.READ_MESSAGE_HISTORY, Permissions.READ_MESSAGES, Permissions.SEND_MESSAGES, Permissions.SEND_TTS_MESSAGES), EnumSet.noneOf(Permissions.class));
     }
-    private static void assignRoles(IMessage message){
-        JSONObject root = Utils.readJSONFromFile("/config/mafia/" + message.getGuild().getLongID() + "_dat.txt");
-
+    public static JSONObject assignRoles(IMessage message){
+        JSONObject root = Utils.readJSONFromFile("/config/mafia/" + message.getGuild().getLongID() + ".dat");
+        JSONArray jArrayRoles  = root.getJSONArray("rolelist");
+        JSONObject translator = root.getJSONObject("rolelist-translate");
+        JSONObject roleData = root.getJSONObject("roleData");
+        long[] players = MafiaConfig.getPlayers(message, "Mafia Folks");
+        String[] roleList = MafiaConfig.shuffleJSONArray(jArrayRoles);
+        int i = 0;
+        for(String role : roleList){
+            JSONArray roleDatJSON = translator.getJSONArray(role);
+            String[] roleDat = MafiaConfig.shuffleJSONArray(roleDatJSON);
+            roleList[i] = roleDat[0];
+            i++;
+        }
+        JSONObject out = new JSONObject();
+        int ii = 0;
+        for(long player : players) {
+            out.put("" + player, roleData.getJSONObject(roleList[ii]));
+            ii++;
+        }
+        MafiaConfig.writeGame(message, out);
+        return out;
     }
 
 }
