@@ -26,6 +26,7 @@ public class MafiaConfig {
         JSONObject root = Utils.readJSONFromFile("/config/mafia/" + message.getGuild().getLongID() + "_dat.txt");
         return root.getLong("adminChannel");
     }
+
     public static long getDayChat(IMessage message) {
         JSONObject root = Utils.readJSONFromFile("/config/mafia/" + message.getGuild().getLongID() + "_dat.txt");
         return root.getLong("dayChat");
@@ -40,11 +41,12 @@ public class MafiaConfig {
         }
         return strArray;
     }
-    public static long[] getPlayers(IMessage message, String role){
+
+    public static long[] getPlayers(IMessage message, String role) {
         List<IUser> usersList = message.getGuild().getUsersByRole(Roles.getRole(message, role));
         long[] players = new long[usersList.size()];
         int i = 0;
-        for(IUser user : usersList){
+        for (IUser user : usersList) {
             players[i] = user.getLongID();
             i++;
         }
@@ -64,7 +66,13 @@ public class MafiaConfig {
     public static Object[] getPlayerDetails(IMessage message) {
         JSONObject root1 = Utils.readJSONFromFile("/config/mafia/" + message.getGuild().getLongID() + "_playerdat.txt");
         JSONObject root = root1.getJSONObject("" + message.getAuthor().getLongID());
-        return new Object[] {root.getString("alignment"), root.getString("class"), root.getString("role"), root.getBoolean("dead"), root.getInt("attack"), root.getInt("defence")};
+        return new Object[]{root.getString("alignment"), root.getString("class"), root.getString("role"), root.getBoolean("dead"), root.getInt("attack"), root.getInt("defence"), root.getBoolean("blocked"), root.getBoolean("framed"), root.getBoolean("jailed")};
+    }
+
+    public static Object[] getPlayerDetails(IMessage message, long playerID) {
+        JSONObject root1 = Utils.readJSONFromFile("/config/mafia/" + message.getGuild().getLongID() + "_playerdat.txt");
+        JSONObject root = root1.getJSONObject("" + playerID);
+        return new Object[]{root.getString("alignment"), root.getString("class"), root.getString("role"), root.getBoolean("dead"), root.getInt("attack"), root.getInt("defence"), root.getBoolean("blocked"), root.getBoolean("framed"), root.getBoolean("jailed")};
     }
 
     public static long getMafiaChat(IMessage message) {
@@ -86,20 +94,21 @@ public class MafiaConfig {
         return root1.getLong("dead_chat");
     }
 
-    public static String[] shuffleJSONArray(JSONArray jsonArray){
+    public static String[] shuffleJSONArray(JSONArray jsonArray) {
         String[] list = new String[jsonArray.length()];
-            for(int i=0; i<jsonArray.length(); i++){
-                list[i] = jsonArray.getString(i);
-            }
-            ArrayUtils.shuffle(list);
+        for (int i = 0; i < jsonArray.length(); i++) {
+            list[i] = jsonArray.getString(i);
+        }
+        ArrayUtils.shuffle(list);
         return list;
     }
-    public static void writeGame(IMessage message, JSONObject object){
+
+    public static void writeGame(IMessage message, JSONObject object) {
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
 
-        File file = new File (s+"/config/mafia/"+ message.getGuild().getLongID() + "_playerdat.txt");
-        if(!file.exists()){
+        File file = new File(s + "/config/mafia/" + message.getGuild().getLongID() + "_playerdat.txt");
+        if (!file.exists()) {
             try {
                 file.createNewFile();
             } catch (IOException e) {
@@ -107,12 +116,27 @@ public class MafiaConfig {
             }
         }
 
-        try (FileWriter fileWriter = new FileWriter(s+"/config/mafia/"+ message.getGuild().getLongID() + "_playerdat.txt")) {
+        try (FileWriter fileWriter = new FileWriter(s + "/config/mafia/" + message.getGuild().getLongID() + "_playerdat.txt")) {
             fileWriter.write(object.toString());
             System.out.println("Successfully Copied JSON Object to File...");
             System.out.println("JSON Object: " + object);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static long getJailorChat(IMessage message) {
+        JSONObject root1 = Utils.readJSONFromFile("/config/mafia/" + message.getGuild().getLongID() + "_dat.txt");
+        return root1.getLong("jailor_chat");
+    }
+
+    public static long getJailedChat(IMessage message) {
+        JSONObject root1 = Utils.readJSONFromFile("/config/mafia/" + message.getGuild().getLongID() + "_dat.txt");
+        return root1.getLong("jailed_chat");
+    }
+
+    public static long getJailed(IMessage message) {
+        JSONObject root = Utils.readJSONFromFile("/config/mafia/" + message.getGuild().getLongID() + "_playerdat.txt");
+        return root.getLong("jailed");
     }
 }

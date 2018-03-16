@@ -63,7 +63,7 @@ public class Listener {
             Object messageContent[] = content.split(" ");
             SwearFilter.filter(message, messageContent);
 
-            if (!Roles.checkForBotAbuse(message) && content.charAt(0) == prefix.charAt(0)) {
+            if (!Roles.checkForBotAbuse(message)) {
                 if (messageContent[0].equals(prefix + "bj")) {
                     //message.reply(BlackJack.blackjack(messageContent, message));
                 } else if (messageContent[0].toString().toLowerCase().equals("hit") && Perms.checkGames(message) || messageContent[0].toString().toLowerCase().equals("stay") && Perms.checkGames(message)) {
