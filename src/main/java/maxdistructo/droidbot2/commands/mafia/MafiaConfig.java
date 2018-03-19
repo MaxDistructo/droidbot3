@@ -6,19 +6,14 @@ import maxdistructo.droidbot2.core.message.Message;
 import org.apache.commons.lang3.ArrayUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.JSONTokener;
-import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.handle.obj.IUser;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 
 public class MafiaConfig {
@@ -138,5 +133,26 @@ public class MafiaConfig {
     public static long getJailed(IMessage message) {
         JSONObject root = Utils.readJSONFromFile("/config/mafia/" + message.getGuild().getLongID() + "_playerdat.txt");
         return root.getLong("jailed");
+    }
+    public static void writeGameDat(IMessage message, JSONObject object){
+        Path currentRelativePath = Paths.get("");
+        String s = currentRelativePath.toAbsolutePath().toString();
+
+        File file = new File(s + "/config/mafia/" + message.getGuild().getLongID() + "_dat.txt");
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                Message.throwError(e, message);
+            }
+        }
+
+        try (FileWriter fileWriter = new FileWriter(s + "/config/mafia/" + message.getGuild().getLongID() + "_dat.txt")) {
+            fileWriter.write(object.toString());
+            System.out.println("Successfully Copied JSON Object to File...");
+            System.out.println("JSON Object: " + object);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

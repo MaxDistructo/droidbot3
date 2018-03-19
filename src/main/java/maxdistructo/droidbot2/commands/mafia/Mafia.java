@@ -61,6 +61,9 @@ public class Mafia {
         long mafiaChannelLong = MafiaConfig.getMafiaChannel(message);
         IChannel mafiaChannel = message.getGuild().getChannelByID(mafiaChannelLong);
         boolean isDay = MafiaConfig.getDayStatus(message);
+        IChannel jailorChannel = message.getGuild().getChannelByID(MafiaConfig.getJailorChat(message));
+        IChannel jailedChannel = message.getGuild().getChannelByID(MafiaConfig.getJailedChat(message));
+        IChannel mediumChannel = message.getGuild().getChannelByID(MafiaConfig.getMediumChat(message));
         long[] players = MafiaConfig.getPlayers(message, "Mafia Folks");
 
         //runActions();
@@ -77,7 +80,7 @@ public class Mafia {
                 if(playerInfo[2].toString().equals("jailor")) {
                     allowJailorChat(message, message.getGuild().getUserByID(player));
                 }
-                if((boolean)playerInfo[8]){
+                if(MafiaConfig.getJailed(message) == player){
                     allowJailedChat(message, message.getGuild().getUserByID(player));
                 }
                 if(playerInfo[2].toString().equals("medium")){
@@ -86,6 +89,10 @@ public class Mafia {
 
                 denyDayChat(message, message.getGuild().getUserByID(player));
             }
+            JSONObject root = Utils.readJSONFromFile("/config/mafia/" + message.getGuild().getLongID() + "_dat.txt");
+            root.remove("day");
+            root.put("day", false);
+            MafiaConfig.writeGameDat(message, root);
         }
         else{
             for(long player : players){
@@ -94,8 +101,21 @@ public class Mafia {
                 if(playerInfo[0].toString().equals("mafia")){//check if mafia
                     denyMafChat(message, message.getGuild().getUserByID(player));
                 }
+                if(playerInfo[2].toString().equals("jailor")){
+                    jailorChannel.removePermissionsOverride(message.getGuild().getUserByID(player));
+                }
+                if(MafiaConfig.getJailed(message) == player){
+                    jailedChannel.removePermissionsOverride(message.getGuild().getUserByID(player));
+                    unjail(message);
+                }
+                if(playerInfo[2].toString().equals("medium")){
+                    mediumChannel.removePermissionsOverride(message.getGuild().getUserByID(player));
+                }
             }
-
+            JSONObject root = Utils.readJSONFromFile("/config/mafia/" + message.getGuild().getLongID() + "_dat.txt");
+            root.remove("day");
+            root.put("day", true);
+            MafiaConfig.writeGameDat(message, root);
         }
         for(long player : players){
             Object[] playerDetails = MafiaConfig.getPlayerDetails(message);
@@ -242,6 +262,12 @@ public class Mafia {
         else{
             root.put("jailed", user.getLongID());
         }
+        MafiaConfig.writeGame(message, root);
+    }
+    public static void unjail(IMessage message){
+        JSONObject root = Utils.readJSONFromFile("/config/mafia/" + message.getGuild().getLongID() + "_playerdat.txt");
+        root.remove("jailed");
+        root.put("jailed", 0L);
         MafiaConfig.writeGame(message, root);
     }
     public static boolean checkCleaned(){
