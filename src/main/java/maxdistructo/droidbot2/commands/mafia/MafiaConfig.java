@@ -39,6 +39,7 @@ public class MafiaConfig {
 
     public static long[] getPlayers(IMessage message, String role) {
         List<IUser> usersList = message.getGuild().getUsersByRole(Roles.getRole(message, role));
+        usersList.remove(message.getClient().getOurUser());
         long[] players = new long[usersList.size()];
         int i = 0;
         for (IUser user : usersList) {
@@ -61,13 +62,13 @@ public class MafiaConfig {
     public static Object[] getPlayerDetails(IMessage message) {
         JSONObject root1 = Utils.readJSONFromFile("/config/mafia/" + message.getGuild().getLongID() + "_playerdat.txt");
         JSONObject root = root1.getJSONObject("" + message.getAuthor().getLongID());
-        return new Object[]{root.getString("alignment"), root.getString("class"), root.getString("role"), root.getBoolean("dead"), root.getInt("attack"), root.getInt("defence"), root.getBoolean("blocked"), root.getBoolean("framed"), root.getBoolean("jailed")};
+        return new Object[]{root.getString("alignment"), root.getString("class"), root.getString("role"), root.getBoolean("dead"), root.getInt("attack"), root.getInt("defense"), root.getBoolean("blocked"), root.getBoolean("framed"), root.getBoolean("jailed")};
     }
 
     public static Object[] getPlayerDetails(IMessage message, long playerID) {
         JSONObject root1 = Utils.readJSONFromFile("/config/mafia/" + message.getGuild().getLongID() + "_playerdat.txt");
         JSONObject root = root1.getJSONObject("" + playerID);
-        return new Object[]{root.getString("alignment"), root.getString("class"), root.getString("role"), root.getBoolean("dead"), root.getInt("attack"), root.getInt("defence"), root.getBoolean("blocked"), root.getBoolean("framed"), root.getBoolean("jailed")};
+        return new Object[]{root.getString("alignment"), root.getString("class"), root.getString("role"), root.getBoolean("dead"), root.getInt("attack"), root.getInt("defense"), root.getBoolean("blocked"), root.getBoolean("framed"), root.getBoolean("jailed")};
     }
 
     public static long getMafiaChat(IMessage message) {

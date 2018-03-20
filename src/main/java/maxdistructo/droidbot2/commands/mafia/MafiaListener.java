@@ -54,7 +54,7 @@ public class MafiaListener {
                     Message.sendDM(Utils.getMentionedUser(message), Utils.makeNewString(messageContent, 3) + "\n To reply, use /mafia pm " + message.getAuthor().mention() + " in the mafia commands channel."); //Send PM to desired recipient
                     message.delete();
                 } else if (messageContent[1].equals("shuffle")) {
-                    message.reply(Mafia.assignRoles(message).toString());
+                    //message.reply(Mafia.assignRoles(message).toString());
                     message.delete();
                 } else if (messageContent[1].equals("akill") && Perms.checkMod(message)) { //Deaths List: Admin, Mafia, Serial Killer, Werewolf, Arsonist, Jester, Veteran, Vigilante, Jailor
                     Mafia.killPlayer(message, Utils.getMentionedUser(message).getLongID());
@@ -144,7 +144,7 @@ public class MafiaListener {
                     }
                     message.delete();
                 } //TODO add kills for VH and Vampire. Vampire kills Mafia if they try to bite them. VH kills Vampire on visit.
-                else if(messageContent[1].equals("jail")){
+                else if(messageContent[1].equals("jail") && MafiaConfig.getPlayerDetails(message)[2].toString().equals("jailor")){
                     if(Utils.getMentionedUser(message) == message.getAuthor()){
                         Message.sendDM(message.getAuthor(), "You can not jail yourself!");
                     }
@@ -184,24 +184,21 @@ public class MafiaListener {
                 }
                 else if(messageContent[1].equals("invest") && Perms.checkMod(message)){ // /mafia invest @target @user
                     List<IUser> mentionedList = message.getMentions();
-                    Object[] mentionedArray = mentionedList.toArray();
-                    IUser target = (IUser) mentionedArray[0];
-                    IUser invest = (IUser) mentionedArray[1];
                     JSONObject investResults1 = Utils.readJSONFromFile("/config/mafia/" + message.getGuild().getLongID() + ".dat");
                     JSONObject investResults = investResults1.getJSONObject("invest_results");
-                    Object[] targetDetails = MafiaConfig.getPlayerDetails(message, target.getLongID());
-                    Message.sendDM(invest, investResults.getString(targetDetails[2].toString()));
+                    Object[] targetDetails = MafiaConfig.getPlayerDetails(message, mentionedList.get(0).getLongID());
+                    Message.sendDM(mentionedList.get(1), investResults.getString(targetDetails[2].toString()));
+                    System.out.println("Send DM to " + mentionedList.get(1));
                     message.delete();
                 }
-                else if(messageContent[1].equals("invest")){
+                else if(messageContent[1].equals("invest") && MafiaConfig.getPlayerDetails(message)[2].toString().equals("investigator")){
                     Message.sendMessage(message.getGuild().getChannelByID(MafiaConfig.getAdminChannel(message)), message.getAuthor().getDisplayName(message.getGuild()) + " would like to investigate " + Utils.getMentionedUser(message).getDisplayName(message.getGuild()) + " tonight.");
                     message.delete();
                 }
                 else if(messageContent[1].equals("sheriff") && Perms.checkMod(message)){ // /mafia sheriff @target @user
                     List<IUser> mentionedList = message.getMentions();
-                    Object[] mentionedArray = mentionedList.toArray();
-                    IUser target = (IUser) mentionedArray[0];
-                    IUser invest = (IUser) mentionedArray[1];
+                    IUser target = mentionedList.get(0);
+                    IUser invest = mentionedList.get(1);
                     Object[] details = MafiaConfig.getPlayerDetails(message, target.getLongID());
 
                     if (details[0].equals("mafia") || (boolean)details[7]){
@@ -218,30 +215,30 @@ public class MafiaListener {
                     }
                     message.delete();
                 }
-                else if(messageContent[1].equals("sheriff")){
+                else if(messageContent[1].equals("sheriff") && MafiaConfig.getPlayerDetails(message)[2].toString().equals("sheriff")){
                     Message.sendMessage(message.getGuild().getChannelByID(MafiaConfig.getAdminChannel(message)), "The sheriff would like to interrogate " + Utils.getMentionedUser(message).getDisplayName(message.getGuild()) + " tonight.");
                     Message.sendDM(message.getAuthor(), "You are going to be interrogating " + Utils.getMentionedUser(message) + " tonight.");
                     message.delete();
                 }
-                else if(messageContent[1].equals("transport")){
+                else if(messageContent[1].equals("transport") && MafiaConfig.getPlayerDetails(message)[2].toString().equals("transporter")){
                     List<IUser> mentionedList = message.getMentions();
                     Object[] mentionedArray = mentionedList.toArray();
-                    IUser target = (IUser) mentionedArray[0];
-                    IUser invest = (IUser) mentionedArray[1];
+                    IUser target = mentionedList.get(0);
+                    IUser invest = mentionedList.get(1);
                     Message.sendMessage(message.getGuild().getChannelByID(MafiaConfig.getAdminChannel(message)), message.getAuthor().getDisplayName(message.getGuild()) + " would like to swap positions of " + invest.getDisplayName(message.getGuild()) + " & " + target.getDisplayName(message.getGuild()));
                     Message.sendDM(message.getAuthor(), "You will be transporting " + invest.getDisplayName(message.getGuild()) + " & " + target.getDisplayName(message.getGuild()));
                     message.delete();
                 }
-                else if(messageContent[1].equals("witch")){
+                else if(messageContent[1].equals("witch") && MafiaConfig.getPlayerDetails(message)[2].toString().equals("witch")){
                     List<IUser> mentionedList = message.getMentions();
                     Object[] mentionedArray = mentionedList.toArray();
-                    IUser target = (IUser) mentionedArray[0];
-                    IUser invest = (IUser) mentionedArray[1];
+                    IUser target = mentionedList.get(0);
+                    IUser invest = mentionedList.get(1);
                     Message.sendMessage(message.getGuild().getChannelByID(MafiaConfig.getAdminChannel(message)), message.getAuthor().getDisplayName(message.getGuild()) + " would like to control " + invest.getDisplayName(message.getGuild()) + " into using their ability onto " + target.getDisplayName(message.getGuild()));
                     Message.sendDM(message.getAuthor(), "You will be witching " + invest.getDisplayName(message.getGuild()) + " into " + target.getDisplayName(message.getGuild()));
                     message.delete();
                 }
-                else if(messageContent[1].equals("heal")){
+                else if(messageContent[1].equals("heal") && MafiaConfig.getPlayerDetails(message)[2].toString().equals("doctor")){
                     Message.sendMessage(message.getGuild().getChannelByID(MafiaConfig.getAdminChannel(message)), message.getAuthor().getDisplayName(message.getGuild()) + " will be healing " + Utils.getMentionedUser(message).getDisplayName(message.getGuild()) + " tonight.");
                     Message.sendDM(message.getAuthor(), "You will be healing " + Utils.getMentionedUser(message).getDisplayName(message.getGuild()) + " tonight.");
                     message.delete();
@@ -295,6 +292,30 @@ public class MafiaListener {
                     Message.sendMessage(message.getGuild().getChannelByID(MafiaConfig.getAdminChannel(message)), "The framer is gonna frame " + Utils.getMentionedUser(message).getDisplayName(message.getGuild()));
                     Message.sendDM(message.getAuthor(), "You will be framing " + Utils.getMentionedUser(message).getDisplayName(message.getGuild()));
                     message.delete();
+                }
+                else if(messageContent[1].equals("clean")){
+                    Message.sendMessage(message.getGuild().getChannelByID(MafiaConfig.getAdminChannel(message)), message.getAuthor().getDisplayName(message.getGuild()) + " would like to clean the role of " + Utils.getMentionedUser(message));
+                    Message.sendDM(message.getAuthor(), "You will be cleaning " + Utils.getMentionedUser(message).getDisplayName(message.getGuild()));
+                    message.delete();
+                }
+                else if(messageContent[1].equals("blackmail")){
+                    Message.sendMessage(message.getGuild().getChannelByID(MafiaConfig.getAdminChannel(message)), message.getAuthor().getDisplayName(message.getGuild()) + "would like to Blackmail " + Utils.getMentionedUser(message).getDisplayName(message.getGuild()));
+                    Message.sendDM(message.getAuthor(), "You will be blackmailing " + Utils.getMentionedUser(message));
+                    message.delete();
+                }
+                else if(messageContent[1].equals("consig")){
+                    Message.sendMessage(message.getGuild().getChannelByID(MafiaConfig.getAdminChannel(message)), message.getAuthor().getDisplayName(message.getGuild()) + " would like to know the role of " + Utils.getMentionedUser(message));
+                    Message.sendDM(message.getAuthor(), "You will receive the role of " + Utils.getMentionedUser(message));
+                    message.delete();
+                }
+                else if(messageContent[1].equals("remember")){
+                    Message.sendMessage(message.getGuild().getChannelByID(MafiaConfig.getAdminChannel(message)), message.getAuthor().getDisplayName(message.getGuild()) + " would like to remember the role of " + Utils.getMentionedUser(message));
+                    Message.sendDM(message.getAuthor(), "You will remember the role of " + Utils.getMentionedUser(message));
+                    message.delete();
+                }
+                else if(messageContent[1].equals("vest")){
+                    Message.sendMessage(message.getGuild().getChannelByID(MafiaConfig.getAdminChannel(message)), message.getAuthor().getDisplayName(message.getGuild()) + " will be putting on a vest tonight.");
+                    Message.sendDM(message.getAuthor(), "You will be putting on a vest tonight.");
                 }
 
 

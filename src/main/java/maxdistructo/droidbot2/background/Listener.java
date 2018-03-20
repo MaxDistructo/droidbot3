@@ -209,7 +209,7 @@ public class Listener {
                     message.delete();
                 } else if (messageContent[0].equals(prefix + "fixServer") && Perms.checkOwner_Guild(message)) { //Due to requirement of server configs (Blame Swear Filter), this command is separated so that if errors are being thrown this command can still run.
                     try {
-                        FileUtils.copyURLToFile(new URL("https://maxdistructo.github.io/droidbot2/downloads/config/defaultconfig.txt"), new File(s + "droidbot/config/" + message.getGuild().getLongID() + ".txt"));
+                        FileUtils.copyURLToFile(new URL("https://maxdistructo.github.io/droidbot2/downloads/config/defaultconfig.txt"), new File(s + "/droidbot/config/" + message.getGuild().getLongID() + ".txt"));
                     } catch (Exception e) {
                         Message.throwError(e, message);
                     }
@@ -219,6 +219,13 @@ public class Listener {
                     RoleBuilder rb3 = new RoleBuilder(guild);
                     Message.sendMessage(guild.getDefaultChannel(), "Thank you for letting me join your server. I am " + client.getOurUser().getName() + " and my features can be found by using the command " + prefix + "help.");
 
+                }
+                else if (messageContent[0].equals(prefix + "getMentions") && Perms.checkOwner(message)){
+                    List<IUser> mentionedList = message.getMentions();
+                    Object[] mentionedArray = mentionedList.toArray();
+                    IUser target = (IUser) mentionedArray[0];
+                    IUser invest = (IUser) mentionedArray[1];
+                    Message.sendDM(message.getAuthor(), "The user in slot 0 is " + target.getDisplayName(message.getGuild()) + "\n The user in slot 1 is " + invest.getDisplayName(message.getGuild()));
                 }
 
             } else if (content.charAt(0) == prefix.charAt(0)) {
