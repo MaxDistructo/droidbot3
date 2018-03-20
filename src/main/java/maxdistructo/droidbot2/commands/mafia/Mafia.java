@@ -70,7 +70,7 @@ public class Mafia {
 
         if(isDay){
             for(long player : players){
-                Object[] playerInfo = MafiaConfig.getPlayerDetails(message);
+                Object[] playerInfo = MafiaConfig.getPlayerDetails(message, player);
                 if(playerInfo[0].toString().equals("mafia")){//check if mafia
                     mafiaChannel.overrideUserPermissions(message.getGuild().getUserByID(player), EnumSet.of(Permissions.READ_MESSAGE_HISTORY, Permissions.READ_MESSAGES, Permissions.SEND_MESSAGES, Permissions.SEND_TTS_MESSAGES), EnumSet.noneOf(Permissions.class));
                 }
@@ -80,11 +80,20 @@ public class Mafia {
                 if(playerInfo[2].toString().equals("jailor")) {
                     allowJailorChat(message, message.getGuild().getUserByID(player));
                 }
+                else{
+                    denyJailorChat(message, message.getGuild().getUserByID(player));
+                }
                 if(MafiaConfig.getJailed(message) == player){
                     allowJailedChat(message, message.getGuild().getUserByID(player));
                 }
+                else{
+                    //denyJailedChat(message, message.getGuild().getUserByID(player));
+                }
                 if(playerInfo[2].toString().equals("medium")){
                     allowMediumChat(message, message.getGuild().getUserByID(player));
+                }
+                else{
+                    //denyMediumChat(message, message.getGuild().getUserByID(player));
                 }
 
                 denyDayChat(message, message.getGuild().getUserByID(player));
@@ -97,7 +106,7 @@ public class Mafia {
         else{
             for(long player : players){
                 dayChannel.removePermissionsOverride(message.getGuild().getUserByID(player)); //enable day chat
-                Object[] playerInfo = MafiaConfig.getPlayerDetails(message);
+                Object[] playerInfo = MafiaConfig.getPlayerDetails(message, player);
                 if(playerInfo[0].toString().equals("mafia")){//check if mafia
                     denyMafChat(message, message.getGuild().getUserByID(player));
                 }
@@ -128,52 +137,58 @@ public class Mafia {
         }
     }
 
-   /* private static void runActions(IMessage message) {
-        List<String> actions  = null;
-        try {
-            actions = FileUtils.readLines(new File(s + "/config/mafia/" + message.getGuild().getLongID() + "_actions.txt"), "UTF-8");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if(actions != null) {
-            for(String action : actions){
-                String[] a = action.split(" ");
-                if(a[1].equals("alert")){
-                    setVeteran(message, message.getGuild().getUserByID(Long.valueOf(a[0])));
-                }
-                if(a[1].equals("swap")){
-                    actions = swapUsers(message, message.getGuild().getUserByID(Long.valueOf(a[0])), message.getGuild().getUserByID(Long.valueOf(a[2])), actions);
-                }
-                if(a[1].equals("witch")){
-                    actions = witchUser(message, message.getGuild().getUserByID(Long.valueOf(a[0])), message.getGuild().getUserByID(Long.valueOf(a[2])), actions);
-                }
-
-            }
-            for (String action : actions) {
-                String[] a = action.split(" ");
-                if(a[1].equals("blocked")){ // To make sure that escort/consort values go through before invest results are released
-                    blockUser(message, message.getGuild().getUserByID(Long.valueOf(a[2])));
-                }
-            }
-            for (String action : actions){
-                String[] a = action.split(" ");
-                if (a[1].equals("framed")){
-                    frameUser(message, message.getGuild().getUserByID(Long.valueOf(a[2])));
-                }
-
-            }
-        }
-
+    private static void denyJailorChat(IMessage message, IUser userByID) {
+        long mafChatLong = MafiaConfig.getJailorChat(message);
+        IChannel channel = message.getGuild().getChannelByID(mafChatLong);
+        channel.overrideUserPermissions(userByID, EnumSet.noneOf(Permissions.class) , EnumSet.of(Permissions.SEND_MESSAGES, Permissions.SEND_TTS_MESSAGES));
     }
 
-    private static List<String> witchUser(IMessage message, IUser userByID, IUser userByID1, List<String> actions) {
+    /* private static void runActions(IMessage message) {
+         List<String> actions  = null;
+         try {
+             actions = FileUtils.readLines(new File(s + "/config/mafia/" + message.getGuild().getLongID() + "_actions.txt"), "UTF-8");
+         } catch (IOException e) {
+             e.printStackTrace();
+         }
+         if(actions != null) {
+             for(String action : actions){
+                 String[] a = action.split(" ");
+                 if(a[1].equals("alert")){
+                     setVeteran(message, message.getGuild().getUserByID(Long.valueOf(a[0])));
+                 }
+                 if(a[1].equals("swap")){
+                     actions = swapUsers(message, message.getGuild().getUserByID(Long.valueOf(a[0])), message.getGuild().getUserByID(Long.valueOf(a[2])), actions);
+                 }
+                 if(a[1].equals("witch")){
+                     actions = witchUser(message, message.getGuild().getUserByID(Long.valueOf(a[0])), message.getGuild().getUserByID(Long.valueOf(a[2])), actions);
+                 }
 
-    }
+             }
+             for (String action : actions) {
+                 String[] a = action.split(" ");
+                 if(a[1].equals("blocked")){ // To make sure that escort/consort values go through before invest results are released
+                     blockUser(message, message.getGuild().getUserByID(Long.valueOf(a[2])));
+                 }
+             }
+             for (String action : actions){
+                 String[] a = action.split(" ");
+                 if (a[1].equals("framed")){
+                     frameUser(message, message.getGuild().getUserByID(Long.valueOf(a[2])));
+                 }
 
-    private static List<String> swapUsers(IMessage message, IUser userByID, IUser userByID1, List<String> actions) {
+             }
+         }
 
-    }
-*/
+     }
+
+     private static List<String> witchUser(IMessage message, IUser userByID, IUser userByID1, List<String> actions) {
+
+     }
+
+     private static List<String> swapUsers(IMessage message, IUser userByID, IUser userByID1, List<String> actions) {
+
+     }
+ */
     private static void setVeteran(IMessage message, IUser userByID) {
 
     }
@@ -253,7 +268,7 @@ public class Mafia {
     }
     public static void jailPlayer(IMessage message, IUser user){
         Object[] playerDetails = MafiaConfig.getPlayerDetails(message, user.getLongID());
-        JSONObject root = Utils.readJSONFromFile("/config/mafia/" + message.getGuild().getLongID() + "_playerdat.txt");
+        JSONObject root = Utils.readJSONFromFile("/config/mafia/" + message.getGuild().getLongID() + "_dat.txt");
         root.remove("jailed");
         if(playerDetails[2].toString().equals(MafiaConfig.getPlayerDetails(message)[2].toString())){
             System.out.println("Jailor's can not jail themselves!");
@@ -265,7 +280,7 @@ public class Mafia {
         MafiaConfig.writeGame(message, root);
     }
     public static void unjail(IMessage message){
-        JSONObject root = Utils.readJSONFromFile("/config/mafia/" + message.getGuild().getLongID() + "_playerdat.txt");
+        JSONObject root = Utils.readJSONFromFile("/config/mafia/" + message.getGuild().getLongID() + "_dat.txt");
         root.remove("jailed");
         root.put("jailed", 0L);
         MafiaConfig.writeGame(message, root);

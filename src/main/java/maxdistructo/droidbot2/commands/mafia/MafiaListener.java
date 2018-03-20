@@ -21,26 +21,28 @@ public class MafiaListener {
         IMessage message = event.getMessage();
         Object[] messageContent = message.getContent().split(" ");
         if (message.getGuild().getLongID() == 249615705517981706L || message.getGuild().getLongID() == 268370862661435392L) {
-            if (!MafiaConfig.getDayStatus(message) && message.getChannel() == message.getGuild().getChannelByID(MafiaConfig.getDeadChat(message)) && !message.getAuthor().isBot()) { //Dead to Medium
-                Message.sendMessage(message.getGuild().getChannelByID(MafiaConfig.getMediumChat(message)), message.getAuthor().getDisplayName(message.getGuild()) + ": " + message.getContent());
-            }
-            if (!MafiaConfig.getDayStatus(message) && message.getChannel() == message.getGuild().getChannelByID(MafiaConfig.getMediumChat(message)) && !message.getAuthor().isBot() && MafiaConfig.getJailed(message) != message.getAuthor().getLongID()) { //Medium to Dead
-                Message.sendMessage(message.getGuild().getChannelByID(MafiaConfig.getDeadChat(message)), "Medium:" + message.getContent());
-            }
-            if (message.getChannel() == message.getGuild().getChannelByID(MafiaConfig.getMafiaChat(message))) { //Mafia to Spy
-                Message.sendMessage(message.getGuild().getChannelByID(MafiaConfig.getSpyChat(message)), "Mafia: " + message.getContent());
-            }
-            if (message.getChannel() == message.getGuild().getChannelByID(MafiaConfig.getJailorChat(message))) { //Jailor to Jailed
-                Message.sendMessage(message.getGuild().getChannelByID(MafiaConfig.getJailedChat(message)), "Jailor: " + message.getContent());
-            }
-            if (message.getChannel() == message.getGuild().getChannelByID(MafiaConfig.getJailedChat(message))) { //Jailed to Jailor
-                Message.sendMessage(message.getGuild().getChannelByID(MafiaConfig.getJailorChat(message)), message.getAuthor().getDisplayName(message.getGuild()) + message.getContent());
-            }
+                if(!Perms.checkMod(message)) {
+                    if (!MafiaConfig.getDayStatus(message) && message.getChannel() == message.getGuild().getChannelByID(MafiaConfig.getDeadChat(message)) && !message.getAuthor().isBot()) { //Dead to Medium
+                        Message.sendMessage(message.getGuild().getChannelByID(MafiaConfig.getMediumChat(message)), message.getAuthor().getDisplayName(message.getGuild()) + ": " + message.getContent());
+                    }
+                    if (!MafiaConfig.getDayStatus(message) && message.getChannel() == message.getGuild().getChannelByID(MafiaConfig.getMediumChat(message)) && !message.getAuthor().isBot() && MafiaConfig.getJailed(message) != message.getAuthor().getLongID()) { //Medium to Dead
+                        Message.sendMessage(message.getGuild().getChannelByID(MafiaConfig.getDeadChat(message)), "Medium:" + message.getContent());
+                    }
+                    if (message.getChannel() == message.getGuild().getChannelByID(MafiaConfig.getMafiaChat(message))) { //Mafia to Spy
+                        Message.sendMessage(message.getGuild().getChannelByID(MafiaConfig.getSpyChat(message)), "Mafia: " + message.getContent());
+                    }
+                    if (message.getChannel() == message.getGuild().getChannelByID(MafiaConfig.getJailorChat(message))) { //Jailor to Jailed
+                        Message.sendMessage(message.getGuild().getChannelByID(MafiaConfig.getJailedChat(message)), "Jailor: " + message.getContent());
+                    }
+                    if (message.getChannel() == message.getGuild().getChannelByID(MafiaConfig.getJailedChat(message))) { //Jailed to Jailor
+                        Message.sendMessage(message.getGuild().getChannelByID(MafiaConfig.getJailorChat(message)), message.getAuthor().getDisplayName(message.getGuild()) + message.getContent());
+                    }
+                }
             if (messageContent[0].equals(prefix + "mafia")) { //This is all this listener will handle so putting this requirement for the rest of the code to execute.
                 if (messageContent[1].equals("start") && Perms.checkMod(message)) {
                     Mafia.onGameStart(message);
                     message.delete();
-                } else if (messageContent[1].equals("continue")) {
+                } else if (messageContent[1].equals("continue") && Perms.checkMod(message)) {
                     Mafia.onGameToggle(message);
                     message.delete();
                 } else if (messageContent[1].equals("join")) {
@@ -56,7 +58,39 @@ public class MafiaListener {
                 } else if (messageContent[1].equals("shuffle")) {
                     //message.reply(Mafia.assignRoles(message).toString());
                     message.delete();
-                } else if (messageContent[1].equals("akill") && Perms.checkMod(message)) { //Deaths List: Admin, Mafia, Serial Killer, Werewolf, Arsonist, Jester, Veteran, Vigilante, Jailor
+                }
+                else if(messageContent[1].equals("getInfo") && Perms.checkMod(message)){
+                    Object[] details = MafiaConfig.getPlayerDetails(message, Utils.getMentionedUser(message).getLongID());
+                    EmbedBuilder builder = new EmbedBuilder();
+                    builder.withTitle("Player Info on " + Utils.getMentionedUser(message).getDisplayName(message.getGuild()));
+                    builder.withDesc("Alignment: " + details[0] + "\nClass: " + details[1] + "\nRole: " + details[2] + "\nIs Dead: " + details[3] + "\nAttack Power: " + details[4] + "\nDefence Power: " + details[5]);
+                    builder.withColor(message.getAuthor().getColorForGuild(message.getGuild()));
+                    builder.withAuthorName(message.getAuthor().getName() + "#" + message.getAuthor().getDiscriminator());
+                    builder.withAuthorIcon(message.getAuthor().getAvatarURL());
+                    builder.withTimestamp(Instant.now());
+                    builder.withFooterIcon(message.getGuild().getIconURL());
+                    builder.withFooterText(message.getGuild().getName());
+                    Message.sendDM(message.getAuthor(), "Player Info on " + message.getAuthor().getDisplayName(message.getGuild()) +  "\nAlignment: " + details[0] + "\nClass: " + details[1] + "\nRole: " + details[2] + "\nIs Dead: " + details[3] + "\nAttack Power: " + details[4] + "\nDefence Power: " + details[5]);
+                }
+                else if(messageContent[1].equals("getInfo")){
+                    Object[] details = MafiaConfig.getPlayerDetails(message);
+                    EmbedBuilder builder = new EmbedBuilder();
+                    builder.withTitle("Player Info on " + Utils.getMentionedUser(message).getDisplayName(message.getGuild()));
+                    builder.withDesc("Alignment: " + details[0] + "\nClass: " + details[1] + "\nRole: " + details[2] + "\nIs Dead: " + details[3] + "\nAttack Power: " + details[4] + "\nDefence Power: " + details[5]);
+                    builder.withColor(message.getAuthor().getColorForGuild(message.getGuild()));
+                    builder.withAuthorName(message.getAuthor().getName() + "#" + message.getAuthor().getDiscriminator());
+                    builder.withAuthorIcon(message.getAuthor().getAvatarURL());
+                    builder.withTimestamp(Instant.now());
+                    builder.withFooterIcon(message.getGuild().getIconURL());
+                    builder.withFooterText(message.getGuild().getName());
+                    Message.sendDM(message.getAuthor(),"Player Info on " + message.getAuthor().getDisplayName(message.getGuild()) +  "\nAlignment: " + details[0] + "\nClass: " + details[1] + "\nRole: " + details[2] + "\nIs Dead: " + details[3] + "\nAttack Power: " + details[4] + "\nDefence Power: " + details[5]);
+                }
+                else if(messageContent[1].equals("setrole") && Perms.checkAdmin(message)){ // /mafia setrole @user roleName
+                    Mafia.setRole(message, Utils.getMentionedUser(message), messageContent[3].toString());
+                    Message.sendMessage(message.getGuild().getChannelByID(MafiaConfig.getAdminChannel(message)), "The role of " + Utils.getMentionedUser(message).getDisplayName(message.getGuild()) + " has been set to " + MafiaConfig.getPlayerDetails(message, Utils.getMentionedUser(message).getLongID())[2]);
+                    message.delete();
+                }
+                else if (messageContent[1].equals("akill") && Perms.checkMod(message)) { //Deaths List: Admin, Mafia, Serial Killer, Werewolf, Arsonist, Jester, Veteran, Vigilante, Jailor
                     Mafia.killPlayer(message, Utils.getMentionedUser(message).getLongID());
                     Message.sendMessage(message.getGuild().getChannelByID(MafiaConfig.getDayChat(message)), "__**" + Utils.getMentionedUser(message).getDisplayName(message.getGuild()) + " has committed suicide. **__" + "\n" + Utils.getMentionedUser(message).getDisplayName(message.getGuild()) + " was a " + MafiaConfig.getPlayerDetails(message, Utils.getMentionedUser(message).getLongID())[2]);
                     Message.sendMessage(message.getGuild().getChannelByID(MafiaConfig.getAdminChannel(message)), Utils.getMentionedUser(message).getDisplayName(message.getGuild()) + " was killed by " + message.getAuthor().getDisplayName(message.getGuild()));
@@ -155,33 +189,13 @@ public class MafiaListener {
                     }
                     message.delete();
                 }
-                else if(messageContent[1].equals("setrole") && Perms.checkAdmin(message)){ // /mafia setrole @user roleName
-                    Mafia.setRole(message, Utils.getMentionedUser(message), messageContent[3].toString());
-                    Message.sendMessage(message.getGuild().getChannelByID(MafiaConfig.getAdminChannel(message)), "The role of " + Utils.getMentionedUser(message).getDisplayName(message.getGuild()) + " has been set to " + MafiaConfig.getPlayerDetails(message, Utils.getMentionedUser(message).getLongID())[2]);
-                    message.delete();
-                }
+
                 else if(messageContent[1].equals("watch") && MafiaConfig.getPlayerDetails(message)[2].toString().equals("lookout")){
                     Message.sendDM(message.getAuthor(), "You will be watching " + Utils.getMentionedUser(message).getDisplayName(message.getGuild()) + " tonight.");
                     Message.sendMessage(message.getGuild().getChannelByID(MafiaConfig.getAdminChannel(message)), message.getAuthor().getDisplayName(message.getGuild()) + " will be watching " + Utils.getMentionedUser(message).getDisplayName(message.getGuild()) + " tonight.");
                     message.delete();
                 }
-                else if(messageContent[1].equals("getInfo") && Perms.checkMod(message) && message.getChannel().getLongID() == MafiaConfig.getAdminChannel(message)){
-                    Object[] details = MafiaConfig.getPlayerDetails(message, Utils.getMentionedUser(message).getLongID());
-                    EmbedBuilder builder = new EmbedBuilder();
-                    builder.withTitle("Player Info on " + Utils.getMentionedUser(message).getDisplayName(message.getGuild()));
-                    builder.withDesc("Alignment: " + details[0] + "\nClass: " + details[1] + "\nRole: " + details[2] + "\nIs Dead: " + details[3] + "\nAttack Power: " + details[4] + "\nDefence Power: " + details[5]);
-                    builder.withColor(message.getAuthor().getColorForGuild(message.getGuild()));
-                    builder.withAuthorName(message.getAuthor().getName() + "#" + message.getAuthor().getDiscriminator());
-                    builder.withAuthorIcon(message.getAuthor().getAvatarURL());
-                    builder.withTimestamp(Instant.now());
-                    builder.withFooterIcon(message.getGuild().getIconURL());
-                    builder.withFooterText(message.getGuild().getName());
-                    Message.sendMessage(message.getChannel(), builder.build());
-                }
-                else if(messageContent[1].equals("getInfo")){
-                    Object[] details = MafiaConfig.getPlayerDetails(message);
-                    Message.sendDM(message.getAuthor(),"Player Info on " + message.getAuthor().getDisplayName(message.getGuild()) +  "\nAlignment: " + details[0] + "\nClass: " + details[1] + "\nRole: " + details[2] + "\nIs Dead: " + details[3] + "\nAttack Power: " + details[4] + "\nDefence Power: " + details[5]);
-                }
+
                 else if(messageContent[1].equals("invest") && Perms.checkMod(message)){ // /mafia invest @target @user
                     List<IUser> mentionedList = message.getMentions();
                     JSONObject investResults1 = Utils.readJSONFromFile("/config/mafia/" + message.getGuild().getLongID() + ".dat");
