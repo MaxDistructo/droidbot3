@@ -135,7 +135,7 @@ public class MafiaConfig {
         JSONObject root = Utils.readJSONFromFile("/config/mafia/" + message.getGuild().getLongID() + "_playerdat.txt");
         return root.getLong("jailed");
     }
-    public static void writeGameDat(IMessage message, JSONObject object){
+    public static void writeDat(IMessage message, JSONObject object){
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
 
