@@ -29,6 +29,102 @@ class MafiaListener {
                 if (message.channel === message.guild.getChannelByID(MafiaConfig.getJailedChat(message))) { //Jailed to Jailor
                     Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getJailorChat(message)), message.author.getDisplayName(message.guild) + message.content)
                 }
+            }
+            if (messageContent[0] == prefix + "mafia") { //This is all this listener will handle so putting this requirement for the rest of the code to execute.
+                if (messageContent[1] == "start" && Perms.checkMod(message)) {
+                    Mafia.onGameStart(message)
+                    message.delete()
+                } else if (messageContent[1] == "continue" && Perms.checkMod(message)) {
+                    Mafia.onGameToggle(message)
+                    message.delete()
+                } else if (messageContent[1] == "join") {
+                    Mafia.onGameJoinCommand(message)
+                    message.delete()
+                } else if (messageContent[1] == "leave") {
+                    Mafia.onGameLeaveCommand(message)
+                    message.delete()
+                } else if (messageContent[1] == "pm") {
+                    Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getSpyChat(message)), Utils.makeNewString(messageContent, 3)) //Send PMs to Spy
+                    Message.sendDM(Utils.getMentionedUser(message)!!, Utils.makeNewString(messageContent, 3) + "\n To reply, use /mafia pm " + message.author.mention() + " in the mafia commands channel.") //Send PM to desired recipient
+                    message.delete()
+                } else if (messageContent[1] == "shuffle") {
+                    //message.reply(Mafia.assignRoles(message).toString());
+                    message.delete()
+                } else if (messageContent[1] == "getInfo" && Perms.checkMod(message)) {
+                    val details = MafiaConfig.getPlayerDetails(message, Utils.getMentionedUser(message).longID)
+                    val builder = EmbedBuilder()
+                    builder.withTitle("Player Info on " + Utils.getMentionedUser(message).getDisplayName(message.guild))
+                    builder.withDesc("Alignment: " + details[0] + "\nClass: " + details[1] + "\nRole: " + details[2] + "\nIs Dead: " + details[3] + "\nAttack Power: " + details[4] + "\nDefence Power: " + details[5])
+                    builder.withColor(message.author.getColorForGuild(message.guild))
+                    builder.withAuthorName(message.author.name + "#" + message.author.discriminator)
+                    builder.withAuthorIcon(message.author.avatarURL)
+                    builder.withTimestamp(Instant.now())
+                    builder.withFooterIcon(message.guild.iconURL)
+                    builder.withFooterText(message.guild.name)
+                    Message.sendDM(message.author, "Player Info on " + message.author.getDisplayName(message.guild) + "\nAlignment: " + details[0] + "\nClass: " + details[1] + "\nRole: " + details[2] + "\nIs Dead: " + details[3] + "\nAttack Power: " + details[4] + "\nDefence Power: " + details[5])
+                } else if (messageContent[1] == "getInfo") {
+                    val details = MafiaConfig.getPlayerDetails(message)
+                    val builder = EmbedBuilder()
+                    builder.withTitle("Player Info on " + Utils.getMentionedUser(message).getDisplayName(message.guild))
+                    builder.withDesc("Alignment: " + details[0] + "\nClass: " + details[1] + "\nRole: " + details[2] + "\nIs Dead: " + details[3] + "\nAttack Power: " + details[4] + "\nDefence Power: " + details[5])
+                    builder.withColor(message.author.getColorForGuild(message.guild))
+                    builder.withAuthorName(message.author.name + "#" + message.author.discriminator)
+                    builder.withAuthorIcon(message.author.avatarURL)
+                    builder.withTimestamp(Instant.now())
+                    builder.withFooterIcon(message.guild.iconURL)
+                    builder.withFooterText(message.guild.name)
+                    Message.sendDM(message.author, "Player Info on " + message.author.getDisplayName(message.guild) + "\nAlignment: " + details[0] + "\nClass: " + details[1] + "\nRole: " + details[2] + "\nIs Dead: " + details[3] + "\nAttack Power: " + details[4] + "\nDefence Power: " + details[5])
+                } else if (messageContent[1] == "setrole" && Perms.checkAdmin(message)) { // /mafia setrole @user roleName
+                    Mafia.setRole(message, Utils.getMentionedUser(message), messageContent[3] as String)
+                    Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getAdminChannel(message)), "The role of " + Utils.getMentionedUser(message).getDisplayName(message.guild) + " has been set to " + MafiaConfig.getPlayerDetails(message, Utils.getMentionedUser(message).longID)[2])
+                    message.delete()
+                } else if (messageContent[1] == "akill" && Perms.checkMod(message)) { //Deaths List: Admin, Mafia, Serial Killer, Werewolf, Arsonist, Jester, Veteran, Vigilante, Jailor
+                    Mafia.killPlayer(message, Utils.getMentionedUser(message).longID)
+                    Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getDayChat(message)), "__**" + Utils.getMentionedUser(message).getDisplayName(message.guild) + " has committed suicide. **__" + "\n" + Utils.getMentionedUser(message).getDisplayName(message.guild) + " was a " + MafiaConfig.getPlayerDetails(message, Utils.getMentionedUser(message).longID)[2])
+                    Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getAdminChannel(message)), Utils.getMentionedUser(message).getDisplayName(message.guild) + " was killed by " + message.author.getDisplayName(message.guild))
+                    message.delete()
+                } else if (messageContent[1] == "mkill" && Perms.checkMod(message)) {
+                    Mafia.killPlayer(message, Utils.getMentionedUser(message).longID)
+                    Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getDayChat(message)), "__**" + Utils.getMentionedUser(message).getDisplayName(message.guild) + " was killed by the Mafia**__" + "\n" + Utils.getMentionedUser(message).getDisplayName(message.guild) + " was a " + MafiaConfig.getPlayerDetails(message, Utils.getMentionedUser(message).longID)[2])
+                    Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getAdminChannel(message)), Utils.getMentionedUser(message).getDisplayName(message.guild) + " was killed by the Mafia. Authorizing Member: " + message.author.getDisplayName(message.guild))
+                    message.delete()
+                } else if (messageContent[1] == "skkill" && Perms.checkMod(message)) {
+                    Mafia.killPlayer(message, Utils.getMentionedUser(message).longID)
+                    Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getDayChat(message)), "__**" + Utils.getMentionedUser(message).getDisplayName(message.guild) + " was stabbed by a Serial Killer**__" + "\n" + Utils.getMentionedUser(message).getDisplayName(message.guild) + " was a " + MafiaConfig.getPlayerDetails(message, Utils.getMentionedUser(message).longID)[2])
+                    Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getAdminChannel(message)), Utils.getMentionedUser(message).getDisplayName(message.guild) + " was Stabbed by a Serial Killer. Authorizing Member: " + message.author.getDisplayName(message.guild))
+                    message.delete()
+                } else if (messageContent[1] == "wwkill" && Perms.checkMod(message)) {
+                    Mafia.killPlayer(message, Utils.getMentionedUser(message).longID)
+                    Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getDayChat(message)), "__**" + Utils.getMentionedUser(message).getDisplayName(message.guild) + " was attacked by a Werewolf.**__" + "\n" + Utils.getMentionedUser(message).getDisplayName(message.guild) + " was a " + MafiaConfig.getPlayerDetails(message, Utils.getMentionedUser(message).longID)[2])
+                    Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getAdminChannel(message)), Utils.getMentionedUser(message).getDisplayName(message.guild) + " was attacked by a Werewolf. Authorizing Member: " + message.author.getDisplayName(message.guild))
+                    message.delete()
+                } else if (messageContent[1] == "arsokill" && Perms.checkMod(message)) {
+                    Mafia.killPlayer(message, Utils.getMentionedUser(message).longID)
+                    Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getDayChat(message)), "__**" + Utils.getMentionedUser(message).getDisplayName(message.guild) + " was burnt to a crisp by an Arsonist**__" + "\n" + Utils.getMentionedUser(message).getDisplayName(message.guild) + " was a " + MafiaConfig.getPlayerDetails(message, Utils.getMentionedUser(message).longID)[2])
+                    Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getAdminChannel(message)), Utils.getMentionedUser(message).getDisplayName(message.guild) + " was burnt to a crisp by an Arsonist. Authorizing Member: " + message.author.getDisplayName(message.guild))
+                    message.delete()
+                } else if (messageContent[1] == "jestkill" && Perms.checkMod(message)) {
+                    Mafia.killPlayer(message, Utils.getMentionedUser(message).longID)
+                    Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getDayChat(message)), "__**" + Utils.getMentionedUser(message).getDisplayName(message.guild) + " was haunted by the Jester they linched.**__" + "\n" + Utils.getMentionedUser(message).getDisplayName(message.guild) + " was a " + MafiaConfig.getPlayerDetails(message, Utils.getMentionedUser(message).longID)[2])
+                    Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getAdminChannel(message)), Utils.getMentionedUser(message).getDisplayName(message.guild) + " was haunted by the Jester they linched. Authorizing Member: " + message.author.getDisplayName(message.guild))
+                    message.delete()
+                } else if (messageContent[1] == "vetkill" && Perms.checkMod(message)) {
+                    Mafia.killPlayer(message, Utils.getMentionedUser(message).longID)
+                    Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getDayChat(message)), "__**" + Utils.getMentionedUser(message).getDisplayName(message.guild) + " was shot by the Veteran they visited.**__" + "\n" + Utils.getMentionedUser(message).getDisplayName(message.guild) + " was a " + MafiaConfig.getPlayerDetails(message, Utils.getMentionedUser(message).longID)[2])
+                    Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getAdminChannel(message)), Utils.getMentionedUser(message).getDisplayName(message.guild) + " was shot by a Veteran. Authorizing Member: " + message.author.getDisplayName(message.guild))
+                    message.delete()
+                } else if (messageContent[1] == "vigkill" && Perms.checkMod(message)) {
+                    Mafia.killPlayer(message, Utils.getMentionedUser(message).longID)
+                    Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getDayChat(message)), "__**" + Utils.getMentionedUser(message).getDisplayName(message.guild) + " was shot by a Vigilante**__" + "\n" + Utils.getMentionedUser(message).getDisplayName(message.guild) + " was a " + MafiaConfig.getPlayerDetails(message, Utils.getMentionedUser(message).longID)[2])
+                    Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getAdminChannel(message)), Utils.getMentionedUser(message).getDisplayName(message.guild) + " was shot by a Vigilante. Authorizing Member: " + message.author.getDisplayName(message.guild))
+                    message.delete()
+                } else if (messageContent[1] == "jailkill" && Perms.checkMod(message)) {
+                    Mafia.killPlayer(message, Utils.getMentionedUser(message).longID)
+                    Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getDayChat(message)), "__**" + Utils.getMentionedUser(message).getDisplayName(message.guild) + " was killed by the Jailor**__ " + "\n" + Utils.getMentionedUser(message).getDisplayName(message.guild) + " was a " + MafiaConfig.getPlayerDetails(message, Utils.getMentionedUser(message).longID)[2])
+                    Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getAdminChannel(message)), Utils.getMentionedUser(message).getDisplayName(message.guild) + " was killed by the Jailor. Authorizing Member: " + message.author.getDisplayName(message.guild))
+                    message.delete()
+                } else if (messageContent[1] == "mkill" && MafiaConfig.getPlayerDetails(message)[0].toString() == "mafia") {
+                  
             if(Perms.checkMod(message) && messageContent[0] == prefix + "mafia"){
                 when(messageContent[1]){
                     "start" ->{
