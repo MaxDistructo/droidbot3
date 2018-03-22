@@ -47,16 +47,6 @@ object MafiaConfig {
         return arrayOf(root.getString("alignment"), root.getString("class"), root.getString("role"), root.getBoolean("dead"), root.getInt("attack"), root.getInt("defense"), root.getBoolean("blocked"), root.getBoolean("framed"), root.getBoolean("jailed"))
     }
 
-    fun getSpyChat(message: IMessage): Long {
-        val root1 = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt")
-        return root1.getLong("spy_chat")
-    }
-
-    fun getDeadChat(message: IMessage): Long {
-        val root1 = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt")
-        return root1.getLong("dead_chat")
-    }
-
     fun shuffleJSONArray(jsonArray: JSONArray): Array<String?> {
         val list = arrayOfNulls<String>(jsonArray.length())
         for (i in 0 until jsonArray.length()) {
@@ -88,16 +78,6 @@ object MafiaConfig {
             e.printStackTrace()
         }
 
-    }
-
-    fun getJailorChat(message: IMessage): Long {
-        val root1 = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt")
-        return root1.getLong("jailor_chat")
-    }
-
-    fun getJailedChat(message: IMessage): Long {
-        val root1 = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt")
-        return root1.getLong("jailed_chat")
     }
 
     fun getJailed(message: IMessage): Long {
