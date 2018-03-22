@@ -1,5 +1,6 @@
 package maxdistructo.droidbot2.commands.mafia
 
+import maxdistructo.droidbot2.commands.mafia.obj.Player
 import maxdistructo.droidbot2.core.Utils
 import maxdistructo.droidbot2.core.message.Message
 import sx.blah.discord.api.events.EventSubscriber
@@ -111,9 +112,36 @@ class MafiaListener {
                         Mafia.assignRoles(message)
                         message.delete()
                     }
+                    "invest" -> {
+                        val mentionedList = message.mentions
+                        val investResults1 = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + ".dat")
+                        val investResults = investResults1.getJSONObject("invest_results")
+                        val targetDetails = MafiaConfig.getPlayerDetails(message, mentionedList[0].longID)
+                        Message.sendDM(mentionedList[1], investResults.getString(targetDetails[2].toString()))
+                        println("Sent DM to " + mentionedList[1])
+                        message.delete()
+                    }
+                    "sheriff" -> {
+                        val mentionedList = message.mentions
+                        val target = mentionedList[0]
+                        val invest = mentionedList[1]
+                        val details = MafiaConfig.getPlayerDetails(message, target.longID)
+
+                        if (details[0] == "mafia" || details[7] as Boolean) {
+                            Message.sendDM(invest, "Your target is a Member of the Mafia!")
+                        } else if (details[2] == "serial_killer") {
+                            Message.sendDM(invest, "Your target is a Serial Killer!")
+                        } else if (details[2] == "werewolf") {
+                            Message.sendDM(invest, "Your target is a Werewolf!")
+                        } else {
+                            Message.sendDM(invest, "Your target is not suspicious")
+                        }
+                        message.delete()
+                    }
                 }
             }
             else if (messageContent[0] == prefix + "mafia") { //This is all this listener will handle so putting this requirement for the rest of the code to execute.
+                val player = Player(MafiaConfig.getPlayerDetails(message))
                 when(messageContent[1]){
                     "join" ->{
                         Mafia.onGameJoinCommand(message)
@@ -128,19 +156,19 @@ class MafiaListener {
                         Message.sendDM(message.author, "Player Info on " + message.author.getDisplayName(message.guild) + "\nAlignment: " + details[0] + "\nClass: " + details[1] + "\nRole: " + details[2] + "\nIs Dead: " + details[3] + "\nAttack Power: " + details[4] + "\nDefence Power: " + details[5])
                     }
                 }
-                if (messageContent[1] == "mkill" && MafiaConfig.getPlayerDetails(message)[0].toString() == "mafia") {
+                if (messageContent[1] == "mkill" && player.role == "mafia") {
                     Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getAdminChannel(message)), "The mafia would like to kill " + Utils.getMentionedUser(message).getDisplayName(message.guild))
                     Message.sendMessage(message.channel, "You have decided to kill " + Utils.getMentionedUser(message).getDisplayName(message.guild))
                     message.delete()
-                } else if (messageContent[1] == "skkill" && MafiaConfig.getPlayerDetails(message)[2].toString() == "serial_killer") {
+                } else if (messageContent[1] == "skkill" && player.role == "serial_killer") {
                     Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getAdminChannel(message)), "A serial killer has decided to stab " + Utils.getMentionedUser(message).getDisplayName(message.guild))
                     Message.sendDM(message.author, "You have decided to kill " + Utils.getMentionedUser(message).getDisplayName(message.guild))
                     message.delete()
-                } else if (messageContent[1] == "wwkill" && MafiaConfig.getPlayerDetails(message)[2].toString() == "werewolf") {
+                } else if (messageContent[1] == "wwkill" && player.role == "werewolf") {
                     Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getAdminChannel(message)), "The werewolf has decided to visit " + Utils.getMentionedUser(message).getDisplayName(message.guild))
                     Message.sendDM(message.author, "You have decided to go pay " + Utils.getMentionedUser(message).getDisplayName(message.guild) + " a visit tonight")
                     message.delete()
-                } else if (messageContent[1] == "arsokill" && MafiaConfig.getPlayerDetails(message)[2].toString() == "arsonist") {
+                } else if (messageContent[1] == "arsokill" && player.role == "arsonist") {
                     if (Utils.getMentionedUser(message) !== message.author) {
                         Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getAdminChannel(message)), "The arsonist is gonna douse " + Utils.getMentionedUser(message).getDisplayName(message.guild))
                         Message.sendDM(message.author, "You have decided to douse " + Utils.getMentionedUser(message).getDisplayName(message.guild))
@@ -149,19 +177,19 @@ class MafiaListener {
                         Message.sendDM(message.author, "You have decided to set all targets on fire tonight")
                     }
                     message.delete()
-                } else if (messageContent[1] == "jestkill" && MafiaConfig.getPlayerDetails(message)[2].toString() == "jester") {
+                } else if (messageContent[1] == "jestkill" && player.role == "jester") {
                     Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getAdminChannel(message)), "The jester is gonna haunt " + Utils.getMentionedUser(message).getDisplayName(message.guild))
                     Message.sendDM(message.author, "You have decided to haunt " + Utils.getMentionedUser(message).getDisplayName(message.guild))
                     message.delete()
-                } else if (messageContent[1] == "vetkill" && MafiaConfig.getPlayerDetails(message)[2].toString() == "veteran") {
+                } else if (messageContent[1] == "vetkill" && player.role == "veteran") {
                     Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getAdminChannel(message)), "The Veteran " + message.author + " is going on alert tonight.")
                     Message.sendDM(message.author, "You have decided to go on alert tonight")
                     message.delete()
-                } else if (messageContent[1] == "vigkill" && MafiaConfig.getPlayerDetails(message)[2].toString() == "vigilante") {
+                } else if (messageContent[1] == "vigkill" && player.role == "vigilante") {
                     Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getAdminChannel(message)), "The Vigilante is going to shoot " + Utils.getMentionedUser(message).getDisplayName(message.guild))
                     Message.sendDM(message.author, "You have decided to shoot " + Utils.getMentionedUser(message).getDisplayName(message.guild))
                     message.delete()
-                } else if (messageContent[1] == "jailkill" && MafiaConfig.getPlayerDetails(message)[2].toString() == "jailor") {
+                } else if (messageContent[1] == "jailkill" && player.role == "jailor") {
                     if (Utils.getMentionedUser(message).longID == MafiaConfig.getJailed(message)) {
                         Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getAdminChannel(message)), "The jailor is going to shoot " + Utils.getMentionedUser(message).getDisplayName(message.guild))
                         Message.sendMessage(message.channel, "You have decided to shoot " + Utils.getMentionedUser(message).getDisplayName(message.guild))
@@ -170,7 +198,7 @@ class MafiaListener {
                     }
                     message.delete()
                 } //TODO add kills for VH and Vampire. Vampire kills Mafia if they try to bite them. VH kills Vampire on visit.
-                else if (messageContent[1] == "jail" && MafiaConfig.getPlayerDetails(message)[2].toString() == "jailor") {
+                else if (messageContent[1] == "jail" && player.role == "jailor") {
                     if (Utils.getMentionedUser(message) === message.author) {
                         Message.sendDM(message.author, "You can not jail yourself!")
                     } else {
@@ -179,50 +207,25 @@ class MafiaListener {
                         Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getAdminChannel(message)), "The jailor has jailed " + Utils.getMentionedUser(message).getDisplayName(message.guild))
                     }
                     message.delete()
-                } else if (messageContent[1] == "watch" && MafiaConfig.getPlayerDetails(message)[2].toString() == "lookout") {
+                } else if (messageContent[1] == "watch" && player.role == "lookout") {
                     Message.sendDM(message.author, "You will be watching " + Utils.getMentionedUser(message).getDisplayName(message.guild) + " tonight.")
                     Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getAdminChannel(message)), message.author.getDisplayName(message.guild) + " will be watching " + Utils.getMentionedUser(message).getDisplayName(message.guild) + " tonight.")
                     message.delete()
-                } else if (messageContent[1] == "invest" && Perms.checkMod(message)) { // /mafia invest @target @user
-                    val mentionedList = message.mentions
-                    val investResults1 = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + ".dat")
-                    val investResults = investResults1.getJSONObject("invest_results")
-                    val targetDetails = MafiaConfig.getPlayerDetails(message, mentionedList[0].longID)
-                    Message.sendDM(mentionedList[1], investResults.getString(targetDetails[2].toString()))
-                    println("Send DM to " + mentionedList[1])
-                    message.delete()
-                } else if (messageContent[1] == "invest" && MafiaConfig.getPlayerDetails(message)[2].toString() == "investigator") {
+                } else if (messageContent[1] == "invest" && player.role == "investigator") {
                     Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getAdminChannel(message)), message.author.getDisplayName(message.guild) + " would like to investigate " + Utils.getMentionedUser(message).getDisplayName(message.guild) + " tonight.")
                     message.delete()
-                } else if (messageContent[1] == "sheriff" && Perms.checkMod(message)) { // /mafia sheriff @target @user
-                    val mentionedList = message.mentions
-                    val target = mentionedList[0]
-                    val invest = mentionedList[1]
-                    val details = MafiaConfig.getPlayerDetails(message, target.longID)
-
-                    if (details[0] == "mafia" || details[7] as Boolean) {
-                        Message.sendDM(invest, "Your target is a Member of the Mafia!")
-                    } else if (details[2] == "serial_killer") {
-                        Message.sendDM(invest, "Your target is a Serial Killer!")
-                    } else if (details[2] == "werewolf") {
-                        Message.sendDM(invest, "Your target is a Werewolf!")
-                    } else {
-                        Message.sendDM(invest, "Your target is not suspicious")
-                    }
-                    message.delete()
-                } else if (messageContent[1] == "sheriff" && MafiaConfig.getPlayerDetails(message)[2].toString() == "sheriff") {
+                } else if (messageContent[1] == "sheriff" && player.role == "sheriff") {
                     Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getAdminChannel(message)), "The sheriff would like to interrogate " + Utils.getMentionedUser(message).getDisplayName(message.guild) + " tonight.")
                     Message.sendDM(message.author, "You are going to be interrogating " + Utils.getMentionedUser(message) + " tonight.")
                     message.delete()
-                } else if (messageContent[1] == "transport" && MafiaConfig.getPlayerDetails(message)[2].toString() == "transporter") {
+                } else if (messageContent[1] == "transport" && player.role == "transporter") {
                     val mentionedList = message.mentions
-                    val mentionedArray = mentionedList.toTypedArray()
                     val target = mentionedList[0]
                     val invest = mentionedList[1]
                     Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getAdminChannel(message)), message.author.getDisplayName(message.guild) + " would like to swap positions of " + invest.getDisplayName(message.guild) + " & " + target.getDisplayName(message.guild))
                     Message.sendDM(message.author, "You will be transporting " + invest.getDisplayName(message.guild) + " & " + target.getDisplayName(message.guild))
                     message.delete()
-                } else if (messageContent[1] == "witch" && MafiaConfig.getPlayerDetails(message)[2].toString() == "witch") {
+                } else if (messageContent[1] == "witch" && player.role == "witch") {
                     val mentionedList = message.mentions
                     val mentionedArray = mentionedList.toTypedArray()
                     val target = mentionedList[0]
@@ -230,19 +233,19 @@ class MafiaListener {
                     Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getAdminChannel(message)), message.author.getDisplayName(message.guild) + " would like to control " + invest.getDisplayName(message.guild) + " into using their ability onto " + target.getDisplayName(message.guild))
                     Message.sendDM(message.author, "You will be witching " + invest.getDisplayName(message.guild) + " into " + target.getDisplayName(message.guild))
                     message.delete()
-                } else if (messageContent[1] == "heal" && MafiaConfig.getPlayerDetails(message)[2].toString() == "doctor") {
+                } else if (messageContent[1] == "heal" && player.role == "doctor") {
                     Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getAdminChannel(message)), message.author.getDisplayName(message.guild) + " will be healing " + Utils.getMentionedUser(message).getDisplayName(message.guild) + " tonight.")
                     Message.sendDM(message.author, "You will be healing " + Utils.getMentionedUser(message).getDisplayName(message.guild) + " tonight.")
                     message.delete()
-                } else if (messageContent[1] == "guard") {
+                } else if (messageContent[1] == "guard" && player.role == "bodyguard") {
                     Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getAdminChannel(message)), message.author.getDisplayName(message.guild) + " will be guarding " + Utils.getMentionedUser(message).getDisplayName(message.guild) + " tonight.")
                     Message.sendDM(message.author, "You will be guarding " + Utils.getMentionedUser(message).getDisplayName(message.guild) + " tonight.")
                     message.delete()
-                } else if (messageContent[1] == "escort") {
+                } else if (messageContent[1] == "escort" && player.role == "escort" || player.role == "consort") {
                     Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getAdminChannel(message)), message.author.getDisplayName(message.guild) + " would like to roleblock " + Utils.getMentionedUser(message) + " tonight.")
                     Message.sendDM(message.author, "You will be escorting " + Utils.getMentionedUser(message).getDisplayName(message.guild) + " tonight.")
                     message.delete()
-                } else if (messageContent[1] == "reveal" && MafiaConfig.getDayStatus(message) && MafiaConfig.getPlayerDetails(message)[2].toString() == "mayor") {
+                } else if (messageContent[1] == "reveal" && MafiaConfig.getDayStatus(message) && player.role == "mayor") {
                     Message.sendMessage(message.channel, message.author.getDisplayName(message.guild) + " has revealed themselves as the Mayor!")
                     Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getAdminChannel(message)), message.author.getDisplayName(message.guild) + " has revealed as the mayor. Their votes now count as 3.")
                     message.delete()
@@ -250,47 +253,47 @@ class MafiaListener {
                     Message.sendMessage(message.channel, message.author.toString() + " has voted for " + Utils.getMentionedUser(message))
                     Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getAdminChannel(message)), message.author.toString() + " has voted for " + Utils.getMentionedUser(message))
                     message.delete()
-                } else if (messageContent[1] == "secance" && !MafiaConfig.getDayStatus(message) && MafiaConfig.getPlayerDetails(message)[2].toString() == "medium" && MafiaConfig.getPlayerDetails(message)[3] as Boolean) {
+                } else if (messageContent[1] == "secance" && !MafiaConfig.getDayStatus(message) && player.role == "medium" && player.dead) {
                     Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getAdminChannel(message)), "The medium would like to talk to " + Utils.getMentionedUser(message).getDisplayName(message.guild))
                     Message.sendDM(message.author, "Your message has been sent to the Admin. Please wait for them to respond to your secance request")
                     message.delete()
-                } else if (messageContent[1] == "revive" && MafiaConfig.getPlayerDetails(message)[2].toString() == "retributionist") {
+                } else if (messageContent[1] == "revive" && player.role == "retributionist") {
                     Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getAdminChannel(message)), "The retributionist will be reviving " + Utils.getMentionedUser(message) + " tonight.")
                     Message.sendDM(message.author, "You will be reviving " + Utils.getMentionedUser(message).getDisplayName(message.guild) + " tonight.")
                     message.delete()
-                } else if (messageContent[1] == "vampcheck") {
+                } else if (messageContent[1] == "vampcheck" && player.role == "vampire_hunter") {
                     Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getAdminChannel(message)), "The vampire hunter " + message.author.getDisplayName(message.guild) + " will be checking if " + Utils.getMentionedUser(message) + " is a vampire tonight.")
                     Message.sendDM(message.author, "You will be checking to see if " + Utils.getMentionedUser(message).getDisplayName(message.guild) + "is a Vampire.")
                     message.delete()
-                } else if (messageContent[1] == "disguise") {
+                } else if (messageContent[1] == "disguise" && player.role == "disguiser") {
                     Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getAdminChannel(message)), "The Disguiser is going to be disguised as " + Utils.getMentionedUser(message).getDisplayName(message.guild) + " in role.")
                     Message.sendDM(message.author, "You will be disguising as " + Utils.getMentionedUser(message).getDisplayName(message.guild))
                     message.delete()
-                } else if (messageContent[1] == "forge") {
+                } else if (messageContent[1] == "forge" && player.role == "forger") {
                     Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getAdminChannel(message)), "The forger is gonna forge the role of " + Utils.getMentionedUser(message).getDisplayName(message.guild) + " to be Forger.")
                     Message.sendDM(message.author, "You will be forging the role of " + Utils.getMentionedUser(message).getDisplayName(message.guild))
                     message.delete()
-                } else if (messageContent[1] == "frame") {
+                } else if (messageContent[1] == "frame" && player.role == "framer") {
                     Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getAdminChannel(message)), "The framer is gonna frame " + Utils.getMentionedUser(message).getDisplayName(message.guild))
                     Message.sendDM(message.author, "You will be framing " + Utils.getMentionedUser(message).getDisplayName(message.guild))
                     message.delete()
-                } else if (messageContent[1] == "clean") {
+                } else if (messageContent[1] == "clean" && player.role == "janitor") {
                     Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getAdminChannel(message)), message.author.getDisplayName(message.guild) + " would like to clean the role of " + Utils.getMentionedUser(message))
                     Message.sendDM(message.author, "You will be cleaning " + Utils.getMentionedUser(message).getDisplayName(message.guild))
                     message.delete()
-                } else if (messageContent[1] == "blackmail") {
+                } else if (messageContent[1] == "blackmail" && player.role  == "blackmailer") {
                     Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getAdminChannel(message)), message.author.getDisplayName(message.guild) + "would like to Blackmail " + Utils.getMentionedUser(message).getDisplayName(message.guild))
                     Message.sendDM(message.author, "You will be blackmailing " + Utils.getMentionedUser(message))
                     message.delete()
-                } else if (messageContent[1] == "consig") {
+                } else if (messageContent[1] == "consig" && player.role ==  "consigerge") {
                     Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getAdminChannel(message)), message.author.getDisplayName(message.guild) + " would like to know the role of " + Utils.getMentionedUser(message))
                     Message.sendDM(message.author, "You will receive the role of " + Utils.getMentionedUser(message))
                     message.delete()
-                } else if (messageContent[1] == "remember") {
+                } else if (messageContent[1] == "remember" && player.role == "retributionist") {
                     Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getAdminChannel(message)), message.author.getDisplayName(message.guild) + " would like to remember the role of " + Utils.getMentionedUser(message))
                     Message.sendDM(message.author, "You will remember the role of " + Utils.getMentionedUser(message))
                     message.delete()
-                } else if (messageContent[1] == "vest") {
+                } else if (messageContent[1] == "vest" && player.role == "veteran") {
                     Message.sendMessage(message.guild.getChannelByID(MafiaConfig.getAdminChannel(message)), message.author.getDisplayName(message.guild) + " will be putting on a vest tonight.")
                     Message.sendDM(message.author, "You will be putting on a vest tonight.")
                 }

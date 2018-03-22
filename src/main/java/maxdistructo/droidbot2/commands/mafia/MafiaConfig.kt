@@ -13,16 +13,6 @@ import java.io.IOException
 import java.nio.file.Paths
 
 object MafiaConfig {
-    fun getAdminChannel(message: IMessage): Long {
-        val root = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt")
-        return root.getLong("adminChannel")
-    }
-
-    fun getDayChat(message: IMessage): Long {
-        val root = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt")
-        return root.getLong("dayChat")
-    }
-
     fun getPlayers(message: IMessage): LongArray {
         val root1 = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_players.txt")
         val jsonArray = root1.getJSONArray("players")
@@ -45,16 +35,6 @@ object MafiaConfig {
         return players
     }
 
-    fun getMafiaChannel(message: IMessage): Long {
-        val root1 = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt")
-        return root1.getLong("mafia_chat")
-    }
-
-    fun getDayStatus(message: IMessage): Boolean {
-        val root1 = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt")
-        return root1.getBoolean("day")
-    }
-
     fun getPlayerDetails(message: IMessage): Array<Any> {
         val root1 = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_playerdat.txt")
         val root = root1.getJSONObject("" + message.author.longID)
@@ -65,15 +45,6 @@ object MafiaConfig {
         val root1 = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_playerdat.txt")
         val root = root1.getJSONObject("" + playerID)
         return arrayOf(root.getString("alignment"), root.getString("class"), root.getString("role"), root.getBoolean("dead"), root.getInt("attack"), root.getInt("defense"), root.getBoolean("blocked"), root.getBoolean("framed"), root.getBoolean("jailed"))
-    }
-
-    fun getMafiaChat(message: IMessage): Long {
-        return getMafiaChannel(message)
-    }
-
-    fun getMediumChat(message: IMessage): Long {
-        val root1 = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt")
-        return root1.getLong("medium_chat")
     }
 
     fun getSpyChat(message: IMessage): Long {
