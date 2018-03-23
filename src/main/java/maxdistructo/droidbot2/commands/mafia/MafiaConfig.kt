@@ -70,8 +70,6 @@ object MafiaConfig {
         try {
             FileWriter(s + "/config/mafia/" + message.guild.longID + "_playerdat.txt").use { fileWriter ->
                 fileWriter.write(`object`.toString())
-                println("Successfully Copied JSON Object to File...")
-                println("JSON Object: " + `object`)
             }
         } catch (e: IOException) {
             e.printStackTrace()
@@ -101,8 +99,6 @@ object MafiaConfig {
         try {
             FileWriter(s + "/config/mafia/" + message.guild.longID + "_dat.txt").use { fileWriter ->
                 fileWriter.write(`object`.toString())
-                println("Successfully Copied JSON Object to File...")
-                println("JSON Object: " + `object`)
             }
         } catch (e: IOException) {
             e.printStackTrace()

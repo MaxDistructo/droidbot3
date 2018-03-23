@@ -29,7 +29,7 @@ object PlayerFun //Additions Ideas: Shoot,Stab,Fake mute
         return if (mentioned !== message.client.ourUser) {
             mentioned.toString() + " you have been kissed by " + message.author + ":lips:"
         } else {
-            message.client.ourUser.toString() + " has slapped you upside the head with a anvil! :anvil:"
+            message.client.ourUser.toString() + " has slapped you upside the head! :clap:"
         }
     }
 
@@ -45,7 +45,7 @@ object PlayerFun //Additions Ideas: Shoot,Stab,Fake mute
         }
     }
 
-    fun onPayRespects(message: IMessage, mentioned: IUser): String { // /f command.
+    fun onPayRespects(message: IMessage, mentioned: IUser?): String { // /f command.
         return message.author.toString() + " pays their respects. https://cdn.discordapp.com/emojis/294160585179004928.png"
     }
 

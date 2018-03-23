@@ -117,7 +117,7 @@ class Listener {
                     Message.sendMessage(message.channel, PlayerFun.onPokeCommand(message, mentioned!!))
                     message.delete()
                 } else if (messageContent[0] == prefix + "respect" || messageContent[0] == "/f") {
-                    Message.sendMessage(message.channel, PlayerFun.onPayRespects(message, mentioned!!))
+                    Message.sendMessage(message.channel, PlayerFun.onPayRespects(message, mentioned))
                     message.delete()
                 } else if (messageContent[0] == prefix + "banhammer") {
                     Message.sendMessage(message.channel, PlayerFun.onBanHammer(message, mentioned!!))
