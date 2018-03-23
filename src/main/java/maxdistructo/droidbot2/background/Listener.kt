@@ -24,7 +24,6 @@ import sx.blah.discord.handle.obj.IUser
 import sx.blah.discord.util.DiscordException
 import sx.blah.discord.util.MissingPermissionsException
 import sx.blah.discord.util.RateLimitException
-import sx.blah.discord.util.RoleBuilder
 import java.io.File
 import java.net.URL
 
@@ -36,7 +35,7 @@ class Listener {
         try {
             val message = event.message
             val guild = message.guild
-            prefix = Client.prefix // To allow for easy compatability with old code. All new code will reference #Client.prefix directly.
+            val prefix = Client.prefix // To allow for easy compatability with old code. All new code will reference #Client.prefix directly.
 
             val channelMention = Utils.getMentionedChannel(message)
             val mentioned = Utils.getMentionedUser(message)
@@ -45,7 +44,7 @@ class Listener {
             val messageContent = content.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
             val messageContentAny = content.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray() as Array<Any>
 
-            if (!Roles.checkForBotAbuse(message)) {
+            if (!Roles.checkForBotAbuse(message) && messageContent.isNotEmpty()) {
                 if (messageContent[0] == prefix + "bj") {
                     //message.reply(BlackJack.blackjack(messageContent, message));
                 } else if (messageContent[0].toLowerCase() == "hit" && Perms.checkGames(message) || messageContent[0].toLowerCase() == "stay" && Perms.checkGames(message)) {
@@ -209,14 +208,12 @@ class Listener {
                     Message.sendDM(message.author, "The user in slot 0 is " + target.getDisplayName(message.guild) + "\n The user in slot 1 is " + invest.getDisplayName(message.guild))
                 }
 
-            } else if (content[0] == prefix[0]) {
-                message.reply("Please wait until you have lost your Bot Abuser role to use this command.")
+
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
+        }
+        catch(e : Exception){
             Message.throwError(e)
         }
-
     }
 
 
@@ -270,6 +267,7 @@ class Listener {
         var triviaRunning = true
     }
 }
+
 
 /*public static void onGuildJoinEvent(GuildCreateEvent event){
         IGuild guild = event.getGuild();

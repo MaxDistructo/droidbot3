@@ -67,7 +67,6 @@ object MafiaConfig {
             }
 
         }
-
         try {
             FileWriter(s + "/config/mafia/" + message.guild.longID + "_playerdat.txt").use { fileWriter ->
                 fileWriter.write(`object`.toString())

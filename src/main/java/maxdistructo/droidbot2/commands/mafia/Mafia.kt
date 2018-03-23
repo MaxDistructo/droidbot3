@@ -215,7 +215,7 @@ object Mafia {
     }
 
     fun assignRoles(message: IMessage): JSONObject {
-        val root = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + ".dat")
+        val root = Utils.readJSONFromFile("/config/mafia/roles.dat")
         val jArrayRoles = root.getJSONArray("rolelist")
         val translator = root.getJSONObject("rolelist-translate")
         val roleData = root.getJSONObject("roleData")

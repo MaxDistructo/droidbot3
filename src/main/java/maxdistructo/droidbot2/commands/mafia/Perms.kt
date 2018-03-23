@@ -42,7 +42,6 @@ object Perms{
         var tokener: JSONTokener? = null
         try {
             tokener = JSONTokener(uri.toURL().openStream())
-            println("Successfully read file $fileName")
         } catch (e: IOException) {
             Message.sendDM(Client.client!!.applicationOwner, e.toString())
             e.printStackTrace()
@@ -67,7 +66,6 @@ object Perms{
         var tokener: JSONTokener? = null
         try {
             tokener = JSONTokener(uri.toURL().openStream())
-            println("Successfully read file $fileName")
         } catch (e: IOException) {
             Message.sendDM(Client.client!!.applicationOwner, e.toString())
             e.printStackTrace()
