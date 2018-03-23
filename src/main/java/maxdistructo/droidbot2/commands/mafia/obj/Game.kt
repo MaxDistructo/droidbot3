@@ -13,9 +13,9 @@ class Game(input: JSONObject) : IGame{
         get() = info.getBoolean("day")
     override val deadChannel: IChannel
         get() = BaseBot.client.getChannelByID(info.getLong("dead_chat"))
-    override val jailedChat: IChannel
+    override val jailedChannel: IChannel
         get() = BaseBot.client.getChannelByID(info.getLong("jailed_chat"))
-    override val jailorChat: IChannel
+    override val jailorChannel: IChannel
         get() = BaseBot.client.getChannelByID(info.getLong("jailor_chat"))
     override val mafiaChannel: IChannel
         get() = BaseBot.client.getChannelByID(info.getLong("mafia_chat"))

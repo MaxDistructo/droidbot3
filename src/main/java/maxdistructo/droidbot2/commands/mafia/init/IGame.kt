@@ -9,7 +9,7 @@ interface IGame{
     val mafiaChannel : IChannel
     val day : Boolean
     val spyChannel : IChannel
-    val jailorChat : IChannel
-    val jailedChat : IChannel
+    val jailorChannel : IChannel
+    val jailedChannel : IChannel
     val dayChannel : IChannel
 }

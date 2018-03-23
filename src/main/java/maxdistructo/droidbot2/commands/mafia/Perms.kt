@@ -1,6 +1,7 @@
 package maxdistructo.droidbot2.commands.mafia
 
 import maxdistructo.droidbot2.core.Client
+import maxdistructo.droidbot2.core.Utils
 import maxdistructo.droidbot2.core.message.Message
 import org.json.JSONObject
 import org.json.JSONTokener
@@ -12,7 +13,7 @@ import java.nio.file.Paths
 object Perms{
     fun checkAdmin(message : IMessage) : Boolean{
         //Checks if user is a Admin/Owner of the Server (Or Myself).
-        val admins = getAdminArray("/config/mafia/perms.txt")
+        val admins = getAdminArray("/config/mafia/"+ message.guild.longID + "_perms.txt")
         var i = 0
         while (i < admins.size) {
             if (message.author.longID == admins[i]) {
@@ -23,7 +24,7 @@ object Perms{
         return false
     }
     fun checkMod(message : IMessage) : Boolean{
-        val admins = getAdminArray("/config/mafia/perms.txt")
+        val admins = getAdminArray("/config/mafia/"+ message.guild.longID + "_perms.txt")
         var i = 0
         while (i < admins.size) {
             if (message.author.longID == admins[i] || checkAdmin(message)) {
@@ -82,5 +83,16 @@ object Perms{
             i++
         }
         return longArray
+    }
+    fun checkMafiaChannels(message : IMessage) : Boolean{
+        val root = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt")
+        val channels = arrayListOf(root.getLong("admin_chat"), root.getLong("day_chat"), root.getLong("mafia_chat"), root.getLong("medium_chat"), root.getLong("spy_chat"), root.getLong("dead_chat"), root.getLong("jailor_chat"), root.getLong("jailed_chat"), 422457248724549632L)
+        for(channel in channels){
+            if(channel == message.channel.longID){
+                return true
+            }
+        }
+        return false
+
     }
 }

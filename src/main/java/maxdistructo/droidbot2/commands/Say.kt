@@ -19,13 +19,13 @@ object Say {
         }
 
         return if (anotherChannel) {
-            if (attachments != null) {
+            if (!attachments.isEmpty()) {
                 Utils.makeNewString(args, 2) + attachments[0].url
             } else {
                 Utils.makeNewString(args, 2)
             }
         } else {
-            if (attachments != null) {
+            if (!attachments.isEmpty()) {
                 Utils.makeNewString(args, 1) + attachments[0].url
             } else { //This is technically not required though I want to make sure it does what it is suppost to do.
                 Utils.makeNewString(args, 1)
