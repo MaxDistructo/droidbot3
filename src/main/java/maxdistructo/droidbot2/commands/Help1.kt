@@ -7,7 +7,6 @@ import sx.blah.discord.handle.obj.IMessage
 
 object Help1 {
 
-    @Deprecated("")
     fun onHelpCommand(): String {
         val user = BaseBot.client.ourUser
         return "Commands List for " + user.mention(true) + "\n \n" +
@@ -36,15 +35,13 @@ object Help1 {
                 Listener.prefix + "xp [@user]: Shows the rules on Tatsu XP system. Can have a user mention to show another user.\n"
     }
 
-    @Deprecated("")
     fun onAdminHelpCommand(message: IMessage) {
         Message.sendDM(message.author, onHelpCommand())
         val sendMessage = "Admin Commands List for " + BaseBot.client.ourUser.mention(true) + "\n \n" +
-                Listener.prefix + "@admin addMod <@User>: Adds a user as a Moderator" +
-                Listener.prefix + "@admin addAdmin <@User>: Adds a user as a Administrator" +
-                Listener.prefix + "@casino balance add|remove|set <@User> <balanceChange: Changes a Users Casino balance." +
-                Listener.prefix + "@admin botAbuse <@User>: Marks a user as a bot abuser and denies them access to bot commands." +
-                Listener.prefix + "@admin perms "
+                Listener.prefix + "@admin addMod <@User>: Adds a user as a Moderator\n" +
+                Listener.prefix + "@admin addAdmin <@User>: Adds a user as a Administrator\n" +
+                Listener.prefix + "@casino balance add|remove|set <@User> <balanceChange: Changes a Users Casino balance.\n" +
+                Listener.prefix + "@admin botAbuse <@User>: Marks a user as a bot abuser and denies them access to bot commands.\n"
         Message.sendDM(message.author, sendMessage)
 
     }

@@ -1,5 +1,6 @@
 package maxdistructo.droidbot2.commands.mafia
 
+import maxdistructo.droidbot2.BaseBot
 import maxdistructo.droidbot2.commands.mafia.obj.Game
 import maxdistructo.droidbot2.commands.mafia.obj.Player
 import maxdistructo.droidbot2.commands.mafia.Kill
@@ -9,6 +10,7 @@ import sx.blah.discord.api.events.EventSubscriber
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 
 import maxdistructo.droidbot2.core.Client.prefix
+import sx.blah.discord.handle.obj.IUser
 
 class MafiaListener {
 
@@ -34,7 +36,7 @@ class MafiaListener {
                 if (message.channel === game.jailedChannel) { //Jailed to Jailor
                     Message.sendMessage(game.jailorChannel, message.author.getDisplayName(message.guild) + message.content)
                 }
-                if (Perms.checkMod(message) && messageContent.size > 2 && Perms.checkMafiaChannels(message)) {
+                if (Perms.checkMod(message) && messageContent.size >= 2 && Perms.checkMafiaChannels(message)) {
                     when (messageContent[1]) {
                         "start" -> {
                             Mafia.onGameStart(message)
@@ -54,7 +56,14 @@ class MafiaListener {
                             message.delete()
                         }
                         "kill" -> {
-                            Mafia.killPlayer(message, Utils.getMentionedUser(message)!!.longID)
+                            val mentioned : IUser
+                            if(Utils.getMentionedUser(message) == null){
+                                mentioned = BaseBot.client.getUserByID(Utils.convertToLong(messageContent[2]))
+                            }
+                            else{
+                                mentioned = Utils.getMentionedUser(message)!!
+                            }
+                            Mafia.killPlayer(message, mentioned.longID)
                             Message.sendMessage(game.dayChannel, Kill.message(message, messageContent))
                         }
                     /*                           "akill" -> {
@@ -152,7 +161,7 @@ class MafiaListener {
                             message.delete()
                         }
                     }
-                } else if(messageContent.size > 2 && Perms.checkMafiaChannels(message)){ //This is all this listener will handle so putting this requirement for the rest of the code to execute.
+                } else if(messageContent.size >= 2 && Perms.checkMafiaChannels(message)){ //This is all this listener will handle so putting this requirement for the rest of the code to execute.
                     val player = Player(MafiaConfig.getPlayerDetails(message))
                     when (messageContent[1]) {
                         "join" -> {

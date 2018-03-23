@@ -68,23 +68,27 @@ object Mafia {
                 } else {
                     game.mafiaChannel.overrideUserPermissions(message.guild.getUserByID(player), EnumSet.noneOf(Permissions::class.java), EnumSet.of(Permissions.READ_MESSAGE_HISTORY, Permissions.READ_MESSAGES, Permissions.SEND_MESSAGES, Permissions.SEND_TTS_MESSAGES))
                 }
+                println("Ran Mafia Toggle")
                 if (playerInfo[2].toString() == "jailor") {
                     allowJailorChat(message, message.guild.getUserByID(player))
                 } else {
                     denyJailorChat(message, message.guild.getUserByID(player))
                 }
+                println("Ran Jailor Toggle")
                 if (MafiaConfig.getJailed(message) == player) {
                     allowJailedChat(message, message.guild.getUserByID(player))
                 } else {
                     //denyJailedChat(message, message.getGuild().getUserByID(player));
                 }
+                println("Ran Jailed Toggle")
                 if (playerInfo[2].toString() == "medium") {
                     allowMediumChat(message, message.guild.getUserByID(player))
                 } else {
                     //denyMediumChat(message, message.getGuild().getUserByID(player));
                 }
-
+                println("Ran Medium Toggle")
                 denyDayChat(message, message.guild.getUserByID(player))
+                println("Ran Day Toggle")
             }
             val root = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt")
             root.remove("day")

@@ -65,7 +65,6 @@ object MafiaConfig {
             } catch (e: IOException) {
                 Message.throwError(e, message)
             }
-
         }
         try {
             FileWriter(s + "/config/mafia/" + message.guild.longID + "_playerdat.txt").use { fileWriter ->

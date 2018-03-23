@@ -14,11 +14,12 @@ object Kill{
         val multi = json1.getJSONObject("multi_kill")
         val mentioned : IUser
         if(Utils.getMentionedUser(message1) == null){
-            mentioned = BaseBot.client.getUserByID(messageContent[2] as Long)
+            mentioned = BaseBot.client.getUserByID(Utils.convertToLong(messageContent[2]))
         }
         else{
            mentioned = Utils.getMentionedUser(message1)!!
         }
+        message.append(mentioned.getDisplayName(message1.guild) + " ")
         when {
             messageContent[3] == "-2kill" -> {
                 message.append(single.getString(messageContent[4].toString()))

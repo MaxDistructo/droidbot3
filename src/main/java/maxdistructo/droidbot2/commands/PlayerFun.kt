@@ -50,7 +50,7 @@ object PlayerFun //Additions Ideas: Shoot,Stab,Fake mute
     }
 
     fun onBanHammer(message: IMessage, mentioned: IUser): String {
-        return message.author.toString() + " picks up the <:blobhammer:315285738302341121> and prepares to swing it at " + mentioned + "! It misses " + mentioned + " by a hair and they live to see another day!"
+        return message.author.toString() + " picks up the <:blobhammer:426815241557508116> and prepares to swing it at " + mentioned + "! It misses " + mentioned + " by a hair and they live to see another day!"
     }
 
     fun onShootCommand(message: IMessage, mentioned: IUser): String {

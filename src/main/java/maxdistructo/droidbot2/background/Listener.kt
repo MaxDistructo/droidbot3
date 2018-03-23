@@ -84,9 +84,9 @@ class Listener {
                     message.delete()
                 } else if (messageContent[0] == prefix + "help") {
                     if (Perms.checkAdmin(message)) {
-                        // Help.onAdminHelpCommand(message);
+                         Help1.onAdminHelpCommand(message)
                     } else {
-                        //  Message.sendDM(message.getAuthor(), Help.onHelpCommand());
+                       Message.sendDM(message.author, Help1.onHelpCommand())
                     }
                     message.delete()
                 } else if (messageContent[0] == prefix + "allin" && Perms.checkGames(message)) {
