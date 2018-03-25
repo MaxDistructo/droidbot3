@@ -19,7 +19,7 @@ object Kill{
         catch (e : Exception){
             Message.throwError(e)
         }
-        message.append(mentioned!!.getDisplayName(message1.guild))
+        message.append(mentioned!!.mention(true))
         when {
             messageContent[3] == "-2kill" -> {
                 message.append(single.getString(messageContent[4].toString()))
@@ -39,11 +39,11 @@ object Kill{
         if(!messageContent.contains("-clean")){
             message.append(" ")
             val player = Player(MafiaConfig.getPlayerDetails(message1, mentioned.longID))
-            message.append("The role of " + mentioned.getDisplayName(message1.guild) + " was " + player.role )
+            message.append("Their role was __**" + player.role.toUpperCase() + "**__." )
         }
         else{
             message.append(" ")
-            message.append("The role of " + mentioned.getDisplayName(message1.guild) + " was Cleaned")
+            message.append("Their role was Cleaned")
         }
 
         return message.toString()

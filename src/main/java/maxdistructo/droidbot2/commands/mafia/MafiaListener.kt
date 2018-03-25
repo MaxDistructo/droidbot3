@@ -16,12 +16,12 @@ class MafiaListener {
         val message = event.message
         val messageContent = message.content.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray() as Array<Any>
         if (messageContent.isNotEmpty()) {
-            if (message.guild.longID == 249615705517981706L || message.guild.longID == 268370862661435392L && Perms.checkMafiaChannels(message) && messageContent[0] == prefix + "mafia") {
-                val game = Game(Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt"))
-                if (!game.day && message.channel === game.deadChannel && !message.author.isBot) { //Dead to Medium
+            if (message.guild.longID == 249615705517981706L || message.guild.longID == 268370862661435392L && Perms.checkMafiaChannels(message)) {
+                var game = Game(Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt"))
+                if (game.day && message.channel === game.deadChannel && !message.author.isBot) { //Dead to Medium
                     Message.sendMessage(game.mediumChannel, message.author.getDisplayName(message.guild) + ": " + message.content)
                 }
-                if (!game.day && message.channel === game.mediumChannel && !message.author.isBot && MafiaConfig.getJailed(message) != message.author.longID) { //Medium to Dead
+                if (game.day && message.channel === game.mediumChannel && !message.author.isBot && MafiaConfig.getJailed(message) != message.author.longID) { //Medium to Dead
                     Message.sendMessage(game.deadChannel, "Medium:" + message.content)
                 }
                 if (message.channel === game.mafiaChannel) { //Mafia to Spy
@@ -31,9 +31,9 @@ class MafiaListener {
                     Message.sendMessage(game.jailedChannel, "Jailor: " + message.content)
                 }
                 if (message.channel === game.jailedChannel) { //Jailed to Jailor
-                    Message.sendMessage(game.jailorChannel, message.author.getDisplayName(message.guild) + message.content)
+                    Message.sendMessage(game.jailorChannel, message.author.getDisplayName(message.guild) + ": "+ message.content)
                 }
-                if (Perms.checkMod(message) && messageContent.size >= 2 && Perms.checkMafiaChannels(message)) {
+                if (Perms.checkMod(message) && messageContent.size >= 2 && Perms.checkMafiaChannels(message) && messageContent[0] == prefix + "mafia") {
                     when (messageContent[1]) {
                         "start" -> {
                             Mafia.onGameStart(message)
@@ -83,7 +83,7 @@ class MafiaListener {
                             message.delete()
                         }
                     }
-                } else if(messageContent.size >= 2 && Perms.checkMafiaChannels(message)){ //This is all this listener will handle so putting this requirement for the rest of the code to execute.
+                } else if(messageContent.size >= 2 && Perms.checkMafiaChannels(message) && messageContent[0] == prefix + "mafia"){ //This is all this listener will handle so putting this requirement for the rest of the code to execute.
                     val player = Player(MafiaConfig.getPlayerDetails(message))
                     when (messageContent[1]) {
                         "join" -> {

@@ -36,15 +36,29 @@ object MafiaConfig {
     }
 
     fun getPlayerDetails(message: IMessage): Array<Any> {
-        val root1 = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_playerdat.txt")
-        val root = root1.getJSONObject("" + message.author.longID)
-        return arrayOf(root.getString("alignment"), root.getString("class"), root.getString("role"), root.getBoolean("dead"), root.getInt("attack"), root.getInt("defense"), root.getBoolean("blocked"), root.getBoolean("framed"), root.getBoolean("jailed"))
+        if(!Perms.checkMod(message)) {
+            val root1 = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_playerdat.txt")
+            val root = root1.getJSONObject("" + message.author.longID)
+            val list = arrayListOf<Any>(root.getString("alignment"), root.getString("class"), root.getString("role"), root.getBoolean("dead"), root.getInt("attack"), root.getInt("defense"))
+            return list.toArray()
+        }
+        else{
+            val list = arrayListOf<Any>("admin", "admin", "admin", false, 3, 3)
+            return list.toArray()
+        }
     }
 
     fun getPlayerDetails(message: IMessage, playerID: Long): Array<Any> {
-        val root1 = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_playerdat.txt")
-        val root = root1.getJSONObject("" + playerID)
-        return arrayOf(root.getString("alignment"), root.getString("class"), root.getString("role"), root.getBoolean("dead"), root.getInt("attack"), root.getInt("defense"), root.getBoolean("blocked"), root.getBoolean("framed"), root.getBoolean("jailed"))
+        if(!Perms.checkMod(message,playerID)) {
+            val root1 = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_playerdat.txt")
+            val root = root1.getJSONObject("" + playerID)
+            val list = arrayListOf<Any>(root.getString("alignment"), root.getString("class"), root.getString("role"), root.getBoolean("dead"), root.getInt("attack"), root.getInt("defense"))
+            return list.toArray()
+        }
+        else{
+            val list = arrayListOf<Any>("admin", "admin", "admin", false, 3, 3)
+            return list.toArray()
+        }
     }
 
     fun shuffleJSONArray(jsonArray: JSONArray): Array<String?> {
@@ -77,7 +91,7 @@ object MafiaConfig {
     }
 
     fun getJailed(message: IMessage): Long {
-        val root = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_playerdat.txt")
+        val root = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt")
         return root.getLong("jailed")
     }
 

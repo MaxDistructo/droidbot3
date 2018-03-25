@@ -23,11 +23,34 @@ object Perms{
         }
         return false
     }
+    fun checkAdmin(message: IMessage, input : Long) : Boolean{
+        //Checks if user is a Admin/Owner of the Server (Or Myself).
+        val admins = getAdminArray("/config/mafia/"+ message.guild.longID + "_perms.txt")
+        var i = 0
+        while (i < admins.size) {
+            if (input == admins[i]) {
+                return true
+            }
+            i++
+        }
+        return false
+    }
     fun checkMod(message : IMessage) : Boolean{
         val admins = getAdminArray("/config/mafia/"+ message.guild.longID + "_perms.txt")
         var i = 0
         while (i < admins.size) {
             if (message.author.longID == admins[i] || checkAdmin(message)) {
+                return true
+            }
+            i++
+        }
+        return false
+    }
+    fun checkMod(message : IMessage, input : Long) : Boolean{
+        val admins = getAdminArray("/config/mafia/"+ message.guild.longID + "_perms.txt")
+        var i = 0
+        while (i < admins.size) {
+            if (input == admins[i] || checkAdmin(message, input)) {
                 return true
             }
             i++
