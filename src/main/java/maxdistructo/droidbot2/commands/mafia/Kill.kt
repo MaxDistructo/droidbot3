@@ -1,8 +1,8 @@
 package maxdistructo.droidbot2.commands.mafia
 
-import maxdistructo.droidbot2.BaseBot
 import maxdistructo.droidbot2.commands.mafia.obj.Player
 import maxdistructo.droidbot2.core.Utils
+import maxdistructo.droidbot2.core.message.Message
 import sx.blah.discord.handle.obj.IMessage
 import sx.blah.discord.handle.obj.IUser
 
@@ -12,14 +12,14 @@ object Kill{
         val json1 = Utils.readJSONFromFile("/config/mafia/roles.dat")
         val single = json1.getJSONObject("single_kill")
         val multi = json1.getJSONObject("multi_kill")
-        val mentioned : IUser
-        if(Utils.getMentionedUser(message1) == null){
-            mentioned = BaseBot.client.getUserByID(Utils.convertToLong(messageContent[2]))
+        var mentioned : IUser? = null
+        try {
+            mentioned = Utils.getUserFromInput(message1, messageContent[2])!!
         }
-        else{
-           mentioned = Utils.getMentionedUser(message1)!!
+        catch (e : Exception){
+            Message.throwError(e)
         }
-        message.append(mentioned.getDisplayName(message1.guild) + " ")
+        message.append(mentioned!!.getDisplayName(message1.guild))
         when {
             messageContent[3] == "-2kill" -> {
                 message.append(single.getString(messageContent[4].toString()))

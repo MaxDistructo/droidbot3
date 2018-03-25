@@ -8,7 +8,7 @@ import sx.blah.discord.handle.obj.IMessage
 object Reminder {
 
     fun onReminderCommand(args: Array<String>, message: IMessage) {  //!remindme (time) "Message"
-        val time = Utils.convertToLong(args[0]) * 60000
+        val time = Utils.convertToLong(args[0])!! * 60000
         var reminder: String? = null
         var i = 2
         while (i < args.size) {

@@ -124,7 +124,7 @@ object Admin {
     }
 
     fun leaveGuild(args: Array<String>): String {// !admin leaveGuild <GuildLongID>
-        val guild = client.getGuildByID(Utils.convertToLong(args[2]))
+        val guild = client.getGuildByID(Utils.convertToLong(args[2])!!)
         guild.leave()
         return "Sucessfully left \"" + guild.name + "\""
     }
