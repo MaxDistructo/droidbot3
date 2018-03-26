@@ -257,6 +257,7 @@ object Mafia {
         for (player in players) {
             out.put("" + player, roleData.getJSONObject(roleList[ii]))
             ii++
+            Message.sendDM(message.guild.getUserByID(player), "You are a " + roleList[ii] + "\n For more details on this role visit town-of-salem.wikia.com/wiki/"+ roleList[ii])
         }
         MafiaConfig.writeGame(message, out)
         return out
