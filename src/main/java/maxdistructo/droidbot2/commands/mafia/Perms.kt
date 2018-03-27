@@ -71,7 +71,6 @@ object Perms{
         }
 
         val root = JSONObject(tokener!!)
-        println("Converted JSON file to JSONObject")
         val array = root.getJSONArray("Admins")
         val longArray = LongArray(array.length())
         var i = 0
@@ -95,7 +94,6 @@ object Perms{
         }
 
         val root = JSONObject(tokener!!)
-        println("Converted JSON file to JSONObject")
         val array = root.getJSONArray("Mods")
         val longArray = LongArray(array.length())
         var i = 0

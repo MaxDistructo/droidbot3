@@ -19,8 +19,10 @@ import sx.blah.discord.handle.impl.events.guild.voice.user.UserVoiceChannelJoinE
 import sx.blah.discord.handle.impl.events.guild.voice.user.UserVoiceChannelLeaveEvent
 import sx.blah.discord.handle.impl.events.shard.ShardReadyEvent
 import sx.blah.discord.handle.impl.obj.ReactionEmoji
+import sx.blah.discord.handle.obj.ActivityType
 import sx.blah.discord.handle.obj.IGuild
 import sx.blah.discord.handle.obj.IUser
+import sx.blah.discord.handle.obj.StatusType
 import sx.blah.discord.util.DiscordException
 import sx.blah.discord.util.MissingPermissionsException
 import sx.blah.discord.util.RateLimitException
@@ -240,6 +242,7 @@ class Listener {
     @EventSubscriber
     fun onShardReadyEvent(event: ShardReadyEvent) {
         client.isLoggedIn
+        client.changePresence(StatusType.ONLINE, ActivityType.PLAYING, prefix + "help")
         BaseBot.LOGGER.info("Added playing content")
         val guildsList = client.guilds
         val guilds = guildsList.toTypedArray()
