@@ -245,6 +245,7 @@ object Mafia {
         val roleData = root.getJSONObject("roleData")
         val players = MafiaConfig.getPlayers(message, "Mafia Folks")
         val roleList = MafiaConfig.shuffleJSONArray(jArrayRoles)
+        val game = Game(Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt"))
         var i = 0
         for (role in roleList) {
             val roleDatJSON = translator.getJSONArray(role)
@@ -254,11 +255,15 @@ object Mafia {
         }
         val out = JSONObject()
         var ii = 0
+        val sb = StringBuilder()
+        sb.append("The role list contains: \n")
         for (player in players) {
             out.put("" + player, roleData.getJSONObject(roleList[ii]))
             ii++
             Message.sendDM(message.guild.getUserByID(player), "You are a " + roleList[ii] + "\n For more details on this role visit town-of-salem.wikia.com/wiki/"+ roleList[ii])
+            sb.append(message.guild.getUserByID(player).getDisplayName(message.guild) + ": " + roleList[ii] + "\n")
         }
+        Message.sendMessage(game.adminChannel, sb.toString())
         MafiaConfig.writeGame(message, out)
         return out
     }
