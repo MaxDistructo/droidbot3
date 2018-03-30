@@ -18,19 +18,18 @@ class MafiaListener {
         if (messageContent.isNotEmpty()) {
             if (message.guild.longID == 249615705517981706L || message.guild.longID == 268370862661435392L && Perms.checkMafiaChannels(message)) {
                 var game = Game(Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt"))
-                if (game.day && message.channel === game.deadChannel && !message.author.isBot) { //Dead to Medium
+                if (game.day && message.channel === game.deadChannel && !message.author.isBot && !Perms.checkMod(message)) { //Dead to Medium
                     Message.sendMessage(game.mediumChannel, message.author.getDisplayName(message.guild) + ": " + message.content)
                 }
-                if (game.day && message.channel === game.mediumChannel && !message.author.isBot && MafiaConfig.getJailed(message) != message.author.longID) { //Medium to Dead
+                if (game.day && message.channel === game.mediumChannel && !message.author.isBot && MafiaConfig.getJailed(message) != message.author.longID && !Perms.checkMod(message)) { //Medium to Dead
                     Message.sendMessage(game.deadChannel, "Medium:" + message.content)
                 }
-                if (message.channel === game.mafiaChannel) { //Mafia to Spy
-                    Message.sendMessage(game.spyChannel, "Mafia: " + message.content)
+                if (message.channel === game.mafiaChannel && !Perms.checkMod(message)) { //Mafia to Spy
                 }
-                if (message.channel === game.jailorChannel) {
+                if (message.channel === game.jailorChannel && !Perms.checkMod(message)) {
                     Message.sendMessage(game.jailedChannel, "Jailor: " + message.content)
                 }
-                if (message.channel === game.jailedChannel) { //Jailed to Jailor
+                if (message.channel === game.jailedChannel && !Perms.checkMod(message)) { //Jailed to Jailor
                     Message.sendMessage(game.jailorChannel, message.author.getDisplayName(message.guild) + ": "+ message.content)
                 }
                 if (Perms.checkMod(message) && messageContent.size >= 2 && Perms.checkMafiaChannels(message) && messageContent[0] == prefix + "mafia") {
