@@ -1,6 +1,5 @@
 package maxdistructo.droidbot2.background
 
-
 import maxdistructo.droidbot2.BaseBot
 import maxdistructo.droidbot2.BaseBot.client
 import maxdistructo.droidbot2.commands.*
@@ -26,6 +25,7 @@ import sx.blah.discord.handle.obj.StatusType
 import sx.blah.discord.util.DiscordException
 import sx.blah.discord.util.MissingPermissionsException
 import sx.blah.discord.util.RateLimitException
+import sx.blah.discord.util.RoleBuilder
 import java.io.File
 import java.net.URL
 

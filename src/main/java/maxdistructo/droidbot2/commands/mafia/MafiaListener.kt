@@ -46,6 +46,18 @@ class MafiaListener {
                             val details = MafiaConfig.getPlayerDetails(message, Utils.getUserFromInput(message, messageContent[2])!!.longID)
                             Message.sendDM(message.author, "Player Info on " + Utils.getUserFromInput(message, messageContent[2])!!.getDisplayName(message.guild) + "\nAlignment: " + details[0] + "\nClass: " + details[1] + "\nRole: " + details[2] + "\nIs Dead: " + details[3] + "\nAttack Power: " + details[4] + "\nDefence Power: " + details[5])
                         }
+                        "info" -> {
+                            val details = MafiaConfig.getPlayerDetails(message, Utils.getUserFromInput(message, messageContent[2])!!.longID)
+                            Message.sendDM(message.author, "Player Info on " + Utils.getUserFromInput(message, messageContent[2])!!.getDisplayName(message.guild) + "\nAlignment: " + details[0] + "\nClass: " + details[1] + "\nRole: " + details[2] + "\nIs Dead: " + details[3] + "\nAttack Power: " + details[4] + "\nDefence Power: " + details[5])
+                        }
+                        "details" -> {
+                            val details = MafiaConfig.getPlayerDetails(message, Utils.getUserFromInput(message, messageContent[2])!!.longID)
+                            Message.sendDM(message.author, "Player Info on " + Utils.getUserFromInput(message, messageContent[2])!!.getDisplayName(message.guild) + "\nAlignment: " + details[0] + "\nClass: " + details[1] + "\nRole: " + details[2] + "\nIs Dead: " + details[3] + "\nAttack Power: " + details[4] + "\nDefence Power: " + details[5])
+                        }
+                        "checkrole" -> {
+                            val details = MafiaConfig.getPlayerDetails(message, Utils.getUserFromInput(message, messageContent[2])!!.longID)
+                            Message.sendDM(message.author, "Player Info on " + Utils.getUserFromInput(message, messageContent[2])!!.getDisplayName(message.guild) + "\nAlignment: " + details[0] + "\nClass: " + details[1] + "\nRole: " + details[2] + "\nIs Dead: " + details[3] + "\nAttack Power: " + details[4] + "\nDefence Power: " + details[5])
+                        }
                         "setrole" -> {
                             Mafia.setRole(message, Utils.getUserFromInput(message, messageContent[2])!!, messageContent[3] as String)
                             Message.sendMessage(game.adminChannel, "The role of " + Utils.getUserFromInput(message, messageContent[2])!!.getDisplayName(message.guild) + " has been set to " + MafiaConfig.getPlayerDetails(message, Utils.getUserFromInput(message, messageContent[2])!!.longID)[2])

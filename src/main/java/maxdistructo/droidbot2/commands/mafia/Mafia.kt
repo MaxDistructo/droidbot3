@@ -38,19 +38,13 @@ object Mafia {
         Message.sendMessage(dayChannel, "@everyone The Mafia game has started! \n Day 1 has begun!")
         Message.sendMessage(adminChannel, message.author.getDisplayName(message.guild) + message.author.discriminator + " has started the Mafia game.")
         val players = MafiaConfig.getPlayers(message, "Mafia Folks")
-
+        resetChannelOverrides(message, players)
         for (player in players) {
-            game.dayChannel.overrideUserPermissions(message.guild.getUserByID(player), EnumSet.noneOf(Permissions::class.java), EnumSet.of(Permissions.SEND_MESSAGES, Permissions.SEND_TTS_MESSAGES,Permissions.READ_MESSAGE_HISTORY, Permissions.READ_MESSAGES))
-            denyMediumChat(message, message.guild.getUserByID(player))
-            denyJailorChat(message, message.guild.getUserByID(player))
-            denyJailedChat(message, message.guild.getUserByID(player))
-            game.mafiaChannel.overrideUserPermissions(message.guild.getUserByID(player), EnumSet.noneOf(Permissions::class.java), EnumSet.of(Permissions.SEND_MESSAGES, Permissions.SEND_TTS_MESSAGES,Permissions.READ_MESSAGE_HISTORY, Permissions.READ_MESSAGES))
-            game.spyChannel.overrideUserPermissions(message.guild.getUserByID(player), EnumSet.noneOf(Permissions::class.java), EnumSet.of(Permissions.SEND_MESSAGES, Permissions.SEND_TTS_MESSAGES,Permissions.READ_MESSAGE_HISTORY, Permissions.READ_MESSAGES))
-
             val playerInfo = MafiaConfig.getPlayerDetails(message)
             if (playerInfo[2].toString() == "spy") {
                 allowSpyChat(message, message.guild.getUserByID(player))
-            } else if (playerInfo[2].toString() == "medium") {
+            }
+            else if (playerInfo[2].toString() == "medium") {
                 allowMediumChat(message, message.guild.getUserByID(player))
             }
         }
@@ -66,6 +60,7 @@ object Mafia {
         //runActions();
 
         if (game.day) {
+            resetChannelOverrides(message, players)
             for (player in players) {
                 if (!Perms.checkMod(message, player)) {
                     val playerInfo = MafiaConfig.getPlayerDetails(message, player)
@@ -95,6 +90,17 @@ object Mafia {
                     println("Ran Medium Toggle")
                     denyDayChat(message, message.guild.getUserByID(player))
                     println("Ran Day Toggle")
+
+                    val playerDetails = MafiaConfig.getPlayerDetails(message)
+                    if (playerDetails[3] as Boolean) {
+                        game.dayChannel.removePermissionsOverride(message.guild.getUserByID(player))
+                        denyDayChat(message, message.guild.getUserByID(player))
+                        game.mafiaChannel.removePermissionsOverride(message.guild.getUserByID(player))
+                        denyMafChat(message, message.guild.getUserByID(player))
+                        game.deadChannel.removePermissionsOverride(message.guild.getUserByID(player))
+                        allowDeadChat(message, message.guild.getUserByID(player))
+                    }
+
                 }
             }
                     val root = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt")
@@ -103,6 +109,7 @@ object Mafia {
                     MafiaConfig.writeGameDat(message, root)
                 }
         else {
+            resetChannelOverrides(message, players)
             for (player in players) {
                 if (!Perms.checkMod(message, player)) {
                     dayChannel.removePermissionsOverride(message.guild.getUserByID(player)) //enable day chat
@@ -131,25 +138,31 @@ object Mafia {
         for (player in players) {
                 val playerDetails = MafiaConfig.getPlayerDetails(message)
                 if (playerDetails[3] as Boolean) {
-                    denyDayChat(message, message.guild.getUserByID(player))
-                    denyMafChat(message, message.guild.getUserByID(player))
-                    allowDeadChat(message, message.guild.getUserByID(player))
-                }
+                game.dayChannel.removePermissionsOverride(message.guild.getUserByID(player))
+                denyDayChat(message, message.guild.getUserByID(player))
+                game.mafiaChannel.removePermissionsOverride(message.guild.getUserByID(player))
+                denyMafChat(message, message.guild.getUserByID(player))
+                game.deadChannel.removePermissionsOverride(message.guild.getUserByID(player))
+                allowDeadChat(message, message.guild.getUserByID(player))
+            }
         }
     }
 
     private fun denyMediumChat(message: IMessage, userByID: IUser?) {
         val game = Game(Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt"))
+        game.mediumChannel.removePermissionsOverride(userByID)
         game.mediumChannel.overrideUserPermissions(userByID, EnumSet.noneOf(Permissions::class.java), EnumSet.of(Permissions.SEND_MESSAGES, Permissions.SEND_TTS_MESSAGES))
     }
 
     private fun denyJailedChat(message: IMessage, userByID: IUser?) {
         val game = Game(Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt"))
+        game.jailedChannel.removePermissionsOverride(userByID)
         game.jailedChannel.overrideUserPermissions(userByID, EnumSet.noneOf(Permissions::class.java), EnumSet.of(Permissions.SEND_MESSAGES, Permissions.SEND_TTS_MESSAGES))
     }
 
     private fun denyJailorChat(message: IMessage, userByID: IUser) {
         val game = Game(Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt"))
+        game.jailorChannel.removePermissionsOverride(userByID)
         game.jailorChannel.overrideUserPermissions(userByID, EnumSet.noneOf(Permissions::class.java), EnumSet.of(Permissions.SEND_MESSAGES, Permissions.SEND_TTS_MESSAGES))
     }
 
@@ -205,36 +218,43 @@ object Mafia {
 
     fun denyDayChat(message: IMessage, user: IUser) {
         val game = Game(Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt"))
+        game.dayChannel.removePermissionsOverride(user)
         game.dayChannel.overrideUserPermissions(user, EnumSet.of(Permissions.READ_MESSAGE_HISTORY, Permissions.READ_MESSAGES), EnumSet.of(Permissions.SEND_MESSAGES, Permissions.SEND_TTS_MESSAGES))
     }
 
     fun denyMafChat(message: IMessage, user: IUser) {
         val game = Game(Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt"))
+        game.mafiaChannel.removePermissionsOverride(user)
         game.mafiaChannel.overrideUserPermissions(user, EnumSet.of(Permissions.READ_MESSAGE_HISTORY, Permissions.READ_MESSAGES), EnumSet.of(Permissions.SEND_MESSAGES, Permissions.SEND_TTS_MESSAGES))
     }
 
     fun allowMediumChat(message: IMessage, user: IUser) {
         val game = Game(Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt"))
+        game.mediumChannel.removePermissionsOverride(user)
         game.mediumChannel.overrideUserPermissions(user, EnumSet.of(Permissions.READ_MESSAGE_HISTORY, Permissions.READ_MESSAGES, Permissions.SEND_MESSAGES, Permissions.SEND_TTS_MESSAGES), EnumSet.noneOf(Permissions::class.java))
     }
 
     fun allowJailorChat(message: IMessage, user: IUser) {
         val game = Game(Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt"))
+        game.jailorChannel.removePermissionsOverride(user)
         game.jailorChannel.overrideUserPermissions(user, EnumSet.of(Permissions.READ_MESSAGE_HISTORY, Permissions.READ_MESSAGES, Permissions.SEND_MESSAGES, Permissions.SEND_TTS_MESSAGES), EnumSet.noneOf(Permissions::class.java))
     }
 
     fun allowJailedChat(message: IMessage, user: IUser) {
         val game = Game(Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt"))
+        game.jailedChannel.removePermissionsOverride(user)
         game.jailedChannel.overrideUserPermissions(user, EnumSet.of(Permissions.READ_MESSAGE_HISTORY, Permissions.READ_MESSAGES, Permissions.SEND_MESSAGES, Permissions.SEND_TTS_MESSAGES), EnumSet.noneOf(Permissions::class.java))
     }
 
     fun allowSpyChat(message: IMessage, user: IUser) {
         val game = Game(Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt"))
+        game.spyChannel.removePermissionsOverride(user)
         game.spyChannel.overrideUserPermissions(user, EnumSet.of(Permissions.READ_MESSAGE_HISTORY, Permissions.READ_MESSAGE_HISTORY, Permissions.SEND_MESSAGES, Permissions.SEND_TTS_MESSAGES), EnumSet.noneOf(Permissions::class.java))
     }
 
     fun allowDeadChat(message: IMessage, user: IUser) {
         val game = Game(Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt"))
+        game.deadChannel.removePermissionsOverride(user)
         game.deadChannel.overrideUserPermissions(user, EnumSet.of(Permissions.READ_MESSAGE_HISTORY, Permissions.READ_MESSAGES, Permissions.SEND_MESSAGES, Permissions.SEND_TTS_MESSAGES), EnumSet.noneOf(Permissions::class.java))
     }
 
@@ -356,6 +376,17 @@ object Mafia {
         val roleDat = MafiaConfig.shuffleJSONArray(roleDatJSON)
         roleAssign = roleDat[0].toString()
         root.put("" + user.longID, roleData.getJSONObject(roleAssign))
+    }
+    fun resetChannelOverrides(message : IMessage, players : LongArray){
+        val game = Game(Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt"))
+        for(player in players){
+            game.mafiaChannel.removePermissionsOverride(message.guild.getUserByID(player))
+            game.jailorChannel.removePermissionsOverride(message.guild.getUserByID(player))
+            game.jailedChannel.removePermissionsOverride(message.guild.getUserByID(player))
+            game.mediumChannel.removePermissionsOverride(message.guild.getUserByID(player))
+            game.deadChannel.removePermissionsOverride(message.guild.getUserByID(player))
+            game.spyChannel.removePermissionsOverride(message.guild.getUserByID(player))
+        }
     }
 
 }
