@@ -26,9 +26,14 @@ object MafiaConfig {
     fun getPlayers(message: IMessage, role: String): LongArray {
         val usersList = message.guild.getUsersByRole(Roles.getRole(message, role))
         usersList.remove(message.client.ourUser)
+        for(user in usersList){
+            if(Perms.checkMod(message, user.longID)){
+                usersList.remove(user)
+            }
+        }
         val players = LongArray(usersList.size)
         var i = 0
-        for (user in usersList) {
+        for(user in usersList){
             players[i] = user.longID
             i++
         }
