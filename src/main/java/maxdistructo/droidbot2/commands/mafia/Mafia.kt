@@ -135,7 +135,6 @@ object Mafia {
                         unjail(message)
                     }
                      denyMediumChat(message, message.guild.getUserByID(player))
-
                 }
             }
                     val root = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt")

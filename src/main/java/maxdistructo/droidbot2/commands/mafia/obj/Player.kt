@@ -7,6 +7,7 @@ import sx.blah.discord.handle.obj.IUser
 
 class Player : IPlayer {
     private var details: Array<Any>? = null
+    private var privPlayerID : Long? = 0
     override val role: String
         get() = details!![2] as String
 
@@ -24,15 +25,19 @@ class Player : IPlayer {
 
     constructor() {
         details = null
+        privPlayerID = null
+    }
+    constructor(detailsin : Array<Any>) {
+        details = detailsin
+        privPlayerID = null
     }
 
-    constructor(details1: Array<Any>) {
-        details = details1
-    }
     constructor(message: IMessage, playerID : Long){
         details = MafiaConfig.getPlayerDetails(message, playerID)
+        privPlayerID = playerID
     }
     constructor(message: IMessage, player : IUser){
         details = MafiaConfig.getPlayerDetails(message, player.longID)
+        privPlayerID = player.longID
     }
 }

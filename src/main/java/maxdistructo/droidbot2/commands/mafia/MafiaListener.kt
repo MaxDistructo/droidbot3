@@ -132,7 +132,7 @@ class MafiaListener {
                             message.delete()
                         }
                         "do" -> {
-                            Action.message(message,messageContent)
+                            UserDo.message(message,messageContent)
                         }
                     }
                 }

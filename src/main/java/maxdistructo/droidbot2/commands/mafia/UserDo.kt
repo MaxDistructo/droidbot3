@@ -6,10 +6,10 @@ import maxdistructo.droidbot2.core.Utils
 import maxdistructo.droidbot2.core.message.Message
 import sx.blah.discord.handle.obj.IMessage
 
-object Action{
+object UserDo{
 
     fun message(message : IMessage, messageContent: Array<Any>){
-        val player = Player(MafiaConfig.getPlayerDetails(message))
+        val player = Player(message, message.author)
         val game = Game(Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt"))
         val mentioned = Utils.getUserFromInput(message, messageContent[2])
         when(player.role){
@@ -84,6 +84,7 @@ object Action{
             }
             "investigator" -> {
                 Message.sendMessage(game.adminChannel, message.author.getDisplayName(message.guild) + " would like to investigate " + mentioned!!.getDisplayName(message.guild) + " tonight.")
+                Message.sendDM(message.author, "You are going to investigate " + mentioned.getDisplayName(message.guild))
                 message.delete()
             }
             "sheriff" -> {
