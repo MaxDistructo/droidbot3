@@ -24,7 +24,7 @@ object Casino {
             message.delete()
             return "You have been registered to join " + message.guild.name + " Casino"
         } else if (args.size == 2) {
-            if (args[1] == "payday" && !Roles.checkForPayday(message)) {
+            if (args[1] == "payday" && !Conf.checkForPayday(message)) {
                 checkMembership(message)
                 when (CasinoConfig.MEMBERSHIP) {
                     "null" -> {
@@ -144,7 +144,7 @@ object Casino {
             } else if (args[1] == "balance") {
                 CasinoConfig.readCasino(message)
                 return "You have " + nf.format(CasinoConfig.CHIPS.toLong()) + " Casino chips"
-            } else if (args[1] == "payday" && Roles.checkForPayday(message)) {
+            } else if (args[1] == "payday" && Conf.checkForPayday(message)) {
                 return "Please wait until your payday role is removed to receive your next payday."
             }
         }
@@ -190,15 +190,15 @@ object Casino {
     }
 
     private fun payday(message: IMessage, mentioned: IUser) {
-        Roles.applyPayday(message, mentioned)
+        Conf.applyPayday(message, mentioned)
         try {
             Thread.sleep(21600000)
         } catch (e: InterruptedException) {
-            Roles.removePayday(message, mentioned)
+            Conf.removePayday(message, mentioned)
             e.printStackTrace()
         }
 
-        Roles.removePayday(message, mentioned)
+        Conf.removePayday(message, mentioned)
     }
 
     fun onCasinoInfo(message: IMessage): EmbedObject {

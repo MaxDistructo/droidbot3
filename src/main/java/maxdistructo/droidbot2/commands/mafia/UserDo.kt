@@ -184,6 +184,11 @@ object UserDo{
                 Message.sendDM(message.author, "You will be putting on a vest tonight.")
                 message.delete()
             }
+            "tracker" ->{
+                Message.sendMessage(game.adminChannel, message.author.getDisplayName(message.guild) + " will be tracking " + mentioned!!.getDisplayName(message.guild) + " tonight.")
+                Message.sendDM(message.author, "You will be tracking " + mentioned.getDisplayName(message.guild))
+                message.delete()
+            }
         }
 
 

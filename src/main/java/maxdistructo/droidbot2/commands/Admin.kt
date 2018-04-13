@@ -20,6 +20,7 @@ import java.text.NumberFormat
 import java.util.EnumSet
 
 import maxdistructo.droidbot2.BaseBot.client
+import maxdistructo.droidbot2.background.Conf
 
 object Admin {
     fun addMod(message: IMessage, mentioned: IUser): String {
@@ -93,7 +94,7 @@ object Admin {
     }
 
     fun setBotAbuser(args: Array<String>, message: IMessage, mentioned: IUser): String { //!@admin botabuse <@User> days reason
-        Roles.applyBotAbuser(message, mentioned)
+        Conf.applyBotAbuser(message, mentioned)
         Message.sendDM(mentioned, "You have been banned from using " + client.ourUser.mention(true) + " because of " + args[4])
         try {
             Thread.sleep((86400000 * Utils.convertToInt(args[3])).toLong())
@@ -101,7 +102,7 @@ object Admin {
             e.printStackTrace()
         }
 
-        Roles.removeBotAbuser(message, mentioned)
+        Conf.removeBotAbuser(message, mentioned)
         return mentioned.mention(true) + " you have been released from your bot abuse punishment."
     }
 

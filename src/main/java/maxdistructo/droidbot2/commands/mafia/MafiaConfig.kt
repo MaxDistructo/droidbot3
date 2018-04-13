@@ -12,6 +12,8 @@ import java.io.FileWriter
 import java.io.IOException
 import java.nio.file.Paths
 
+import maxdistructo.droidbot2.core.Utils.s
+
 object MafiaConfig {
     fun getPlayers(message: IMessage): LongArray {
         val root1 = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_players.txt")
@@ -44,7 +46,7 @@ object MafiaConfig {
         if(!Perms.checkMod(message)) {
             val root1 = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_playerdat.txt")
             val root = root1.getJSONObject("" + message.author.longID)
-            val list = arrayListOf<Any>(root.getString("alignment"), root.getString("class"), root.getString("role"), root.getBoolean("dead"), root.getInt("attack"), root.getInt("defense"))
+            val list = arrayListOf<Any>(root.getString("alignment"), root.getString("class"), root.getString("role"), message.author.getRolesForGuild(message.guild).contains(Roles.getRole(message, "Dead(Mafia)")), root.getInt("attack"), root.getInt("defense"))
             return list.toArray()
         }
         else{
@@ -57,7 +59,7 @@ object MafiaConfig {
         if(!Perms.checkMod(message,playerID)) {
             val root1 = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_playerdat.txt")
             val root = root1.getJSONObject("" + playerID)
-            val list = arrayListOf<Any>(root.getString("alignment"), root.getString("class"), root.getString("role"), root.getBoolean("dead"), root.getInt("attack"), root.getInt("defense"))
+            val list = arrayListOf<Any>(root.getString("alignment"), root.getString("class"), root.getString("role"), message.guild.getUserByID(playerID).getRolesForGuild(message.guild).contains(Roles.getRole(message, "Dead(Mafia)")), root.getInt("attack"), root.getInt("defense"))
             return list.toArray()
         }
         else{
@@ -103,7 +105,6 @@ object MafiaConfig {
     fun writeGameDat(message: IMessage, `object`: JSONObject) {
         val currentRelativePath = Paths.get("")
         val s = currentRelativePath.toAbsolutePath().toString()
-
         val file = File(s + "/config/mafia/" + message.guild.longID + "_dat.txt")
         if (!file.exists()) {
             try {
@@ -111,9 +112,7 @@ object MafiaConfig {
             } catch (e: IOException) {
                 Message.throwError(e, message)
             }
-
         }
-
         try {
             FileWriter(s + "/config/mafia/" + message.guild.longID + "_dat.txt").use { fileWriter ->
                 fileWriter.write(`object`.toString())
@@ -121,6 +120,14 @@ object MafiaConfig {
         } catch (e: IOException) {
             e.printStackTrace()
         }
-
+    }
+    fun writeActions(message : IMessage, json: JSONObject){
+        val file = File(s + "/config/mafia/" + message.guild.longID + "_actions.txt")
+        if(!file.exists()){
+            file.createNewFile()
+        }
+        FileWriter(file).use { fileWriter ->
+            fileWriter.write(json.toString())
+        }
     }
 }

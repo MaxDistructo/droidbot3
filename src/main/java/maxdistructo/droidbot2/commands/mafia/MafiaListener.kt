@@ -47,6 +47,9 @@ class MafiaListener {
                             val details = MafiaConfig.getPlayerDetails(message, Utils.getUserFromInput(message, messageContent[2])!!.longID)
                             Message.sendDM(message.author, "Player Info on " + Utils.getUserFromInput(message, messageContent[2])!!.getDisplayName(message.guild) + "\nAlignment: " + details[0] + "\nClass: " + details[1] + "\nRole: " + details[2] + "\nIs Dead: " + details[3] + "\nAttack Power: " + details[4] + "\nDefence Power: " + details[5])
                         }
+                        "rolecard" ->{
+                            Message.sendMessage(message.channel, RoleCards.onRoleCardAsk(message, messageContent[2].toString(), message.author))
+                        }
                         "info" -> {
                             val details = MafiaConfig.getPlayerDetails(message, Utils.getUserFromInput(message, messageContent[2])!!.longID)
                             Message.sendDM(message.author, "Player Info on " + Utils.getUserFromInput(message, messageContent[2])!!.getDisplayName(message.guild) + "\nAlignment: " + details[0] + "\nClass: " + details[1] + "\nRole: " + details[2] + "\nIs Dead: " + details[3] + "\nAttack Power: " + details[4] + "\nDefence Power: " + details[5])

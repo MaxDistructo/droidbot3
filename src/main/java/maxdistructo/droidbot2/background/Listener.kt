@@ -3,14 +3,14 @@ package maxdistructo.droidbot2.background
 import maxdistructo.droidbot2.BaseBot
 import maxdistructo.droidbot2.BaseBot.client
 import maxdistructo.droidbot2.commands.*
-import maxdistructo.droidbot2.commands.casino.Casino
-import maxdistructo.droidbot2.commands.casino.CasinoConfig
+import maxdistructo.droidbot2.commands.casino.*
 import maxdistructo.droidbot2.core.Client
 import maxdistructo.droidbot2.core.Perms
 import maxdistructo.droidbot2.core.Roles
 import maxdistructo.droidbot2.core.Utils
 import maxdistructo.droidbot2.core.Utils.s
 import maxdistructo.droidbot2.core.message.Message
+import maxdistructo.droidbot2.background.*
 import org.apache.commons.io.FileUtils
 import sx.blah.discord.api.events.EventSubscriber
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
@@ -25,7 +25,6 @@ import sx.blah.discord.handle.obj.StatusType
 import sx.blah.discord.util.DiscordException
 import sx.blah.discord.util.MissingPermissionsException
 import sx.blah.discord.util.RateLimitException
-import sx.blah.discord.util.RoleBuilder
 import java.io.File
 import java.net.URL
 
@@ -46,11 +45,11 @@ class Listener {
             val messageContent = content.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
             val messageContentAny = content.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray() as Array<Any>
 
-            if (!Roles.checkForBotAbuse(message) && messageContent.isNotEmpty()) {
+            if (!Conf.checkForBotAbuse(message) && messageContent.isNotEmpty()) {
                 if (messageContent[0] == prefix + "bj") {
-                    //message.reply(BlackJack.blackjack(messageContent, message));
+                    message.reply(BlackJack.blackjack(messageContentAny, message))
                 } else if (messageContent[0].toLowerCase() == "hit" && Perms.checkGames(message) || messageContent[0].toLowerCase() == "stay" && Perms.checkGames(message)) {
-                    //message.reply(BlackJack.continueGame(message, (String[]) messageContent, CasinoConfig.readBJFields(message)));
+                    message.reply(BlackJack.continueGame(message, messageContent, CasinoConfig.readBJFields(message)))
                 } else if (messageContent[0] == prefix + "check") { //Works
                     Message.sendMessage(message.channel, Message.simpleEmbed(message.author, "Check", Check.onCheckCommand(messageContent, message), message))
                     message.delete()
@@ -64,7 +63,7 @@ class Listener {
                     message.reply("", Message.simpleEmbed(message.author, "Casino", Casino.onCasinoCommand(messageContent, message, message.author), message))
                     message.delete()
                 } else if (messageContent[0] == prefix + "50" || messageContent[0] == prefix + "fifty" && Perms.checkGames(message)) { //Works
-                    //message.reply("", Message.simpleEmbed(message.getAuthor(), "FiftyFifty", FiftyFifty.onFiftyCommand(messageContent, message), message));
+                    message.reply("", Message.simpleEmbed(message.author, "FiftyFifty", FiftyFifty.onFiftyCommand(messageContentAny, message), message))
                     message.delete()
                 } else if (messageContent[0] == prefix + "fortune") { //Works
                     message.reply("", Message.simpleEmbed(message.author, "Fortune", Fortune.onFortuneCommand(message), message))
@@ -92,7 +91,7 @@ class Listener {
                     }
                     message.delete()
                 } else if (messageContent[0] == prefix + "allin" && Perms.checkGames(message)) {
-                    //message.reply("", Message.simpleEmbed(message.getAuthor(), "Allin", Allin.onAllinCommand(messageContent, message), message));
+                    message.reply("", Message.simpleEmbed(message.author, "Allin", Allin.onAllinCommand(messageContentAny, message), message));
                     message.delete()
                 } else if (messageContent[0] == prefix + "say" && channelMention != null) {
                     Message.sendMessage(channelMention, Say.onSayCommand(messageContentAny, message, channelMention))
@@ -101,7 +100,7 @@ class Listener {
                     Message.sendMessage(message.channel, Say.onSayCommand(messageContentAny, message, channelMention))
                     message.delete()
                 } else if (messageContent[0] == prefix + "spam") {
-                    //Message.sendMessage(message.getChannel(), Spam.onSpamCommand(messageContent, message, mentioned));
+                    Message.sendMessage(message.channel, Spam.onSpamCommand(messageContentAny, message, mentioned!!))
                     message.delete()
                 } else if (messageContent[0] == prefix + "slap") {
                     Message.sendMessage(message.channel, PlayerFun.onSlapCommand(message, mentioned!!))
