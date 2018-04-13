@@ -112,7 +112,6 @@ object RoleCards {
                 builder.withColor(user.getColorForGuild(message.guild))
                 return builder.build()
             }
-
         }
         val nulBuilder = EmbedBuilder()
         return nulBuilder.build()
