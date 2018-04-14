@@ -4,11 +4,13 @@ import maxdistructo.droidbot2.commands.mafia.obj.Game
 import maxdistructo.droidbot2.commands.mafia.obj.Player
 import maxdistructo.droidbot2.core.Roles
 import maxdistructo.droidbot2.core.Utils
+import maxdistructo.droidbot2.core.Utils.s
 import maxdistructo.droidbot2.core.message.Message
 import org.json.JSONObject
 import sx.blah.discord.handle.obj.IMessage
 import sx.blah.discord.handle.obj.IUser
 import sx.blah.discord.handle.obj.Permissions
+import java.io.File
 import java.util.*
 
 object Mafia {
@@ -40,7 +42,12 @@ object Mafia {
         Message.sendMessage(adminChannel, message.author.getDisplayName(message.guild) + message.author.discriminator + " has started the Mafia game.")
         val players = MafiaConfig.getPlayers(message, "Mafia Folks")
         resetChannelOverrides(message, players)
+        unjail(message)
         for (player in players) {
+            val aliveRole = Roles.getRole(message, "Mafia(Alive)")
+            val deadRole = Roles.getRole(message, "Mafia(Dead)")
+            message.guild.getUserByID(player).removeRole(deadRole)
+            message.guild.getUserByID(player).addRole(aliveRole)
             val playerInfo = MafiaConfig.getPlayerDetails(message)
             if (playerInfo[2].toString() == "spy") {
                 allowSpyChat(message, message.guild.getUserByID(player))
@@ -247,9 +254,10 @@ object Mafia {
             out.put("" + player, roleData.getJSONObject(roleList[ii]))
             ii++
             Message.sendDM(message.guild.getUserByID(player), "You are a " + roleList[ii] + "\n For more details on this role visit town-of-salem.wikia.com/wiki/"+ roleList[ii])
-            sb.append(message.guild.getUserByID(player).getDisplayName(message.guild) + ": " + roleList[ii] + "\n")
+            sb.append(message.guild.getUserByID(player).name + ": " + roleList[ii] + "\n")
         }
         Message.sendMessage(game.adminChannel, sb.toString())
+        File(s + "/config/mafia/" + message.guild.longID + "_playerdat.txt").delete()
         MafiaConfig.writeGame(message, out)
         return out
     }

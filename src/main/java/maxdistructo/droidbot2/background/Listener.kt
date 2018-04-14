@@ -25,8 +25,10 @@ import sx.blah.discord.handle.obj.StatusType
 import sx.blah.discord.util.DiscordException
 import sx.blah.discord.util.MissingPermissionsException
 import sx.blah.discord.util.RateLimitException
+import java.awt.Color
 import java.io.File
 import java.net.URL
+import java.time.Instant
 
 class Listener {
 
@@ -138,7 +140,7 @@ class Listener {
                 } else if (messageContent[0] == prefix + "punch") {
                     Message.sendMessage(message.channel, PlayerFun.onPunchCommand(message, mentioned!!))
                     message.delete()
-                } else if (messageContent[0] == "$prefix@admin" && messageContent[1] == "addMod" && Perms.checkAdmin(message)) {
+                } else if (messageContent[0] == prefix + "@admin" && messageContent[1] == "addMod" && Perms.checkAdmin(message)) {
                     Message.sendMessage(message.channel, Admin.addMod(message, mentioned!!))
                 } else if (messageContent[0] == "$prefix@admin" && messageContent[1] == "addAdmin" && Perms.checkAdmin(message)) {
                     Message.sendMessage(message.channel, Admin.addAdmin(message, mentioned!!))
@@ -154,9 +156,9 @@ class Listener {
                     Message.sendMessage(message.channel, Admin.setNickname(messageContent))
                 } else if (messageContent[0] == "$prefix@admin" && messageContent[1] == "image" && Perms.checkOwner(message)) {
                     Message.sendMessage(message.channel, Admin.setProfilePic(messageContent))
-                } else if (messageContent[0] == "$prefix@admin" && messageContent[1] == "leaveGuild" && Perms.checkOwner(message)) {
+                } else if (messageContent[0] == prefix + "@admin" && messageContent[1] == "leaveGuild" && Perms.checkOwner(message)) {
                     Message.sendMessage(message.channel, Admin.leaveGuild(messageContent))
-                } else if (messageContent[0] == "$prefix@admin" && messageContent[1] == "perms" && Perms.checkAdmin(message)) {
+                } else if (messageContent[0] == prefix + "@admin" && messageContent[1] == "perms" && Perms.checkAdmin(message)) {
                     Message.sendMessage(message.channel, Admin.changeRolePerm(message, messageContent))
                 } else if (messageContent[0] == "$prefix@admin" && messageContent[1] == "restart") {
                     Restart.run(message)
@@ -174,19 +176,19 @@ class Listener {
                         Message.sendDM(message.guild.owner, client.applicationName + "has left your server because the bot owner though it was missing perms or its permissions were screwed up. Please use this url to re-add " + client.applicationName + " to your server. Your server's data has not been affected. https://discordapp.com/oauth2/authorize?client_id=423268575718014976&scope=bot&permissions=470281296")
                         message.guild.leave()
                     }
-                } else if (messageContent[0] == "$prefix@admin" && messageContent[1] == "setColor" && Perms.checkMod(message)) {
+                } else if (messageContent[0] == prefix + "@admin" && messageContent[1] == "setColor" && Perms.checkMod(message)) {
                     Roles.changeColor(Roles.getRole(message, messageContent[2])!!, messageContent[3])
                     message.delete()
-                } else if (messageContent[0] == "$prefix@mute" && Perms.checkAdmin(message)) { //!@mute @User time
+                } else if (messageContent[0] == prefix + "@mute" && Perms.checkAdmin(message)) { //!@mute @User time
                     Admin.muteUser(message, mentioned!!, Utils.convertToInt(messageContent[2]))
                     message.delete()
-                } else if (messageContent[0] == "$prefix@unmute" && Perms.checkAdmin(message) && channelMention != null) {
+                } else if (messageContent[0] == prefix + "@unmute" && Perms.checkAdmin(message) && channelMention != null) {
                     Admin.unmuteUser(message, mentioned!!, channelMention)
                     message.delete()
-                } else if (messageContent[0] == "$prefix@unmute" && Perms.checkAdmin(message)) {
+                } else if (messageContent[0] == prefix + "@unmute" && Perms.checkAdmin(message)) {
                     Admin.unmuteUser(message, mentioned!!)
                     message.delete()
-                } else if (messageContent[0] == "$prefix@announce") {
+                } else if (messageContent[0] == prefix + "@announce") {
                     Admin.onAnnounceCommand(messageContentAny, message)
                     message.delete()
                 } else if (messageContent[0] == prefix + "fixServer" && Perms.checkOwner_Guild(message)) { //Due to requirement of server configs (Blame Swear Filter), this command is separated so that if errors are being thrown this command can still run.
@@ -207,6 +209,14 @@ class Listener {
                     val target = mentionedArray[0] as IUser
                     val invest = mentionedArray[1] as IUser
                     Message.sendDM(message.author, "The user in slot 0 is " + target.getDisplayName(message.guild) + "\n The user in slot 1 is " + invest.getDisplayName(message.guild))
+                } else if(messageContent[0] == prefix + "@clear" && Perms.checkAdmin(message)){
+                    Message.sendMessage(message.channel, "Deleting all messages that are not pinned in this channel. Please wait.")
+                    Admin.clearChannel(message.channel)
+                    Message.sendMessage(message.channel, "Cleared Channel Messages at " + Instant.now())
+                } else if(messageContent[0] == prefix + "@backup" && Perms.checkAdmin(message)){
+                    Message.sendMessage(message.channel, "Backing up this channel.")
+                    Admin.backupChat(message.channel)
+                    message.delete()
                 }
 
 

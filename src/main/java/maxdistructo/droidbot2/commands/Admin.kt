@@ -21,6 +21,9 @@ import java.util.EnumSet
 
 import maxdistructo.droidbot2.BaseBot.client
 import maxdistructo.droidbot2.background.Conf
+import maxdistructo.droidbot2.core.Utils.s
+import java.io.File
+import java.time.Instant
 
 object Admin {
     fun addMod(message: IMessage, mentioned: IUser): String {
@@ -222,6 +225,28 @@ object Admin {
             }
         }
 
+    }
+    fun clearChannel(channel : IChannel){
+        val history = channel.fullMessageHistory
+        for(message in history){
+            if(!message.isPinned){
+                message.delete()
+            }
+            Thread.sleep(1250L)
+        }
+    }
+    fun backupChat(channel: IChannel){
+        val history = channel.fullMessageHistory
+        val sb = StringBuilder()
+        for(message in history){
+            sb.append(message.author.getDisplayName(message.guild) + " " + message.timestamp.toString() + "\n" + message.content)
+        }
+        val file = File(s + "/channelbackup/" + channel.name + "/" + Instant.now().toString() + ".txt")
+        file.parentFile.mkdirs()
+        file.createNewFile()
+        val fw = FileWriter(file)
+        fw.write(sb.toString())
+        Message.sendMessage(channel, "Successfully backed up this channel.")
     }
 
 
