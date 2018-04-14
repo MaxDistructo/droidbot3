@@ -130,4 +130,8 @@ object MafiaConfig {
             fileWriter.write(json.toString())
         }
     }
+    fun investResults(message : IMessage) : JSONObject{
+        val json = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_actions.txt")
+        return json.getJSONObject("invest_results")
+    }
 }

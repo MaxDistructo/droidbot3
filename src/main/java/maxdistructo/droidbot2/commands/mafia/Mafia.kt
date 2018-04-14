@@ -49,7 +49,7 @@ object Mafia {
             message.guild.getUserByID(player).removeRole(deadRole)
             message.guild.getUserByID(player).addRole(aliveRole)
             val playerInfo = MafiaConfig.getPlayerDetails(message)
-            if (playerInfo[2].toString() == "spy") {
+            if (playerInfo[2].toString() == "spy" || playerInfo[2].toString() == "blackmailer") {
                 allowSpyChat(message, message.guild.getUserByID(player))
             }
             else if (playerInfo[2].toString() == "medium") {
@@ -223,7 +223,7 @@ object Mafia {
 
     fun allowSpyChat(message: IMessage, user: IUser) {
         val game = Game(Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt"))
-        game.spyChannel.overrideUserPermissions(user, EnumSet.of(Permissions.READ_MESSAGE_HISTORY, Permissions.READ_MESSAGE_HISTORY, Permissions.SEND_MESSAGES, Permissions.SEND_TTS_MESSAGES), EnumSet.noneOf(Permissions::class.java))
+        game.spyChannel.overrideUserPermissions(user, EnumSet.of(Permissions.READ_MESSAGE_HISTORY, Permissions.READ_MESSAGE_HISTORY), EnumSet.of(Permissions.SEND_MESSAGES, Permissions.SEND_TTS_MESSAGES))
     }
 
     fun allowDeadChat(message: IMessage, user: IUser) {
@@ -252,9 +252,9 @@ object Mafia {
         sb.append("The role list contains: \n")
         for (player in players) {
             out.put("" + player, roleData.getJSONObject(roleList[ii]))
-            ii++
-            Message.sendDM(message.guild.getUserByID(player), "You are a " + roleList[ii] + "\n For more details on this role visit town-of-salem.wikia.com/wiki/"+ roleList[ii])
+            Message.sendDM(message.guild.getUserByID(player), RoleCards.onRoleCardAsk(message, roleList[ii].toString(), message.guild.getUserByID(player)))
             sb.append(message.guild.getUserByID(player).name + ": " + roleList[ii] + "\n")
+            ii++
         }
         Message.sendMessage(game.adminChannel, sb.toString())
         File(s + "/config/mafia/" + message.guild.longID + "_playerdat.txt").delete()

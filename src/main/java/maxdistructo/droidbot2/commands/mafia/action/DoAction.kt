@@ -32,7 +32,7 @@ class DoAction {
             val action = Action(user, actions.getJSONObject("" + user))
             val target = Player(message, action.target)
             if(action.action == "escort"){
-                if(target.role != "serial_killer" || target.role != "werewolf" || target.role != "witch" || target.role != "escort" || target.role != "consort" || target.role != "juggernaut" || target.role != "veteran") {
+                if(target.role != "serial_killer" || target.role != "werewolf" || target.role != "witch" || target.role != "escort" || target.role != "consort" || target.role != "juggernaut" || target.role != "veteran" || target.role != "transporter") {
                     actions.remove("" + action.target)
                     Message.sendDM(message.guild.getUserByID(user), "You have been roleblocked.")
                 }
@@ -55,7 +55,7 @@ class DoAction {
                 action = Action(user, actions.getJSONObject("" + user))
             }
             catch(e : Exception){
-                Message.throwError(e, message)
+                e.localizedMessage
             }
             if(action.action == "witch"){
                 val targetAction = actions.getJSONObject("" + action.target)
@@ -65,5 +65,70 @@ class DoAction {
         }
         MafiaConfig.writeActions(message, actions)
     }
+    fun transport(message : IMessage){
+        val actions = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_actions.txt")
+        for (user in MafiaConfig.getPlayers(message, "Mafia Folks")){
+            lateinit var action : Action
+            try{
+                action = Action(user, actions.getJSONObject("" + user))
+            }
+            catch (e : Exception){
+                e.localizedMessage
+            }
+            if(action.action == "transport"){
+                for(player in MafiaConfig.getPlayers(message, "Mafia Folks")) {
+                    if (action.target == MafiaConfig.getJailed(message) || action.target2 == MafiaConfig.getJailed(message)) {
+                        Message.sendDM(message.guild.getUserByID(player), "One of your targets was Jailed so your transport failed.")
+                        break
+                    }
+                    else {
+                        lateinit var action2: Action
+                        try {
+                            action2 = Action(user, actions.getJSONObject("" + user))
+                        } catch (e: Exception) {
+                            e.localizedMessage
+                        }
+                        if (action2.target == action.target) {
+                            val j = actions.getJSONObject("" + player)
+                            j.remove("target")
+                            j.put("target", action.target2)
+                        }
+                        if (action2.target2 == action.target2) {
+                            val j = actions.getJSONObject("" + player)
+                            j.remove("target")
+                            j.put("target", action.target)
+                        }
+                        if (action2.target == action.target2) {
+                            val j = actions.getJSONObject("" + player)
+                            j.remove("target")
+                            j.put("target", action.target)
+                        }
+                        if (action2.target2 == action.target) {
+                            val j = actions.getJSONObject("" + player)
+                            j.remove("target")
+                            j.put("target", action.target2)
+                        }
+                    }
+                }
+            }
+        }
+    }
+    fun investigate(message : IMessage){
+        val actions = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_actions.txt")
+        for(user in MafiaConfig.getPlayers(message, "Mafia Folks")){
+            lateinit var action : Action
+            try{
+                action = Action(user, actions.getJSONObject("" + user))
+            }
+            catch(e : Exception){
+                e.localizedMessage
+            }
+            if(action.action == "investigate"){
+                val target = Player(message, user)
+                Message.sendDM(message.guild.getUserByID(user), MafiaConfig.investResults(message).getString(target.role))
+            }
+        }
+    }
+
 
 }

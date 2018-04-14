@@ -71,6 +71,17 @@ class MafiaListener {
                         "kill" -> {
                             Mafia.killPlayer(message, Utils.getUserFromInput(message, messageContent[2])!!.longID)
                             Message.sendMessage(game.dayChannel, Kill.message(message, messageContent))
+                            message.delete()
+                        }
+                        "revive" ->{
+                            val root = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_playerdat.txt")
+                            val playerInfo = root.getJSONObject("" + Utils.getUserFromInput(message, messageContent[2])!!.longID)
+                            playerInfo.remove("dead")
+                            playerInfo.put("dead", false)
+                            root.remove("" + Utils.getUserFromInput(message, messageContent[2])!!.longID)
+                            root.put("" + Utils.getUserFromInput(message, messageContent[2])!!.longID, playerInfo)
+                            MafiaConfig.writeGame(message, root)
+                            message.delete()
                         }
                         "shuffle" -> {
                             Mafia.assignRoles(message)
