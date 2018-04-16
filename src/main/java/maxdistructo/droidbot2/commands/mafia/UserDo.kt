@@ -134,60 +134,64 @@ object UserDo{
 
             "medium"-> {
                 if( !game.day && player.dead ) {
-                    Message.sendMessage(game.adminChannel, message.author.getDisplayName(message.guild) + " would like to talk to " + mentioned!!.getDisplayName(message.guild))
+                    Message.sendMessage(game.adminChannel, message.author.night + " would like to talk to " + mentioned!!.getDisplayName(message.guild))
                     Message.sendDM(message.author, "Your message has been sent to the Admin. Please wait for them to respond to your secance request")
                     message.delete()
                 }
             }
             "retributionist" -> {
-                Message.sendMessage(game.adminChannel, message.author.getDisplayName(message.guild) + " will be reviving " + mentioned!! + " tonight.")
+                Message.sendMessage(game.adminChannel, message.author.name + " will be reviving " + mentioned!! + " tonight.")
                 Message.sendDM(message.author, "You will be reviving " + mentioned!!.getDisplayName(message.guild) + " tonight.")
                 message.delete()
             }
             "disguiser" -> {
-                Message.sendMessage(game.adminChannel, message.author.getDisplayName(message.guild) + " is going to be disguised as " + mentioned!!.getDisplayName(message.guild) + " in role.")
+                Message.sendMessage(game.adminChannel, message.author.name + " is going to be disguised as " + mentioned!!.getDisplayName(message.guild) + " in role.")
                 Message.sendDM(message.author, "You will be disguising as " + mentioned!!.getDisplayName(message.guild))
                 message.delete()
             }
             "forger" -> {
-                Message.sendMessage(game.adminChannel, message.author.getDisplayName(message.guild) + " is gonna forge the role of " + mentioned!!.getDisplayName(message.guild) + " to be Forger.")
+                Message.sendMessage(game.adminChannel, message.author.name + " is gonna forge the role of " + mentioned!!.getDisplayName(message.guild) + " to be Forger.")
                 Message.sendDM(message.author, "You will be forging the role of " + mentioned!!.getDisplayName(message.guild))
                 message.delete()
             }
             "framer" -> {
-                Message.sendMessage(game.adminChannel, message.author.getDisplayName(message.guild) + " is gonna frame " + mentioned!!.getDisplayName(message.guild))
+                Message.sendMessage(game.adminChannel, message.author.name + " is gonna frame " + mentioned!!.getDisplayName(message.guild))
                 Message.sendDM(message.author, "You will be framing " + mentioned!!.getDisplayName(message.guild))
                 message.delete()
             }
             "janitor" -> {
-                Message.sendMessage(game.adminChannel, message.author.getDisplayName(message.guild) + " would like to clean the role of " + Utils.getMentionedUser(message)!!.getDisplayName(message.guild))
+                Message.sendMessage(game.adminChannel, message.author.name + " would like to clean the role of " + Utils.getMentionedUser(message)!!.getDisplayName(message.guild))
                 Message.sendDM(message.author, "You will be cleaning " + mentioned!!.getDisplayName(message.guild))
                 message.delete()
             }
             "blackmailer" -> {
-                Message.sendMessage(game.adminChannel, message.author.getDisplayName(message.guild) + "would like to Blackmail " + mentioned!!.getDisplayName(message.guild))
+                Message.sendMessage(game.adminChannel, message.author.name + "would like to Blackmail " + mentioned!!.getDisplayName(message.guild))
                 Message.sendDM(message.author, "You will be blackmailing " + mentioned!!.getDisplayName(message.guild))
                 message.delete()
             }
             "consigerge" -> {
-                Message.sendMessage(game.adminChannel, message.author.getDisplayName(message.guild) + " would like to know the role of " + mentioned!!.getDisplayName(message.guild))
+                Message.sendMessage(game.adminChannel, message.author.name + " would like to know the role of " + mentioned!!.getDisplayName(message.guild))
                 Message.sendDM(message.author, "You will receive the role of " + mentioned!!.getDisplayName(message.guild))
                 message.delete()
             }
             "amnesiac" -> {
-                Message.sendMessage(game.adminChannel, message.author.getDisplayName(message.guild) + " would like to remember the role of " + mentioned!!.getDisplayName(message.guild))
+                Message.sendMessage(game.adminChannel, message.author.name + " would like to remember the role of " + mentioned!!.getDisplayName(message.guild))
                 Message.sendDM(message.author, "You will remember the role of " + mentioned!!.getDisplayName(message.guild))
                 message.delete()
             }
             "survivor" -> {
-                Message.sendMessage(game.adminChannel, message.author.getDisplayName(message.guild) + " will be putting on a vest tonight.")
+                Message.sendMessage(game.adminChannel, message.author.name + " will be putting on a vest tonight.")
                 Message.sendDM(message.author, "You will be putting on a vest tonight.")
                 message.delete()
             }
             "tracker" ->{
-                Message.sendMessage(game.adminChannel, message.author.getDisplayName(message.guild) + " will be tracking " + mentioned!!.getDisplayName(message.guild) + " tonight.")
+                Message.sendMessage(game.adminChannel, message.author.name + " will be tracking " + mentioned!!.getDisplayName(message.guild) + " tonight.")
                 Message.sendDM(message.author, "You will be tracking " + mentioned.getDisplayName(message.guild))
                 message.delete()
+            }
+            "trapper" ->{
+                Message.sendMessage(game.adminChannel, message.author.name + "will be placing a trap at " + mentioned!!.getDisplayName(message.guild) + "'s house tonight."
+                
             }
         }
 
