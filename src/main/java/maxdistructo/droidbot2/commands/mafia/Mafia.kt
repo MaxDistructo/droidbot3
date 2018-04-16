@@ -324,5 +324,21 @@ object Mafia {
             game.spyChannel.removePermissionsOverride(message.guild.getUserByID(player))
         }
     }
+    fun reapPlayer(message : IMessage, playerID : Long){
+        val player = message.guild.getUserByID(playerID)
+        val playerDetails = MafiaConfig.getPlayerDetails(message, playerID)
+        if(){
+            
+        }
+        else{
+            val root = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_playerdat.txt")
+            val playerInfo = root.getJSONObject("" + playerID)
+            playerInfo.remove("reaped")
+            playerInfo.put("reaped", true)
+            root.remove("" + playerID)
+            root.put("" + playerID, playerInfo)
+            MafiaConfig.writeGame(message, root)
+        }
+    }
 
 }
