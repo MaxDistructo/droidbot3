@@ -340,5 +340,11 @@ object Mafia {
             MafiaConfig.writeGame(message, root)
         }
     }
+    fun swapPlayers(message : IMessage, playerID : Long, player2ID : Long){
+        val player = message.guild.getUserByID(playerID)
+        val player2 = message.guild.getUserByID(player2ID)
+        val player1Details = MafiaConfig.getPlayerDetails(message, playerID)
+        val root = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_playerdat.txt")
+    }
 
 }
