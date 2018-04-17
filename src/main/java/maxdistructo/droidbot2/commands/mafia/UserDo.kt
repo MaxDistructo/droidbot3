@@ -191,7 +191,8 @@ object UserDo{
             }
             "trapper" ->{
                 Message.sendMessage(game.adminChannel, message.author.name + "will be placing a trap at " + mentioned!!.getDisplayName(message.guild) + "'s house tonight."
-                
+                Message.sendDM(message.author, "You will be placing a trap at " + mentioned!!.getDisplayName(message.guild) + "'s house."
+                message.delete()
             }
         }
 
