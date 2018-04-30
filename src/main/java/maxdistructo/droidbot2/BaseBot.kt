@@ -10,7 +10,6 @@ import sx.blah.discord.api.IDiscordClient
 object BaseBot {
     lateinit var client: IDiscordClient
     lateinit var LOGGER : Logger
-    var listener = Listener()
     lateinit var bot : Bot
 
     @JvmStatic

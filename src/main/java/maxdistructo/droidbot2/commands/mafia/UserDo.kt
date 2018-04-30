@@ -199,7 +199,7 @@ object UserDo{
                 Message.sendDM(message.author, "You will be guarding " + mentioned.getDisplayName(message.guild))
                 message.delete()
             }
-            
+
         }
 
 
