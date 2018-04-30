@@ -4,13 +4,10 @@ import maxdistructo.droidbot2.BaseBot
 import maxdistructo.droidbot2.BaseBot.client
 import maxdistructo.droidbot2.commands.*
 import maxdistructo.droidbot2.commands.casino.*
-import maxdistructo.droidbot2.core.Client
-import maxdistructo.droidbot2.core.Perms
-import maxdistructo.droidbot2.core.Roles
-import maxdistructo.droidbot2.core.Utils
 import maxdistructo.droidbot2.core.Utils.s
 import maxdistructo.droidbot2.core.message.Message
 import maxdistructo.droidbot2.background.*
+import maxdistructo.droidbot2.core.*
 import org.apache.commons.io.FileUtils
 import sx.blah.discord.api.events.EventSubscriber
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
@@ -38,8 +35,7 @@ class Listener {
         try {
             val message = event.message
             val guild = message.guild
-            val prefix = Client.prefix // To allow for easy compatability with old code. All new code will reference #Client.prefix directly.
-
+            val prefix = Config.readPrefix() // To allow for easy compatability with old code. All new code will reference
             val channelMention = Utils.getMentionedChannel(message)
             val mentioned = Utils.getMentionedUser(message)
 

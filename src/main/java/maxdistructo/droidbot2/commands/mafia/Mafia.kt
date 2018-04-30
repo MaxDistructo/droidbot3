@@ -324,6 +324,7 @@ object Mafia {
             game.spyChannel.removePermissionsOverride(message.guild.getUserByID(player))
         }
     }
+    /*
     fun reapPlayer(message : IMessage, playerID : Long){
         val player = message.guild.getUserByID(playerID)
         val playerDetails = MafiaConfig.getPlayerDetails(message, playerID)
@@ -340,6 +341,7 @@ object Mafia {
             MafiaConfig.writeGame(message, root)
         }
     }
+    */
     fun swapPlayers(message : IMessage, playerID : Long, player2ID : Long){
         val player = message.guild.getUserByID(playerID)
         val player2 = message.guild.getUserByID(player2ID)

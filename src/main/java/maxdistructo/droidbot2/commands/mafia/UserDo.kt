@@ -134,7 +134,7 @@ object UserDo{
 
             "medium"-> {
                 if( !game.day && player.dead ) {
-                    Message.sendMessage(game.adminChannel, message.author.night + " would like to talk to " + mentioned!!.getDisplayName(message.guild))
+                    Message.sendMessage(game.adminChannel, message.author.getDisplayName(message.guild) + " would like to talk to " + mentioned!!.getDisplayName(message.guild))
                     Message.sendDM(message.author, "Your message has been sent to the Admin. Please wait for them to respond to your secance request")
                     message.delete()
                 }
@@ -190,10 +190,16 @@ object UserDo{
                 message.delete()
             }
             "trapper" ->{
-                Message.sendMessage(game.adminChannel, message.author.name + "will be placing a trap at " + mentioned!!.getDisplayName(message.guild) + "'s house tonight."
-                Message.sendDM(message.author, "You will be placing a trap at " + mentioned!!.getDisplayName(message.guild) + "'s house."
+                Message.sendMessage(game.adminChannel, message.author.name + " will be placing a trap at " + mentioned!!.getDisplayName(message.guild) + "'s house tonight.")
+                Message.sendDM(message.author, "You will be placing a trap at " + mentioned!!.getDisplayName(message.guild) + "'s house.")
                 message.delete()
             }
+            "court_wizard" ->{
+                Message.sendMessage(game.adminChannel, message.author.name + " will protect " + mentioned!!.getDisplayName(message.guild) + " from Escorts, Consorts, Transporters, and Witches")
+                Message.sendDM(message.author, "You will be guarding " + mentioned.getDisplayName(message.guild))
+                message.delete()
+            }
+            
         }
 
 
