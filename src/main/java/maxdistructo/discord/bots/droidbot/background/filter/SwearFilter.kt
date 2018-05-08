@@ -1,4 +1,4 @@
-package maxdistructo.droidbot2.background.filter
+package maxdistructo.discord.bots.droidbot.background.filter
 
 import maxdistructo.droidbot2.core.Config
 import org.json.JSONArray

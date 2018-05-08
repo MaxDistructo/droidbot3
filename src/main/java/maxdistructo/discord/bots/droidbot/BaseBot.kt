@@ -1,4 +1,4 @@
-package maxdistructo.droidbot2
+package maxdistructo.discord.bots.droidbot
 
 import maxdistructo.droidbot2.background.*
 import maxdistructo.droidbot2.commands.mafia.MafiaListener

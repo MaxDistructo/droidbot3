@@ -1,4 +1,4 @@
-package maxdistructo.droidbot2.background.audio
+package maxdistructo.discord.bots.droidbot.background.audio
 
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager

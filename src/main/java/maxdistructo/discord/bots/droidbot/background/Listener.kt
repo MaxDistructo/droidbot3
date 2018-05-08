@@ -1,4 +1,4 @@
-package maxdistructo.droidbot2.background
+package maxdistructo.discord.bots.droidbot.background
 
 import maxdistructo.droidbot2.BaseBot
 import maxdistructo.droidbot2.BaseBot.client
