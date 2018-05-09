@@ -1,12 +1,12 @@
 package maxdistructo.discord.bots.droidbot.background
 
-import maxdistructo.droidbot2.BaseBot
-import maxdistructo.droidbot2.BaseBot.client
-import maxdistructo.droidbot2.commands.*
-import maxdistructo.droidbot2.commands.casino.*
+import maxdistructo.discord.bots.droidbot.BaseBot
+import maxdistructo.discord.bots.droidbot.BaseBot.client
+import maxdistructo.discord.bots.droidbot.commands.*
+import maxdistructo.discord.bots.droidbot.commands.casino.*
 import maxdistructo.droidbot2.core.Utils.s
 import maxdistructo.droidbot2.core.message.Message
-import maxdistructo.droidbot2.background.*
+import maxdistructo.discord.bots.droidbot.background.*
 import maxdistructo.droidbot2.core.*
 import org.apache.commons.io.FileUtils
 import sx.blah.discord.api.events.EventSubscriber
@@ -45,6 +45,10 @@ class Listener {
             val messageContentAny = content.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray() as Array<Any>
 
             if (!Conf.checkForBotAbuse(message) && messageContent.isNotEmpty()) {
+                if(messageContent[0].toString() == "/f"){
+                      Message.sendMessage(message.channel, PlayerFun.onPayRespects(message, mentioned))
+                      message.delete()
+                }
                 when(messageContent[0].toString().replace(prefix, "")){
                     "check" ->{
                       Message.sendMessage(message.channel, Message.simpleEmbed(message.author, "Check", Check.onCheckCommand(messageContent, message), message))
@@ -74,6 +78,62 @@ class Listener {
                       }
                       message.delete()
                     }
+                    "say" ->{
+                        Message.sendMessage(message.channel, Say.onSayCommand(messageContentAny, message, channelMention))
+                        message.delete()
+                    }
+                    "slap" ->{
+                        Message.sendMessage(message.channel, PlayerFun.onSlapCommand(message, mentioned!!))
+                        message.delete()
+                    }
+                    "hug" ->{
+                        Message.sendMessage(message.channel, PlayerFun.onHugCommand(message, mentioned!!))
+                        message.delete()
+                    }
+                    "tnt" ->{
+                        Message.sendMessage(message.channel, PlayerFun.onTntCommand(message, mentioned!!))
+                        message.delete()
+                    }
+                    "kiss" ->{
+                        Message.sendMessage(message.channel, PlayerFun.onKissCommand(message, mentioned!!))
+                        message.delete()
+                    }
+                    "poke" ->{
+                        Message.sendMessage(message.channel, PlayerFun.onPokeCommand(message, mentioned!!))
+                        message.delete()
+                    }
+                    "respect" ->{
+                        Message.sendMessage(message.channel, PlayerFun.onPayRespects(message, mentioned))
+                        message.delete()
+                    }
+                    "banhammer" ->{
+                        Message.sendMessage(message.channel, PlayerFun.onBanHammer(message, mentioned!!))
+                        message.delete()
+                    }
+                    "shoot" ->{
+                        Message.sendMessage(message.channel, PlayerFun.onShootCommand(message, mentioned!!))
+                        message.delete()
+                    }
+                    "stab" ->{
+                        Message.sendMessage(message.channel, PlayerFun.onStabCommand(message, mentioned!!))
+                        message.delete()
+                    }
+                    "ping" ->{
+                        Ping.onPingCommand(message)
+                        message.delete()
+                    }
+                    "xp" ->{
+                        Message.sendMessage(message.channel, PlayerFun.onXpCommand(mentioned!!))
+                        message.delete()
+                    }
+                    "punch" ->{
+                        Message.sendMessage(message.channel, PlayerFun.onPunchCommand(message, mentioned!!))
+                        message.delete()
+                    }
+                }
+                if(channelMention != null && Perms.checkMod(message)){
+                    Message.sendMessage(channelMention, Say.onSayCommand(messageContentAny, message, channelMention))
+                    message.delete()
                 }
                 if(Perms.checkGames(message) && casinoEnable){
                   when(messageContent[0].toString().replace(prefix, "")){
@@ -117,6 +177,10 @@ class Listener {
                       message.reply("", Message.simpleEmbed(message.author, "Debug", Debug.onDebugCommand(messageContent, message), message))
                       message.delete()
                     }
+                    "spam" ->{
+                      Message.sendMessage(message.channel, Spam.onSpamCommand(messageContentAny, message, mentioned!!))
+                      message.delete()  
+                    }
                   }
                 }
                 if(Perms.checkOwner(message)){
@@ -125,53 +189,7 @@ class Listener {
                     message.delete()
                   }
                 }
-                
-                if (messageContent[0] == prefix + "say" && channelMention != null) {
-                    Message.sendMessage(channelMention, Say.onSayCommand(messageContentAny, message, channelMention))
-                    message.delete()
-                } else if (messageContent[0] == prefix + "say") {
-                    Message.sendMessage(message.channel, Say.onSayCommand(messageContentAny, message, channelMention))
-                    message.delete()
-                } else if (messageContent[0] == prefix + "spam") {
-                    Message.sendMessage(message.channel, Spam.onSpamCommand(messageContentAny, message, mentioned!!))
-                    message.delete()
-                } else if (messageContent[0] == prefix + "slap") {
-                    Message.sendMessage(message.channel, PlayerFun.onSlapCommand(message, mentioned!!))
-                    message.delete()
-                } else if (messageContent[0] == prefix + "tnt") {
-                    Message.sendMessage(message.channel, PlayerFun.onTntCommand(message, mentioned!!))
-                    message.delete()
-                } else if (messageContent[0] == prefix + "kiss") {
-                    Message.sendMessage(message.channel, PlayerFun.onKissCommand(message, mentioned!!))
-                    message.delete()
-                } else if (messageContent[0] == prefix + "hug") {
-                    Message.sendMessage(message.channel, PlayerFun.onHugCommand(message, mentioned!!))
-                    message.delete()
-                } else if (messageContent[0] == prefix + "poke") {
-                    Message.sendMessage(message.channel, PlayerFun.onPokeCommand(message, mentioned!!))
-                    message.delete()
-                } else if (messageContent[0] == prefix + "respect" || messageContent[0] == "/f") {
-                    Message.sendMessage(message.channel, PlayerFun.onPayRespects(message, mentioned))
-                    message.delete()
-                } else if (messageContent[0] == prefix + "banhammer") {
-                    Message.sendMessage(message.channel, PlayerFun.onBanHammer(message, mentioned!!))
-                    message.delete()
-                } else if (messageContent[0] == prefix + "shoot") {
-                    Message.sendMessage(message.channel, PlayerFun.onShootCommand(message, mentioned!!))
-                    message.delete()
-                } else if (messageContent[0] == prefix + "stab") {
-                    Message.sendMessage(message.channel, PlayerFun.onStabCommand(message, mentioned!!))
-                    message.delete()
-                } else if (messageContent[0] == prefix + "ping") {
-                    Ping.onPingCommand(message)
-                    message.delete()
-                } else if (messageContent[0] == prefix + "xp") {
-                    Message.sendMessage(message.channel, PlayerFun.onXpCommand(mentioned!!))
-                    message.delete()
-                } else if (messageContent[0] == prefix + "punch") {
-                    Message.sendMessage(message.channel, PlayerFun.onPunchCommand(message, mentioned!!))
-                    message.delete()
-                } else if (messageContent[0] == prefix + "@admin" && messageContent[1] == "addMod" && Perms.checkAdmin(message)) {
+                if (messageContent[0] == prefix + "@admin" && messageContent[1] == "addMod" && Perms.checkAdmin(message)) {
                     Message.sendMessage(message.channel, Admin.addMod(message, mentioned!!))
                 } else if (messageContent[0] == "$prefix@admin" && messageContent[1] == "addAdmin" && Perms.checkAdmin(message)) {
                     Message.sendMessage(message.channel, Admin.addAdmin(message, mentioned!!))
@@ -193,15 +211,6 @@ class Listener {
                     Message.sendMessage(message.channel, Admin.changeRolePerm(message, messageContent))
                 } else if (messageContent[0] == "$prefix@admin" && messageContent[1] == "restart") {
                     Restart.run(message)
-                } else if (messageContent[0] == prefix + "emote" && messageContent[1] == "add") {
-                    Emote.addEmoteCommand(message, messageContent)
-                    message.addReaction(ReactionEmoji.of("/:heavy_check_mark:"))
-                } else if (messageContent[0] == prefix + "emote" && messageContent[1] == "request") {
-                    Emote.requestEmoteCommand(message, messageContent)
-                    message.delete()
-                } else if (messageContent[0] == prefix + "emote") {
-                    Emote.onEmoteCommand(message, messageContent)
-                    message.delete()
                 } else if (messageContent[0] == prefix + "admin" && messageContent[1] == "fixPerms") {
                     if (Perms.checkOwner(message)) {
                         Message.sendDM(message.guild.owner, client.applicationName + "has left your server because the bot owner though it was missing perms or its permissions were screwed up. Please use this url to re-add " + client.applicationName + " to your server. Your server's data has not been affected. https://discordapp.com/oauth2/authorize?client_id=423268575718014976&scope=bot&permissions=470281296")
@@ -234,12 +243,6 @@ class Listener {
                     Roles.makeNewRole(guild, "Bot Abuser", false, false)
                     Message.sendMessage(guild.defaultChannel, "Thank you for letting me join your server. I am " + client.ourUser.name + " and my features can be found by using the command " + prefix + "help.")
 
-                } else if (messageContent[0] == prefix + "getMentions" && Perms.checkOwner(message)) {
-                    val mentionedList = message.mentions
-                    val mentionedArray = mentionedList.toTypedArray()
-                    val target = mentionedArray[0] as IUser
-                    val invest = mentionedArray[1] as IUser
-                    Message.sendDM(message.author, "The user in slot 0 is " + target.getDisplayName(message.guild) + "\n The user in slot 1 is " + invest.getDisplayName(message.guild))
                 } else if(messageContent[0] == prefix + "@clear" && Perms.checkAdmin(message)){
                     Message.sendMessage(message.channel, "Deleting all messages that are not pinned in this channel. Please wait.")
                     Admin.clearChannel(message.channel)
@@ -283,7 +286,7 @@ class Listener {
     @EventSubscriber
     fun onShardReadyEvent(event: ShardReadyEvent) {
         client.isLoggedIn
-        client.changePresence(StatusType.ONLINE, ActivityType.PLAYING, prefix + "help")
+        client.changePresence(StatusType.ONLINE, ActivityType.PLAYING, prefix + "help | Celebrating Discord's 3 Years!")
         BaseBot.LOGGER.info("Added playing content")
         val guildsList = client.guilds
         val guilds = guildsList.toTypedArray()
