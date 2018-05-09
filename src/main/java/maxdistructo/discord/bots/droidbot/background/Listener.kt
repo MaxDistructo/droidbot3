@@ -1,12 +1,12 @@
 package maxdistructo.discord.bots.droidbot.background
 
-import maxdistructo.droidbot2.BaseBot
-import maxdistructo.droidbot2.BaseBot.client
-import maxdistructo.droidbot2.commands.*
-import maxdistructo.droidbot2.commands.casino.*
+import maxdistructo.discord.bots.droidbot.BaseBot
+import maxdistructo.discord.bots.droidbot.BaseBot.client
+import maxdistructo.discord.bots.droidbot.commands.*
+import maxdistructo.discord.bots.droidbot.commands.casino.*
 import maxdistructo.droidbot2.core.Utils.s
 import maxdistructo.droidbot2.core.message.Message
-import maxdistructo.droidbot2.background.*
+import maxdistructo.discord.bots.droidbot.background.*
 import maxdistructo.droidbot2.core.*
 import org.apache.commons.io.FileUtils
 import sx.blah.discord.api.events.EventSubscriber
