@@ -1,5 +1,12 @@
 package maxdistructo.discord.bots.droidbot.background
 
+import maxdistructo.discord.core.Config
+import maxdistructo.discord.core.Perms
+import maxdistructo.discord.core.Utils
+import maxdistructo.discord.core.message.Message
+import sx.blah.discord.api.events.EventSubscriber
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
+
 
 class AdminListener{
   
