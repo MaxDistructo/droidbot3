@@ -1,4 +1,4 @@
-package maxdistructo.droidbot2.commands.casino
+package maxdistructo.discord.bots.droidbot.commands.casino
 
 import maxdistructo.droidbot2.core.Perms
 import maxdistructo.droidbot2.core.message.Message

@@ -1,17 +1,14 @@
-package maxdistructo.droidbot2.commands
+package maxdistructo.discord.bots.droidbot.commands
 
-import java.io.File
-import java.io.IOException
-import java.net.MalformedURLException
-import java.net.URL
-import java.nio.file.Path
-import java.nio.file.Paths
-
-import maxdistructo.droidbot2.BaseBot
 import maxdistructo.droidbot2.core.Perms
 import maxdistructo.droidbot2.core.message.Message
 import org.apache.commons.io.FileUtils
 import sx.blah.discord.handle.obj.IMessage
+import java.io.File
+import java.io.IOException
+import java.net.MalformedURLException
+import java.net.URL
+import java.nio.file.Paths
 
 object Emote {
 

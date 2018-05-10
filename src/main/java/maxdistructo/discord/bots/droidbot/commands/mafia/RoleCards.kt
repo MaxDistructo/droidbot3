@@ -1,6 +1,5 @@
-package maxdistructo.droidbot2.commands.mafia
+package maxdistructo.discord.bots.droidbot.commands.mafia
 
-import maxdistructo.droidbot2.core.message.Message
 import sx.blah.discord.api.internal.json.objects.EmbedObject
 import sx.blah.discord.handle.obj.IMessage
 import sx.blah.discord.handle.obj.IUser
@@ -8,31 +7,31 @@ import sx.blah.discord.util.EmbedBuilder
 import java.time.Instant
 
 object RoleCards {
-    fun onRoleCardAsk(message : IMessage, role : String, user : IUser) : EmbedObject{
-        when(role){
-            "investigator" ->{
-                    val builder = EmbedBuilder()
-                    val guild = message.guild
-                    builder.appendField("Class", "Town Investigative (TI)", true)
-                    builder.appendField("Goal", "Lynch every criminal or evildoer",true)
-                    builder.appendField("Attack: 0 - Defence: 0","Your allies are Survivors, Pirates, Guardian Angels, and other Town members",false)
-                    builder.appendField("Summary", "A private eye who secretly gathers information.", false)
-                    builder.withAuthorName("Investigator")
-                    builder.withAuthorIcon("https://vignette.wikia.nocookie.net/town-of-salem/images/2/20/Achievement_Investigator.png/revision/latest/scale-to-width-down/50?cb=20140825150920")
-                    builder.withThumbnail("https://vignette.wikia.nocookie.net/town-of-salem/images/c/cb/Investigator.png/revision/latest?cb=20141222203926")
-                    builder.withDescription("Investigate one person each night for a clue to their role.")
-                    builder.withTimestamp(Instant.now())
-                    builder.withFooterIcon(guild.iconURL)
-                    builder.withFooterText(guild.name)
-                    builder.withColor(user.getColorForGuild(message.guild))
-                return builder.build()
-            }
-            "sheriff" ->{
+    fun onRoleCardAsk(message: IMessage, role: String, user: IUser): EmbedObject {
+        when (role) {
+            "investigator" -> {
                 val builder = EmbedBuilder()
                 val guild = message.guild
                 builder.appendField("Class", "Town Investigative (TI)", true)
-                builder.appendField("Goal", "Lynch every criminal or evildoer",true)
-                builder.appendField("Attack: 0 - Defence: 0","Your allies are Survivors, Pirates, Guardian Angels, and other Town members", false)
+                builder.appendField("Goal", "Lynch every criminal or evildoer", true)
+                builder.appendField("Attack: 0 - Defence: 0", "Your allies are Survivors, Pirates, Guardian Angels, and other Town members", false)
+                builder.appendField("Summary", "A private eye who secretly gathers information.", false)
+                builder.withAuthorName("Investigator")
+                builder.withAuthorIcon("https://vignette.wikia.nocookie.net/town-of-salem/images/2/20/Achievement_Investigator.png/revision/latest/scale-to-width-down/50?cb=20140825150920")
+                builder.withThumbnail("https://vignette.wikia.nocookie.net/town-of-salem/images/c/cb/Investigator.png/revision/latest?cb=20141222203926")
+                builder.withDescription("Investigate one person each night for a clue to their role.")
+                builder.withTimestamp(Instant.now())
+                builder.withFooterIcon(guild.iconURL)
+                builder.withFooterText(guild.name)
+                builder.withColor(user.getColorForGuild(message.guild))
+                return builder.build()
+            }
+            "sheriff" -> {
+                val builder = EmbedBuilder()
+                val guild = message.guild
+                builder.appendField("Class", "Town Investigative (TI)", true)
+                builder.appendField("Goal", "Lynch every criminal or evildoer", true)
+                builder.appendField("Attack: 0 - Defence: 0", "Your allies are Survivors, Pirates, Guardian Angels, and other Town members", false)
                 builder.appendField("Summary", "The law enforcer of the Town, forced into hiding from threat of murder.", false);
                 builder.withAuthorName("Sheriff")
                 builder.withAuthorIcon("https://vignette.wikia.nocookie.net/town-of-salem/images/e/e7/Achievement_Sheriff.png/revision/latest/scale-to-width-down/50?cb=20140825150706")
@@ -44,12 +43,12 @@ object RoleCards {
                 builder.withColor(user.getColorForGuild(message.guild))
                 return builder.build()
             }
-            "spy" ->{
+            "spy" -> {
                 val builder = EmbedBuilder()
                 val guild = message.guild
                 builder.appendField("Class", "Town Investigative (TI)", true)
-                builder.appendField("Goal", "Lynch every criminal or evildoer",true)
-                builder.appendField("Attack: 0 - Defence: 0","Your allies are Survivors, Pirates, Guardian Angels, and other Town members", false)
+                builder.appendField("Goal", "Lynch every criminal or evildoer", true)
+                builder.appendField("Attack: 0 - Defence: 0", "Your allies are Survivors, Pirates, Guardian Angels, and other Town members", false)
                 builder.appendField("Summary", "A talented watcher who keeps track of evil in the Town.", false);
                 builder.withAuthorName("Spy")
                 builder.withAuthorIcon("https://vignette.wikia.nocookie.net/town-of-salem/images/0/0b/Achievement_Spy.png/revision/latest/scale-to-width-down/50?cb=20140825150715")
@@ -61,12 +60,12 @@ object RoleCards {
                 builder.withColor(user.getColorForGuild(message.guild))
                 return builder.build()
             }
-            "lookout" ->{
+            "lookout" -> {
                 val builder = EmbedBuilder()
                 val guild = message.guild
                 builder.appendField("Class", "Town Investigative (TI)", true)
-                builder.appendField("Goal", "Lynch every criminal or evildoer",true)
-                builder.appendField("Attack: 0 - Defence: 0","Your allies are Survivors, Pirates, Guardian Angels, and other Town members", false)
+                builder.appendField("Goal", "Lynch every criminal or evildoer", true)
+                builder.appendField("Attack: 0 - Defence: 0", "Your allies are Survivors, Pirates, Guardian Angels, and other Town members", false)
                 builder.appendField("Summary", "An eagle-eyed observer, stealthily camping outside houses to gain information.", false);
                 builder.withAuthorName("Lookout")
                 builder.withAuthorIcon("https://vignette.wikia.nocookie.net/town-of-salem/images/f/f6/Achievement_Lookout.png/revision/latest/scale-to-width-down/50?cb=20140825150631")
@@ -78,12 +77,12 @@ object RoleCards {
                 builder.withColor(user.getColorForGuild(message.guild))
                 return builder.build()
             }
-            "vigilante" ->{
+            "vigilante" -> {
                 val builder = EmbedBuilder()
                 val guild = message.guild
                 builder.appendField("Class", "Town Killing (TK)", true)
-                builder.appendField("Goal", "Lynch every criminal or evildoer",true)
-                builder.appendField("Attack: 1 - Defence: 0","Your allies are Survivors, Pirates, Guardian Angels, and other Town members", false)
+                builder.appendField("Goal", "Lynch every criminal or evildoer", true)
+                builder.appendField("Attack: 1 - Defence: 0", "Your allies are Survivors, Pirates, Guardian Angels, and other Town members", false)
                 builder.appendField("Summary", "A militant officer willing to bend the law to enact justice.", false);
                 builder.withAuthorName("Vigilante")
                 builder.withAuthorIcon("https://vignette.wikia.nocookie.net/town-of-salem/images/1/1f/Achievement_Vigilante.png/revision/latest?cb=20140825150808")
@@ -95,12 +94,12 @@ object RoleCards {
                 builder.withColor(user.getColorForGuild(message.guild))
                 return builder.build()
             }
-            "veteran" ->{
+            "veteran" -> {
                 val builder = EmbedBuilder()
                 val guild = message.guild
                 builder.appendField("Class", "Town Killing (TK)", true)
-                builder.appendField("Goal", "Lynch every criminal or evildoer",true)
-                builder.appendField("Attack: 2 - Defence: 0","Your allies are Survivors, Pirates, Guardian Angels, and other Town members", false)
+                builder.appendField("Goal", "Lynch every criminal or evildoer", true)
+                builder.appendField("Attack: 2 - Defence: 0", "Your allies are Survivors, Pirates, Guardian Angels, and other Town members", false)
                 builder.appendField("Summary", "A paranoid war hero who will shoot anyone who visits him.", false);
                 builder.withAuthorName("Veteran")
                 builder.withAuthorIcon("https://vignette.wikia.nocookie.net/town-of-salem/images/1/1b/Achievement_Veteran.png/revision/latest/scale-to-width-down/50?cb=20140825150759")
@@ -112,12 +111,12 @@ object RoleCards {
                 builder.withColor(user.getColorForGuild(message.guild))
                 return builder.build()
             }
-            "vampire_hunter" ->{
+            "vampire_hunter" -> {
                 val builder = EmbedBuilder()
                 val guild = message.guild
                 builder.appendField("Class", "Town Killing (TK)", true)
-                builder.appendField("Goal", "Lynch every criminal or evildoer",true)
-                builder.appendField("Attack: 1 - Defence: 0","Your allies are Survivors, Pirates, Guardian Angels, and other Town members", false)
+                builder.appendField("Goal", "Lynch every criminal or evildoer", true)
+                builder.appendField("Attack: 1 - Defence: 0", "Your allies are Survivors, Pirates, Guardian Angels, and other Town members", false)
                 builder.appendField("Summary", "A priest turned monster hunter, this person slays Vampires.", false);
                 builder.withAuthorName("Vampire Hunter")
                 builder.withAuthorIcon("https://vignette.wikia.nocookie.net/town-of-salem/images/8/8e/Achievement_Vampire_Hunter.png/revision/latest/scale-to-width-down/50?cb=20151130210939")
@@ -129,12 +128,12 @@ object RoleCards {
                 builder.withColor(user.getColorForGuild(message.guild))
                 return builder.build()
             }
-            "jailor" ->{
+            "jailor" -> {
                 val builder = EmbedBuilder()
                 val guild = message.guild
                 builder.appendField("Class", "Town Killing (TK)", true)
-                builder.appendField("Goal", "Lynch every criminal or evildoer",true)
-                builder.appendField("Attack: 2 - Defence: 0","Your allies are Survivors, Pirates, Guardian Angels, and other Town members", false)
+                builder.appendField("Goal", "Lynch every criminal or evildoer", true)
+                builder.appendField("Attack: 2 - Defence: 0", "Your allies are Survivors, Pirates, Guardian Angels, and other Town members", false)
                 builder.appendField("Summary", "A prison guard who secretly detains suspects.", false)
                 builder.withAuthorName("Jailor")
                 builder.withAuthorIcon("https://vignette.wikia.nocookie.net/town-of-salem/images/6/64/Achievement_Jailor.png/revision/latest/scale-to-width-down/50?cb=20140825150602")
@@ -146,12 +145,12 @@ object RoleCards {
                 builder.withColor(user.getColorForGuild(message.guild))
                 return builder.build()
             }
-            "bodyguard" ->{
+            "bodyguard" -> {
                 val builder = EmbedBuilder()
                 val guild = message.guild
                 builder.appendField("Class", "Town Protective (TP)", true)
-                builder.appendField("Goal", "Lynch every criminal or evildoer",true)
-                builder.appendField("Attack: 2 - Defence: 0","Your allies are Survivors, Pirates, Guardian Angels, and other Town members", false)
+                builder.appendField("Goal", "Lynch every criminal or evildoer", true)
+                builder.appendField("Attack: 2 - Defence: 0", "Your allies are Survivors, Pirates, Guardian Angels, and other Town members", false)
                 builder.appendField("Summary", "An ex-soldier who secretly makes a living by selling protection.", false)
                 builder.withAuthorName("Bodyguard")
                 builder.withAuthorIcon("https://vignette.wikia.nocookie.net/town-of-salem/images/e/ef/Achievement_Bodyguard.png/revision/latest/scale-to-width-down/50?cb=20140708090613")
@@ -163,12 +162,12 @@ object RoleCards {
                 builder.withColor(user.getColorForGuild(message.guild))
                 return builder.build()
             }
-            "doctor" ->{
+            "doctor" -> {
                 val builder = EmbedBuilder()
                 val guild = message.guild
                 builder.appendField("Class", "Town Protective (TP)", true)
-                builder.appendField("Goal", "Lynch every criminal or evildoer",true)
-                builder.appendField("Attack: 0 - Defence: 0","Your allies are Survivors, Pirates, Guardian Angels, and other Town members", false)
+                builder.appendField("Goal", "Lynch every criminal or evildoer", true)
+                builder.appendField("Attack: 0 - Defence: 0", "Your allies are Survivors, Pirates, Guardian Angels, and other Town members", false)
                 builder.appendField("Summary", "A surgeon skilled in trauma care who secretly heals people.", false)
                 builder.withAuthorName("Doctor")
                 builder.withAuthorIcon("https://vignette.wikia.nocookie.net/town-of-salem/images/a/a0/Achievement_Doctor.png/revision/latest/scale-to-width-down/50?cb=20140708093156")
@@ -180,12 +179,12 @@ object RoleCards {
                 builder.withColor(user.getColorForGuild(message.guild))
                 return builder.build()
             }
-            "escort" ->{
+            "escort" -> {
                 val builder = EmbedBuilder()
                 val guild = message.guild
                 builder.appendField("Class", "Town Support (TS)", true)
-                builder.appendField("Goal", "Lynch every criminal or evildoer",true)
-                builder.appendField("Attack: 0 - Defence: 0","Your allies are Survivors, Pirates, Guardian Angels, and other Town members", false)
+                builder.appendField("Goal", "Lynch every criminal or evildoer", true)
+                builder.appendField("Attack: 0 - Defence: 0", "Your allies are Survivors, Pirates, Guardian Angels, and other Town members", false)
                 builder.appendField("Summary", "A beautiful woman skilled in distraction.", false)
                 builder.withAuthorName("Escort")
                 builder.withAuthorIcon("https://vignette.wikia.nocookie.net/town-of-salem/images/2/29/Achievement_Escort.png/revision/latest/scale-to-width-down/50?cb=20140708093747")
@@ -197,12 +196,12 @@ object RoleCards {
                 builder.withColor(user.getColorForGuild(message.guild))
                 return builder.build()
             }
-            "mayor" ->{
+            "mayor" -> {
                 val builder = EmbedBuilder()
                 val guild = message.guild
                 builder.appendField("Class", "Town Support (TS)", true)
-                builder.appendField("Goal", "Lynch every criminal or evildoer",true)
-                builder.appendField("Attack: 0 - Defence: 0","Your allies are Survivors, Pirates, Guardian Angels, and other Town members", false)
+                builder.appendField("Goal", "Lynch every criminal or evildoer", true)
+                builder.appendField("Attack: 0 - Defence: 0", "Your allies are Survivors, Pirates, Guardian Angels, and other Town members", false)
                 builder.appendField("Summary", "The leader of the Town.", false)
                 builder.withAuthorName("Mayor")
                 builder.withAuthorIcon("https://vignette.wikia.nocookie.net/town-of-salem/images/a/aa/Achievement_Mayor_2017.png/revision/latest/scale-to-width-down/50?cb=20171130202502")
@@ -214,12 +213,12 @@ object RoleCards {
                 builder.withColor(user.getColorForGuild(message.guild))
                 return builder.build()
             }
-            "medium" ->{
+            "medium" -> {
                 val builder = EmbedBuilder()
                 val guild = message.guild
                 builder.appendField("Class", "Town Support (TS)", true)
-                builder.appendField("Goal", "Lynch every criminal or evildoer",true)
-                builder.appendField("Attack: 0 - Defence: 0","Your allies are Survivors, Pirates, Guardian Angels, and other Town members", false)
+                builder.appendField("Goal", "Lynch every criminal or evildoer", true)
+                builder.appendField("Attack: 0 - Defence: 0", "Your allies are Survivors, Pirates, Guardian Angels, and other Town members", false)
                 builder.appendField("Summary", "A secret Psychic who talks with the dead.", false)
                 builder.withAuthorName("Medium")
                 builder.withAuthorIcon("https://vignette.wikia.nocookie.net/town-of-salem/images/6/63/Achievement_Medium.png/revision/latest/scale-to-width-down/50?cb=20140825150649")
@@ -231,12 +230,12 @@ object RoleCards {
                 builder.withColor(user.getColorForGuild(message.guild))
                 return builder.build()
             }
-            "retributionist" ->{
+            "retributionist" -> {
                 val builder = EmbedBuilder()
                 val guild = message.guild
                 builder.appendField("Class", "Town Support (TS)", true)
-                builder.appendField("Goal", "Lynch every criminal or evildoer",true)
-                builder.appendField("Attack: 0 - Defence: 0","Your allies are Survivors, Pirates, Guardian Angels, and other Town members", false)
+                builder.appendField("Goal", "Lynch every criminal or evildoer", true)
+                builder.appendField("Attack: 0 - Defence: 0", "Your allies are Survivors, Pirates, Guardian Angels, and other Town members", false)
                 builder.appendField("Summary", "A powerful mystic who will give one person a second chance at life.", false)
                 builder.withAuthorName("Retributionist")
                 builder.withAuthorIcon("https://vignette.wikia.nocookie.net/town-of-salem/images/6/61/Achievement_Retributionist.png/revision/latest/scale-to-width-down/50?cb=20140825150657")
@@ -248,16 +247,16 @@ object RoleCards {
                 builder.withColor(user.getColorForGuild(message.guild))
                 return builder.build()
             }
-            "transporter" ->{
+            "transporter" -> {
                 val builder = EmbedBuilder()
                 val guild = message.guild
                 builder.appendField("Class", "Town Support (TS)", true)
-                builder.appendField("Goal", "Lynch every criminal or evildoer",true)
-                builder.appendField("Attack: 0 - Defence: 0","Your allies are Survivors, Pirates, Guardian Angels, and other Town members", false)
+                builder.appendField("Goal", "Lynch every criminal or evildoer", true)
+                builder.appendField("Attack: 0 - Defence: 0", "Your allies are Survivors, Pirates, Guardian Angels, and other Town members", false)
                 builder.appendField("Summary", "A man who transports people without asking any questions.", false)
                 builder.withAuthorName("Transporter")
                 builder.withAuthorIcon("https://vignette.wikia.nocookie.net/town-of-salem/images/5/5a/Achievement_Transporter.png/revision/latest/scale-to-width-down/50?cb=20140825150750")
-               // builder.withThumbnail("https://vignette.wikia.nocookie.net/town-of-salem/images/6/66/Nightspirit174%27s_Retributionist_Avatar.png/revision/latest?cb=20160423042204")
+                // builder.withThumbnail("https://vignette.wikia.nocookie.net/town-of-salem/images/6/66/Nightspirit174%27s_Retributionist_Avatar.png/revision/latest?cb=20160423042204")
                 builder.withDescription("Choose two people to transport at night. Transporting two people swaps all targets against them. You may transport yourself. Your targets will know they were transported. You may not transport someone with themselves. You can not transport Jailed people.")
                 builder.withTimestamp(Instant.now())
                 builder.withFooterIcon(guild.iconURL)
@@ -265,12 +264,12 @@ object RoleCards {
                 builder.withColor(user.getColorForGuild(message.guild))
                 return builder.build()
             }
-            "blackmailer" ->{
+            "blackmailer" -> {
                 val builder = EmbedBuilder()
                 val guild = message.guild
                 builder.appendField("Class", "Mafia Support (MS)", true)
-                builder.appendField("Goal", "Kill anyone who doesn't submit to Mafia.",true)
-                builder.appendField("Attack: 0 - Defence: 0","Your allies are Survivors, Pirates, Guardian Angels, Witches, and other Mafia Members.", false)
+                builder.appendField("Goal", "Kill anyone who doesn't submit to Mafia.", true)
+                builder.appendField("Attack: 0 - Defence: 0", "Your allies are Survivors, Pirates, Guardian Angels, Witches, and other Mafia Members.", false)
                 builder.appendField("Summary", "An eavesdropper who uses information to keep people quiet.", false)
                 builder.withAuthorName("Blackmailer")
                 builder.withAuthorIcon("https://vignette.wikia.nocookie.net/town-of-salem/images/0/0f/Achievement_Blackmailer.png/revision/latest?cb=20140825150350")
@@ -282,16 +281,16 @@ object RoleCards {
                 builder.withColor(user.getColorForGuild(message.guild))
                 return builder.build()
             }
-            "consigliere" ->{
+            "consigliere" -> {
                 val builder = EmbedBuilder()
                 val guild = message.guild
                 builder.appendField("Class", "Mafia Support (MS)", true)
-                builder.appendField("Goal", "Kill anyone who doesn't submit to Mafia.",true)
-                builder.appendField("Attack: 0 - Defence: 0","Your allies are Survivors, Pirates, Guardian Angels, Witches, and other Mafia Members.", false)
+                builder.appendField("Goal", "Kill anyone who doesn't submit to Mafia.", true)
+                builder.appendField("Attack: 0 - Defence: 0", "Your allies are Survivors, Pirates, Guardian Angels, Witches, and other Mafia Members.", false)
                 builder.appendField("Summary", "A corrupted Investigator who gathers information for the Mafia.", false)
                 builder.withAuthorName("Consigliere")
                 builder.withAuthorIcon("https://vignette.wikia.nocookie.net/town-of-salem/images/f/f6/Achievement_Consigliere.png/revision/latest?cb=20140825150405")
-               // builder.withThumbnail("https://orig00.deviantart.net/3959/f/2016/043/f/0/blackmailer_skin_5_by_purplellamas_town_of_salem_by_purplellamas5-d9ri8cf.png")
+                // builder.withThumbnail("https://orig00.deviantart.net/3959/f/2016/043/f/0/blackmailer_skin_5_by_purplellamas_town_of_salem_by_purplellamas5-d9ri8cf.png")
                 builder.withDescription("Check one person for their exact role each night.")
                 builder.withTimestamp(Instant.now())
                 builder.withFooterIcon(guild.iconURL)
@@ -299,12 +298,12 @@ object RoleCards {
                 builder.withColor(user.getColorForGuild(message.guild))
                 return builder.build()
             }
-            "consort" ->{
+            "consort" -> {
                 val builder = EmbedBuilder()
                 val guild = message.guild
                 builder.appendField("Class", "Mafia Support (MS)", true)
-                builder.appendField("Goal", "Kill anyone who doesn't submit to Mafia.",true)
-                builder.appendField("Attack: 0 - Defence: 0","Your allies are Survivors, Pirates, Guardian Angels, Witches, and other Mafia Members.", false)
+                builder.appendField("Goal", "Kill anyone who doesn't submit to Mafia.", true)
+                builder.appendField("Attack: 0 - Defence: 0", "Your allies are Survivors, Pirates, Guardian Angels, Witches, and other Mafia Members.", false)
                 builder.appendField("Summary", "A beautiful dancer working for organized crime.", false)
                 builder.withAuthorName("Consort")
                 builder.withAuthorIcon("https://vignette.wikia.nocookie.net/town-of-salem/images/f/f4/Achievement_Consort.png/revision/latest/scale-to-width-down/50?cb=20140825150414")
@@ -316,12 +315,12 @@ object RoleCards {
                 builder.withColor(user.getColorForGuild(message.guild))
                 return builder.build()
             }
-            "disguiser" ->{
+            "disguiser" -> {
                 val builder = EmbedBuilder()
                 val guild = message.guild
                 builder.appendField("Class", "Mafia Deception (MD)", true)
-                builder.appendField("Goal", "Kill anyone who doesn't submit to Mafia.",true)
-                builder.appendField("Attack: 0 - Defence: 0","Your allies are Survivors, Pirates, Guardian Angels, Witches, and other Mafia Members.", false)
+                builder.appendField("Goal", "Kill anyone who doesn't submit to Mafia.", true)
+                builder.appendField("Attack: 0 - Defence: 0", "Your allies are Survivors, Pirates, Guardian Angels, Witches, and other Mafia Members.", false)
                 builder.appendField("Summary", "A master of disguise who pretends to be other roles.", false)
                 builder.withAuthorName("Disguiser")
                 builder.withAuthorIcon("https://vignette.wikia.nocookie.net/town-of-salem/images/b/bf/Achievement_Disguiser.png/revision/latest/scale-to-width-down/50?cb=20140825150509")
@@ -333,12 +332,12 @@ object RoleCards {
                 builder.withColor(user.getColorForGuild(message.guild))
                 return builder.build()
             }
-            "forger" ->{
+            "forger" -> {
                 val builder = EmbedBuilder()
                 val guild = message.guild
                 builder.appendField("Class", "Mafia Deception (MD)", true)
-                builder.appendField("Goal", "Kill anyone who doesn't submit to Mafia.",true)
-                builder.appendField("Attack: 0 - Defence: 0","Your allies are Survivors, Pirates, Guardian Angels, Witches, and other Mafia Members.", false)
+                builder.appendField("Goal", "Kill anyone who doesn't submit to Mafia.", true)
+                builder.appendField("Attack: 0 - Defence: 0", "Your allies are Survivors, Pirates, Guardian Angels, Witches, and other Mafia Members.", false)
                 builder.appendField("Summary", "A crooked lawyer that replaces documents.", false)
                 builder.withAuthorName("Forger")
                 builder.withAuthorIcon("https://vignette.wikia.nocookie.net/town-of-salem/images/f/f0/Achievement_Forger.png/revision/latest/scale-to-width-down/50?cb=20150801143107")
@@ -350,12 +349,12 @@ object RoleCards {
                 builder.withColor(user.getColorForGuild(message.guild))
                 return builder.build()
             }
-            "framer" ->{
+            "framer" -> {
                 val builder = EmbedBuilder()
                 val guild = message.guild
                 builder.appendField("Class", "Mafia Deception (MD)", true)
-                builder.appendField("Goal", "Kill anyone who doesn't submit to Mafia.",true)
-                builder.appendField("Attack: 0 - Defence: 0","Your allies are Survivors, Pirates, Guardian Angels, Witches, and other Mafia Members.", false)
+                builder.appendField("Goal", "Kill anyone who doesn't submit to Mafia.", true)
+                builder.appendField("Attack: 0 - Defence: 0", "Your allies are Survivors, Pirates, Guardian Angels, Witches, and other Mafia Members.", false)
                 builder.appendField("Summary", "A skilled counterfeiter who manipulates information.", false)
                 builder.withAuthorName("Framer")
                 builder.withAuthorIcon("https://vignette.wikia.nocookie.net/town-of-salem/images/5/5c/Achievement_Framer.png/revision/latest/scale-to-width-down/50?cb=20140825150526")
@@ -367,12 +366,12 @@ object RoleCards {
                 builder.withColor(user.getColorForGuild(message.guild))
                 return builder.build()
             }
-            "janitor" ->{
+            "janitor" -> {
                 val builder = EmbedBuilder()
                 val guild = message.guild
                 builder.appendField("Class", "Mafia Deception (MD)", true)
-                builder.appendField("Goal", "Kill anyone who doesn't submit to Mafia.",true)
-                builder.appendField("Attack: 0 - Defence: 0","Your allies are Survivors, Pirates, Guardian Angels, Witches, and other Mafia Members.", false)
+                builder.appendField("Goal", "Kill anyone who doesn't submit to Mafia.", true)
+                builder.appendField("Attack: 0 - Defence: 0", "Your allies are Survivors, Pirates, Guardian Angels, Witches, and other Mafia Members.", false)
                 builder.appendField("Summary", "A sanitation expert working for organized crime.", false)
                 builder.withAuthorName("Janitor")
                 builder.withAuthorIcon("https://vignette.wikia.nocookie.net/town-of-salem/images/1/1a/Achievement_Janitor.png/revision/latest/scale-to-width-down/50?cb=20140825150612")
@@ -384,12 +383,12 @@ object RoleCards {
                 builder.withColor(user.getColorForGuild(message.guild))
                 return builder.build()
             }
-            "godfather" ->{
+            "godfather" -> {
                 val builder = EmbedBuilder()
                 val guild = message.guild
                 builder.appendField("Class", "Mafia Killing (MK)", true)
-                builder.appendField("Goal", "Kill anyone who doesn't submit to Mafia.",true)
-                builder.appendField("Attack: 1 - Defence: 0","Your allies are Survivors, Pirates, Guardian Angels, Witches, and other Mafia Members.", false)
+                builder.appendField("Goal", "Kill anyone who doesn't submit to Mafia.", true)
+                builder.appendField("Attack: 1 - Defence: 0", "Your allies are Survivors, Pirates, Guardian Angels, Witches, and other Mafia Members.", false)
                 builder.appendField("Summary", "The leader of organized crime.", false)
                 builder.withAuthorName("Godfather")
                 builder.withAuthorIcon("https://vignette.wikia.nocookie.net/town-of-salem/images/b/b1/Achievement_Godfather.png/revision/latest/scale-to-width-down/50?cb=20140825150541")
@@ -401,12 +400,12 @@ object RoleCards {
                 builder.withColor(user.getColorForGuild(message.guild))
                 return builder.build()
             }
-            "mafioso" ->{
+            "mafioso" -> {
                 val builder = EmbedBuilder()
                 val guild = message.guild
                 builder.appendField("Class", "Mafia Killing (MK)", true)
-                builder.appendField("Goal", "Kill anyone who doesn't submit to Mafia.",true)
-                builder.appendField("Attack: 1 - Defence: 0","Your allies are Survivors, Pirates, Guardian Angels, Witches, and other Mafia Members.", false)
+                builder.appendField("Goal", "Kill anyone who doesn't submit to Mafia.", true)
+                builder.appendField("Attack: 1 - Defence: 0", "Your allies are Survivors, Pirates, Guardian Angels, Witches, and other Mafia Members.", false)
                 builder.appendField("Summary", "A member of organized crime, trying to work their way to the top.", false)
                 builder.withAuthorName("Mafioso")
                 builder.withAuthorIcon("https://vignette.wikia.nocookie.net/town-of-salem/images/7/70/Achievement_Mafioso.png/revision/latest/scale-to-width-down/50?cb=20140825150640")
@@ -422,8 +421,8 @@ object RoleCards {
                 val builder = EmbedBuilder()
                 val guild = message.guild
                 builder.appendField("Class", "Neutral Benign (NB)", true)
-                builder.appendField("Goal", "Remember a role and complete that role's goal.",true)
-                builder.appendField("Attack: 0 - Defence: 0","You have no allies until you remember a role.", false)
+                builder.appendField("Goal", "Remember a role and complete that role's goal.", true)
+                builder.appendField("Attack: 0 - Defence: 0", "You have no allies until you remember a role.", false)
                 builder.appendField("Summary", "A trauma patient that does not remember who he was.", false)
                 builder.withAuthorName("Amnesiac")
                 builder.withAuthorIcon("https://vignette.wikia.nocookie.net/town-of-salem/images/6/65/Achievement_Amnesiac.png/revision/latest/scale-to-width-down/50?cb=20140825150322")
@@ -435,12 +434,12 @@ object RoleCards {
                 builder.withColor(user.getColorForGuild(message.guild))
                 return builder.build()
             }
-            "survivor" ->{
+            "survivor" -> {
                 val builder = EmbedBuilder()
                 val guild = message.guild
                 builder.appendField("Class", "Neutral Benign (NB)", true)
-                builder.appendField("Goal", "Survive to the end of the game.",true)
-                builder.appendField("Attack: 0 - Defence: 0","Everyone is your ally if they let you survive.", false)
+                builder.appendField("Goal", "Survive to the end of the game.", true)
+                builder.appendField("Attack: 0 - Defence: 0", "Everyone is your ally if they let you survive.", false)
                 builder.appendField("Summary", "A Neutral character who just wants to live.", false)
                 builder.withAuthorName("Survivor")
                 builder.withAuthorIcon("https://vignette.wikia.nocookie.net/town-of-salem/images/5/57/Achievement_Survivor.png/revision/latest/scale-to-width-down/50?cb=20140825150726")
@@ -452,12 +451,12 @@ object RoleCards {
                 builder.withColor(user.getColorForGuild(message.guild))
                 return builder.build()
             }
-            "executioner" ->{
+            "executioner" -> {
                 val builder = EmbedBuilder()
                 val guild = message.guild
                 builder.appendField("Class", "Neutral Evil (NE)", true)
-                builder.appendField("Goal", "Get your target lynched",true)
-                builder.appendField("Attack: 0 - Defence: 0","Everyone can be your ally as long as your goal is completed.", false)
+                builder.appendField("Goal", "Get your target lynched", true)
+                builder.appendField("Attack: 0 - Defence: 0", "Everyone can be your ally as long as your goal is completed.", false)
                 builder.appendField("Summary", "An obsessed lyncher who will stop at nothing to execute his target.", false)
                 builder.withAuthorName("Executioner")
                 builder.withAuthorIcon("https://vignette.wikia.nocookie.net/town-of-salem/images/8/8c/Achievement_Executioner.png/revision/latest/scale-to-width-down/50?cb=20140825150517")
@@ -469,12 +468,12 @@ object RoleCards {
                 builder.withColor(user.getColorForGuild(message.guild))
                 return builder.build()
             }
-            "jester" ->{
+            "jester" -> {
                 val builder = EmbedBuilder()
                 val guild = message.guild
                 builder.appendField("Class", "Neutral Evil (NE)", true)
-                builder.appendField("Goal", "Get lynched by the town",true)
-                builder.appendField("Attack: 0 - Defence: 0","Everyone can be your ally as long as your goal is completed.", false)
+                builder.appendField("Goal", "Get lynched by the town", true)
+                builder.appendField("Attack: 0 - Defence: 0", "Everyone can be your ally as long as your goal is completed.", false)
                 builder.appendField("Summary", "A crazed lunatic whose life goal is to be publicly executed.", false)
                 builder.withAuthorName("Jester")
                 builder.withAuthorIcon("https://vignette.wikia.nocookie.net/town-of-salem/images/0/05/Achievement_Jester.png/revision/latest/scale-to-width-down/50?cb=20140825150623")
@@ -486,12 +485,12 @@ object RoleCards {
                 builder.withColor(user.getColorForGuild(message.guild))
                 return builder.build()
             }
-            "witch" ->{
+            "witch" -> {
                 val builder = EmbedBuilder()
                 val guild = message.guild
                 builder.appendField("Class", "Neutral Evil (NE)", true)
-                builder.appendField("Goal", "Survive to see the Town lose the game.",true)
-                builder.appendField("Attack: 0 - Defence: 0","Everyone but the town can be your ally", false)
+                builder.appendField("Goal", "Survive to see the Town lose the game.", true)
+                builder.appendField("Attack: 0 - Defence: 0", "Everyone but the town can be your ally", false)
                 builder.appendField("Summary", "A voodoo master who can control other people's actions.", false)
                 builder.withAuthorName("Witch")
                 builder.withAuthorIcon("https://vignette.wikia.nocookie.net/town-of-salem/images/2/20/Achievement_Witch.png/revision/latest/scale-to-width-down/50?cb=20140825150816")
@@ -503,12 +502,12 @@ object RoleCards {
                 builder.withColor(user.getColorForGuild(message.guild))
                 return builder.build()
             }
-            "arsonist" ->{
+            "arsonist" -> {
                 val builder = EmbedBuilder()
                 val guild = message.guild
                 builder.appendField("Class", "Neutral Killing (NK)", true)
-                builder.appendField("Goal", "See everyone burn.",true)
-                builder.appendField("Attack: 3 - Defence: 2","Survivor, Witch, Pirate, Guardian Angels, and other Arsonists are your allies.", false)
+                builder.appendField("Goal", "See everyone burn.", true)
+                builder.appendField("Attack: 3 - Defence: 2", "Survivor, Witch, Pirate, Guardian Angels, and other Arsonists are your allies.", false)
                 builder.appendField("Summary", "A pyromaniac that wants to burn everyone.", false)
                 builder.withAuthorName("Arsonist")
                 builder.withAuthorIcon("https://vignette.wikia.nocookie.net/town-of-salem/images/c/cf/Achievement_Arsonist.png/revision/latest/scale-to-width-down/50?cb=20140825150335")
@@ -520,12 +519,12 @@ object RoleCards {
                 builder.withColor(user.getColorForGuild(message.guild))
                 return builder.build()
             }
-            "serial_killer" ->{
+            "serial_killer" -> {
                 val builder = EmbedBuilder()
                 val guild = message.guild
                 builder.appendField("Class", "Neutral Killing (NK)", true)
-                builder.appendField("Goal", "Kill everyone who would oppose you.",true)
-                builder.appendField("Attack: 1 - Defence: 2","Survivor, Witch, Pirate, Guardian Angels, and other Serial Killers are your allies.", false)
+                builder.appendField("Goal", "Kill everyone who would oppose you.", true)
+                builder.appendField("Attack: 1 - Defence: 2", "Survivor, Witch, Pirate, Guardian Angels, and other Serial Killers are your allies.", false)
                 builder.appendField("Summary", "A psychotic criminal who wants everyone to die.", false)
                 builder.withAuthorName("Serial Killer")
                 builder.withAuthorIcon("https://vignette.wikia.nocookie.net/town-of-salem/images/9/98/Achievement_Serial_Killer.png/revision/latest/scale-to-width-down/50?cb=20140723234035")
@@ -537,12 +536,12 @@ object RoleCards {
                 builder.withColor(user.getColorForGuild(message.guild))
                 return builder.build()
             }
-            "werewolf" ->{
+            "werewolf" -> {
                 val builder = EmbedBuilder()
                 val guild = message.guild
                 builder.appendField("Class", "Neutral Killing (NK)", true)
-                builder.appendField("Goal", "Kill everyone who would oppose you.",true)
-                builder.appendField("Attack: 3 - Defence: 2","Survivor, Witch, Pirate, Guardian Angels, and other Werewolves are your allies.", false)
+                builder.appendField("Goal", "Kill everyone who would oppose you.", true)
+                builder.appendField("Attack: 3 - Defence: 2", "Survivor, Witch, Pirate, Guardian Angels, and other Werewolves are your allies.", false)
                 builder.appendField("Summary", "A normal citizen who transforms during the full moon.", false)
                 builder.withAuthorName("Werewolf")
                 builder.withAuthorIcon("https://vignette.wikia.nocookie.net/town-of-salem/images/0/07/Achievement_Werewolf2.png/revision/latest?cb=20170730212305")

@@ -1,15 +1,9 @@
-package maxdistructo.droidbot2.commands
+package maxdistructo.discord.bots.droidbot.commands
 
 import com.mashape.unirest.http.Unirest
 import maxdistructo.droidbot2.core.message.Message
-import org.apache.commons.io.FileUtils
 import org.json.JSONObject
-import sx.blah.discord.handle.obj.*
-
-import java.io.*
-import java.net.URL
-
-import maxdistructo.droidbot2.core.Utils.s
+import sx.blah.discord.handle.obj.IMessage
 
 object Fortune {
 

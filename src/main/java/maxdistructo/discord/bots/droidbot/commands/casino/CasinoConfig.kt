@@ -1,7 +1,6 @@
-package maxdistructo.droidbot2.commands.casino
+package maxdistructo.discord.bots.droidbot.commands.casino
 
-import maxdistructo.droidbot2.BaseBot
-import maxdistructo.droidbot2.background.Listener
+import maxdistructo.discord.bots.droidbot.BaseBot
 import maxdistructo.droidbot2.core.message.Message
 import org.json.JSONObject
 import org.json.JSONTokener
@@ -9,12 +8,9 @@ import sx.blah.discord.handle.obj.IGuild
 import sx.blah.discord.handle.obj.IMessage
 import sx.blah.discord.handle.obj.IRole
 import sx.blah.discord.handle.obj.IUser
-
 import java.io.File
 import java.io.FileWriter
 import java.io.IOException
-import java.net.URI
-import java.nio.file.Path
 import java.nio.file.Paths
 
 object CasinoConfig {

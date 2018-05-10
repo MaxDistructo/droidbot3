@@ -1,11 +1,11 @@
-package maxdistructo.droidbot2.commands.mafia
+package maxdistructo.discord.bots.droidbot.commands.mafia
 
-import maxdistructo.droidbot2.commands.mafia.obj.Game
-import maxdistructo.droidbot2.commands.mafia.obj.Player
-import maxdistructo.droidbot2.core.Roles
-import maxdistructo.droidbot2.core.Utils
-import maxdistructo.droidbot2.core.Utils.s
-import maxdistructo.droidbot2.core.message.Message
+import maxdistructo.discord.bots.droidbot.commands.mafia.obj.Game
+import maxdistructo.discord.bots.droidbot.commands.mafia.obj.Player
+import maxdistructo.discord.bots.droidbot.core.Roles
+import maxdistructo.discord.bots.droidbot.core.Utils
+import maxdistructo.discord.bots.droidbot.core.Utils.s
+import maxdistructo.discord.bots.droidbot.core.message.Message
 import org.json.JSONObject
 import sx.blah.discord.handle.obj.IMessage
 import sx.blah.discord.handle.obj.IUser
@@ -51,8 +51,7 @@ object Mafia {
             val playerInfo = MafiaConfig.getPlayerDetails(message)
             if (playerInfo[2].toString() == "spy" || playerInfo[2].toString() == "blackmailer") {
                 allowSpyChat(message, message.guild.getUserByID(player))
-            }
-            else if (playerInfo[2].toString() == "medium") {
+            } else if (playerInfo[2].toString() == "medium") {
                 allowMediumChat(message, message.guild.getUserByID(player))
             }
         }
@@ -87,8 +86,8 @@ object Mafia {
                     println("Ran Jailor Toggle")
                     if (MafiaConfig.getJailed(message) == player) {
                         val history = game.jailedChannel.messageHistory
-                        for(hist in history){
-                            if(!hist.isPinned){
+                        for (hist in history) {
+                            if (!hist.isPinned) {
                                 message.delete()
                             }
                         }
@@ -107,14 +106,13 @@ object Mafia {
                     println("Ran Day Toggle")
 
                     if (message.guild.getUserByID(player).getRolesForGuild(message.guild).contains(message.guild.getRolesByName("Dead(Mafia)")[0])) {
-                        val user = Player(message,player)
+                        val user = Player(message, player)
                         game.dayChannel.removePermissionsOverride(message.guild.getUserByID(player))
                         denyDayChat(message, message.guild.getUserByID(player))
                         game.mafiaChannel.removePermissionsOverride(message.guild.getUserByID(player))
-                        if(user.allignment == "mafia") {
+                        if (user.allignment == "mafia") {
                             denyMafChat(message, message.guild.getUserByID(player))
-                        }
-                        else{
+                        } else {
                             denyNonMaf(message, message.guild.getUserByID(player))
                         }
                         game.deadChannel.removePermissionsOverride(message.guild.getUserByID(player))
@@ -123,13 +121,12 @@ object Mafia {
 
                 }
             }
-                    val root = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt")
-                    root.remove("day")
-                    root.put("day", false)
-                    MafiaConfig.writeGameDat(message, root)
+            val root = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt")
+            root.remove("day")
+            root.put("day", false)
+            MafiaConfig.writeGameDat(message, root)
             Message.sendMessage(game.adminChannel, "Successfully converted over to night mode.")
-                }
-        else {
+        } else {
             Message.sendMessage(game.adminChannel, "Starting change over to day mode. Please wait.")
             resetChannelOverrides(message, players)
             for (player in players) {
@@ -139,41 +136,38 @@ object Mafia {
                     val playerInfo = MafiaConfig.getPlayerDetails(message, player)
                     if (playerInfo[0].toString() == "mafia") {//check if mafia
                         denyMafChat(message, message.guild.getUserByID(player))
-                    }
-                    else{
+                    } else {
                         denyNonMaf(message, message.guild.getUserByID(player))
                     }
                     if (playerInfo[2].toString() == "jailor") {
                         game.jailorChannel.overrideUserPermissions(message.guild.getUserByID(player), EnumSet.of(Permissions.READ_MESSAGES, Permissions.READ_MESSAGE_HISTORY), EnumSet.of(Permissions.SEND_MESSAGES, Permissions.SEND_TTS_MESSAGES))
-                    }
-                    else{
+                    } else {
                         denyJailorChat(message, message.guild.getUserByID(player))
                     }
                     if (MafiaConfig.getJailed(message) == player) {
                         denyJailedChat(message, message.guild.getUserByID(player))
                         unjail(message)
                     }
-                     denyMediumChat(message, message.guild.getUserByID(player))
+                    denyMediumChat(message, message.guild.getUserByID(player))
                 }
                 if (message.guild.getUserByID(player).getRolesForGuild(message.guild).contains(message.guild.getRolesByName("Dead(Mafia)")[0])) {
-                    val user = Player(message,player)
+                    val user = Player(message, player)
                     game.dayChannel.removePermissionsOverride(message.guild.getUserByID(player))
                     denyDayChat(message, message.guild.getUserByID(player))
                     game.mafiaChannel.removePermissionsOverride(message.guild.getUserByID(player))
-                    if(user.allignment == "mafia") {
+                    if (user.allignment == "mafia") {
                         denyMafChat(message, message.guild.getUserByID(player))
-                    }
-                    else{
+                    } else {
                         denyNonMaf(message, message.guild.getUserByID(player))
                     }
                     game.deadChannel.removePermissionsOverride(message.guild.getUserByID(player))
                     allowDeadChat(message, message.guild.getUserByID(player))
                 }
             }
-                    val root = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt")
-                    root.remove("day")
-                    root.put("day", true)
-                    MafiaConfig.writeGameDat(message, root)
+            val root = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt")
+            root.remove("day")
+            root.put("day", true)
+            MafiaConfig.writeGameDat(message, root)
             Message.sendMessage(game.adminChannel, "Successfully converted over to day mode.")
         }
     }
@@ -192,6 +186,7 @@ object Mafia {
         val game = Game(Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt"))
         game.jailorChannel.overrideUserPermissions(userByID, EnumSet.noneOf(Permissions::class.java), EnumSet.of(Permissions.READ_MESSAGES))
     }
+
     fun denyDayChat(message: IMessage, user: IUser) {
         val game = Game(Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt"))
         game.dayChannel.overrideUserPermissions(user, EnumSet.of(Permissions.READ_MESSAGE_HISTORY, Permissions.READ_MESSAGES), EnumSet.of(Permissions.SEND_MESSAGES, Permissions.SEND_TTS_MESSAGES))
@@ -201,7 +196,8 @@ object Mafia {
         val game = Game(Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt"))
         game.mafiaChannel.overrideUserPermissions(user, EnumSet.of(Permissions.READ_MESSAGE_HISTORY, Permissions.READ_MESSAGES), EnumSet.of(Permissions.SEND_MESSAGES, Permissions.SEND_TTS_MESSAGES))
     }
-    fun denyNonMaf(message: IMessage, user: IUser){
+
+    fun denyNonMaf(message: IMessage, user: IUser) {
         val game = Game(Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt"))
         game.mafiaChannel.overrideUserPermissions(user, EnumSet.noneOf(Permissions::class.java), EnumSet.of(Permissions.SEND_MESSAGES, Permissions.SEND_TTS_MESSAGES, Permissions.READ_MESSAGE_HISTORY, Permissions.READ_MESSAGES))
     }
@@ -301,6 +297,7 @@ object Mafia {
         root.put("jailed", 0)
         MafiaConfig.writeGameDat(message, root)
     }
+
     fun setRole(message: IMessage, user: IUser, role: String) {
         val root = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_playerdat.txt")
         val root1 = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + ".dat")
@@ -313,9 +310,10 @@ object Mafia {
         roleAssign = roleDat[0].toString()
         root.put("" + user.longID, roleData.getJSONObject(roleAssign))
     }
-    fun resetChannelOverrides(message : IMessage, players : LongArray){
+
+    fun resetChannelOverrides(message: IMessage, players: LongArray) {
         val game = Game(Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt"))
-        for(player in players){
+        for (player in players) {
             game.mafiaChannel.removePermissionsOverride(message.guild.getUserByID(player))
             game.jailorChannel.removePermissionsOverride(message.guild.getUserByID(player))
             game.jailedChannel.removePermissionsOverride(message.guild.getUserByID(player))
@@ -324,6 +322,7 @@ object Mafia {
             game.spyChannel.removePermissionsOverride(message.guild.getUserByID(player))
         }
     }
+
     /*
     fun reapPlayer(message : IMessage, playerID : Long){
         val player = message.guild.getUserByID(playerID)
@@ -342,7 +341,7 @@ object Mafia {
         }
     }
     */
-    fun swapPlayers(message : IMessage, playerID : Long, player2ID : Long){
+    fun swapPlayers(message: IMessage, playerID: Long, player2ID: Long) {
         val player = message.guild.getUserByID(playerID)
         val player2 = message.guild.getUserByID(player2ID)
         val player1Details = MafiaConfig.getPlayerDetails(message, playerID)

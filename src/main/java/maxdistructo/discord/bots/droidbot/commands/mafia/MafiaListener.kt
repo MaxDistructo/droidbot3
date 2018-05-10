@@ -1,11 +1,11 @@
-package maxdistructo.droidbot2.commands.mafia
+package maxdistructo.discord.bots.droidbot.commands.mafia
 
 
-import maxdistructo.droidbot2.commands.mafia.obj.Game
-import maxdistructo.droidbot2.commands.mafia.obj.Player
-import maxdistructo.droidbot2.core.Client.prefix
-import maxdistructo.droidbot2.core.Utils
-import maxdistructo.droidbot2.core.message.Message
+import maxdistructo.discord.bots.droidbot.commands.mafia.obj.Game
+import maxdistructo.discord.bots.droidbot.commands.mafia.obj.Player
+import maxdistructo.discord.bots.droidbot.core.Client.prefix
+import maxdistructo.discord.bots.droidbot.core.Utils
+import maxdistructo.discord.bots.droidbot.core.message.Message
 import sx.blah.discord.api.events.EventSubscriber
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 
@@ -31,7 +31,7 @@ class MafiaListener {
                     Message.sendMessage(game.jailedChannel, "Jailor: " + message.content)
                 }
                 if (message.channel === game.jailedChannel && !Perms.checkMod(message)) { //Jailed to Jailor
-                    Message.sendMessage(game.jailorChannel, message.author.getDisplayName(message.guild) + ": "+ message.content)
+                    Message.sendMessage(game.jailorChannel, message.author.getDisplayName(message.guild) + ": " + message.content)
                 }
                 if (Perms.checkMod(message) && messageContent.size >= 2 && Perms.checkMafiaChannels(message) && messageContent[0] == prefix + "mafia") {
                     when (messageContent[1]) {
@@ -47,7 +47,7 @@ class MafiaListener {
                             val details = MafiaConfig.getPlayerDetails(message, Utils.getUserFromInput(message, messageContent[2])!!.longID)
                             Message.sendDM(message.author, "Player Info on " + Utils.getUserFromInput(message, messageContent[2])!!.getDisplayName(message.guild) + "\nAlignment: " + details[0] + "\nClass: " + details[1] + "\nRole: " + details[2] + "\nIs Dead: " + details[3] + "\nAttack Power: " + details[4] + "\nDefence Power: " + details[5])
                         }
-                        "rolecard" ->{
+                        "rolecard" -> {
                             Message.sendMessage(message.channel, RoleCards.onRoleCardAsk(message, messageContent[2].toString(), message.author))
                         }
                         "info" -> {
@@ -73,7 +73,7 @@ class MafiaListener {
                             Message.sendMessage(game.dayChannel, Kill.message(message, messageContent))
                             message.delete()
                         }
-                        "revive" ->{
+                        "revive" -> {
                             val root = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_playerdat.txt")
                             val playerInfo = root.getJSONObject("" + Utils.getUserFromInput(message, messageContent[2])!!.longID)
                             playerInfo.remove("dead")
@@ -110,7 +110,7 @@ class MafiaListener {
                             message.delete()
                         }
                     }
-                } else if(messageContent.size >= 2 && Perms.checkMafiaChannels(message) && messageContent[0] == prefix + "mafia"){ //This is all this listener will handle so putting this requirement for the rest of the code to execute.
+                } else if (messageContent.size >= 2 && Perms.checkMafiaChannels(message) && messageContent[0] == prefix + "mafia") { //This is all this listener will handle so putting this requirement for the rest of the code to execute.
                     val player = Player(MafiaConfig.getPlayerDetails(message))
                     when (messageContent[1]) {
                         "join" -> {
@@ -146,7 +146,7 @@ class MafiaListener {
                             message.delete()
                         }
                         "do" -> {
-                            UserDo.message(message,messageContent)
+                            UserDo.message(message, messageContent)
                         }
                     }
                 }

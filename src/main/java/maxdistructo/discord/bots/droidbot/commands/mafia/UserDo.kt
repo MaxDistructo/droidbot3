@@ -1,39 +1,39 @@
-package maxdistructo.droidbot2.commands.mafia
+package maxdistructo.discord.bots.droidbot.commands.mafia
 
-import maxdistructo.droidbot2.commands.mafia.obj.Game
-import maxdistructo.droidbot2.commands.mafia.obj.Player
-import maxdistructo.droidbot2.core.Utils
-import maxdistructo.droidbot2.core.message.Message
+import maxdistructo.discord.bots.droidbot.commands.mafia.obj.Game
+import maxdistructo.discord.bots.droidbot.commands.mafia.obj.Player
+import maxdistructo.discord.bots.droidbot.core.Utils
+import maxdistructo.discord.bots.droidbot.core.message.Message
 import sx.blah.discord.handle.obj.IMessage
 
-object UserDo{
+object UserDo {
 
-    fun message(message : IMessage, messageContent: Array<Any>){
+    fun message(message: IMessage, messageContent: Array<Any>) {
         val player = Player(message, message.author)
         val game = Game(Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt"))
         val mentioned = Utils.getUserFromInput(message, messageContent[2])
-        when(player.role){
-            "mafioso" ->{
+        when (player.role) {
+            "mafioso" -> {
                 Message.sendMessage(game.adminChannel, message.author.getDisplayName(message.guild) + " has voted to kill " + mentioned!!.getDisplayName(message.guild))
                 Message.sendDM(message.author, "You have voted to kill " + mentioned.getDisplayName(message.guild))
                 message.delete()
             }
-            "godfather" ->{
+            "godfather" -> {
                 Message.sendMessage(game.adminChannel, message.author.getDisplayName(message.guild) + " has decided to kill " + mentioned!!.getDisplayName(message.guild))
                 Message.sendDM(message.author, "You have decided to kill " + mentioned.getDisplayName(message.guild))
                 message.delete()
             }
-            "serial_killer" ->{
+            "serial_killer" -> {
                 Message.sendMessage(game.adminChannel, message.author.getDisplayName(message.guild) + " is gonna go and stab " + mentioned!!.getDisplayName(message.guild))
                 Message.sendDM(message.author, "You have decided to go and stab " + mentioned.getDisplayName(message.guild))
                 message.delete()
             }
-            "werewolf" ->{
+            "werewolf" -> {
                 Message.sendMessage(game.adminChannel, message.author.getDisplayName(message.guild) + " is gonna go and visit " + mentioned!!.getDisplayName(message.guild))
                 Message.sendDM(message.author, "You have decided to go and rampage at " + mentioned.getDisplayName(message.guild) + "'s house")
                 message.delete()
             }
-            "arsonist"-> {
+            "arsonist" -> {
                 if (mentioned!! !== message.author) {
                     Message.sendMessage(game.adminChannel, message.author.getDisplayName(message.guild) + " is gonna douse " + mentioned!!.getDisplayName(message.guild))
                     Message.sendDM(message.author, "You have decided to douse " + mentioned!!.getDisplayName(message.guild))
@@ -43,7 +43,7 @@ object UserDo{
                 }
                 message.delete()
             }
-            "jester"-> {
+            "jester" -> {
                 Message.sendMessage(game.adminChannel, message.author.getDisplayName(message.guild) + " is gonna haunt " + mentioned!!.getDisplayName(message.guild))
                 Message.sendDM(message.author, "You have decided to haunt " + mentioned!!.getDisplayName(message.guild))
                 message.delete()
@@ -116,12 +116,12 @@ object UserDo{
                 Message.sendDM(message.author, "You will be guarding " + mentioned!!.getDisplayName(message.guild) + " tonight.")
                 message.delete()
             }
-            "escort"-> {
+            "escort" -> {
                 Message.sendMessage(game.adminChannel, message.author.getDisplayName(message.guild) + " would like to roleblock " + mentioned!! + " tonight.")
                 Message.sendDM(message.author, "You will be escorting " + mentioned!!.getDisplayName(message.guild) + " tonight.")
                 message.delete()
             }
-            "consort" ->{
+            "consort" -> {
                 Message.sendMessage(game.adminChannel, message.author.getDisplayName(message.guild) + " would like to roleblock " + mentioned!! + " tonight.")
                 Message.sendDM(message.author, "You will be escorting " + mentioned!!.getDisplayName(message.guild) + " tonight.")
                 message.delete()
@@ -132,8 +132,8 @@ object UserDo{
                 message.delete()
             }
 
-            "medium"-> {
-                if( !game.day && player.dead ) {
+            "medium" -> {
+                if (!game.day && player.dead) {
                     Message.sendMessage(game.adminChannel, message.author.getDisplayName(message.guild) + " would like to talk to " + mentioned!!.getDisplayName(message.guild))
                     Message.sendDM(message.author, "Your message has been sent to the Admin. Please wait for them to respond to your secance request")
                     message.delete()
@@ -184,17 +184,17 @@ object UserDo{
                 Message.sendDM(message.author, "You will be putting on a vest tonight.")
                 message.delete()
             }
-            "tracker" ->{
+            "tracker" -> {
                 Message.sendMessage(game.adminChannel, message.author.name + " will be tracking " + mentioned!!.getDisplayName(message.guild) + " tonight.")
                 Message.sendDM(message.author, "You will be tracking " + mentioned.getDisplayName(message.guild))
                 message.delete()
             }
-            "trapper" ->{
+            "trapper" -> {
                 Message.sendMessage(game.adminChannel, message.author.name + " will be placing a trap at " + mentioned!!.getDisplayName(message.guild) + "'s house tonight.")
                 Message.sendDM(message.author, "You will be placing a trap at " + mentioned!!.getDisplayName(message.guild) + "'s house.")
                 message.delete()
             }
-            "court_wizard" ->{
+            "court_wizard" -> {
                 Message.sendMessage(game.adminChannel, message.author.name + " will protect " + mentioned!!.getDisplayName(message.guild) + " from Escorts, Consorts, Transporters, and Witches")
                 Message.sendDM(message.author, "You will be guarding " + mentioned.getDisplayName(message.guild))
                 message.delete()

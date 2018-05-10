@@ -1,8 +1,9 @@
-package maxdistructo.droidbot2.commands.mafia
+package maxdistructo.discord.bots.droidbot.commands.mafia
 
-import maxdistructo.droidbot2.core.Roles
-import maxdistructo.droidbot2.core.Utils
-import maxdistructo.droidbot2.core.message.Message
+import maxdistructo.discord.bots.droidbot.core.Roles
+import maxdistructo.discord.bots.droidbot.core.Utils
+import maxdistructo.discord.bots.droidbot.core.Utils.s
+import maxdistructo.discord.bots.droidbot.core.message.Message
 import org.apache.commons.lang3.ArrayUtils
 import org.json.JSONArray
 import org.json.JSONObject
@@ -11,8 +12,6 @@ import java.io.File
 import java.io.FileWriter
 import java.io.IOException
 import java.nio.file.Paths
-
-import maxdistructo.droidbot2.core.Utils.s
 
 object MafiaConfig {
     fun getPlayers(message: IMessage): LongArray {
@@ -28,14 +27,14 @@ object MafiaConfig {
     fun getPlayers(message: IMessage, role: String): LongArray {
         val usersList = message.guild.getUsersByRole(Roles.getRole(message, role))
         usersList.remove(message.client.ourUser)
-        for(user in usersList){
-            if(Perms.checkMod(message, user.longID)){
+        for (user in usersList) {
+            if (Perms.checkMod(message, user.longID)) {
                 usersList.remove(user)
             }
         }
         val players = LongArray(usersList.size)
         var i = 0
-        for(user in usersList){
+        for (user in usersList) {
             players[i] = user.longID
             i++
         }
@@ -43,26 +42,24 @@ object MafiaConfig {
     }
 
     fun getPlayerDetails(message: IMessage): Array<Any> {
-        if(!Perms.checkMod(message)) {
+        if (!Perms.checkMod(message)) {
             val root1 = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_playerdat.txt")
             val root = root1.getJSONObject("" + message.author.longID)
             val list = arrayListOf<Any>(root.getString("alignment"), root.getString("class"), root.getString("role"), message.author.getRolesForGuild(message.guild).contains(Roles.getRole(message, "Dead(Mafia)")), root.getInt("attack"), root.getInt("defense"))
             return list.toArray()
-        }
-        else{
+        } else {
             val list = arrayListOf<Any>("admin", "admin", "admin", false, 3, 3)
             return list.toArray()
         }
     }
 
     fun getPlayerDetails(message: IMessage, playerID: Long): Array<Any> {
-        if(!Perms.checkMod(message,playerID)) {
+        if (!Perms.checkMod(message, playerID)) {
             val root1 = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_playerdat.txt")
             val root = root1.getJSONObject("" + playerID)
             val list = arrayListOf<Any>(root.getString("alignment"), root.getString("class"), root.getString("role"), message.guild.getUserByID(playerID).getRolesForGuild(message.guild).contains(Roles.getRole(message, "Dead(Mafia)")), root.getInt("attack"), root.getInt("defense"))
             return list.toArray()
-        }
-        else{
+        } else {
             val list = arrayListOf<Any>("admin", "admin", "admin", false, 3, 3)
             return list.toArray()
         }
@@ -76,6 +73,7 @@ object MafiaConfig {
         ArrayUtils.shuffle(list)
         return list
     }
+
     fun writeGame(message: IMessage, `object`: JSONObject) {
         val currentRelativePath = Paths.get("")
         val s = currentRelativePath.toAbsolutePath().toString()
@@ -121,16 +119,18 @@ object MafiaConfig {
             e.printStackTrace()
         }
     }
-    fun writeActions(message : IMessage, json: JSONObject){
+
+    fun writeActions(message: IMessage, json: JSONObject) {
         val file = File(s + "/config/mafia/" + message.guild.longID + "_actions.txt")
-        if(!file.exists()){
+        if (!file.exists()) {
             file.createNewFile()
         }
         FileWriter(file).use { fileWriter ->
             fileWriter.write(json.toString())
         }
     }
-    fun investResults(message : IMessage) : JSONObject{
+
+    fun investResults(message: IMessage): JSONObject {
         val json = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_actions.txt")
         return json.getJSONObject("invest_results")
     }

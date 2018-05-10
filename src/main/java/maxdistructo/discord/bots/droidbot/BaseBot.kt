@@ -1,7 +1,7 @@
 package maxdistructo.discord.bots.droidbot
 
-import maxdistructo.droidbot2.background.*
-import maxdistructo.droidbot2.commands.mafia.MafiaListener
+import maxdistructo.discord.bots.droidbot.background.Listener
+import maxdistructo.discord.bots.droidbot.commands.mafia.MafiaListener
 import maxdistructo.droidbot2.core.Config
 import maxdistructo.droidbot2.core.impl.Bot
 import org.slf4j.Logger

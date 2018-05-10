@@ -1,5 +1,5 @@
-package maxdistructo.droidbot2.commands.mafia.obj
+package maxdistructo.discord.bots.droidbot.commands.mafia.obj
 
 enum class Actions {
-    INVEST,SHERIFF,LOOKOUT,SPY,MEDIUM
+    INVEST, SHERIFF, LOOKOUT, SPY, MEDIUM
 }

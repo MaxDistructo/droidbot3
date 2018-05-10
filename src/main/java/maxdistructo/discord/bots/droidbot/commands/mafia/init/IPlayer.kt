@@ -1,4 +1,4 @@
-package maxdistructo.droidbot2.commands.mafia.init
+package maxdistructo.discord.bots.droidbot.commands.mafia.init
 
 interface IPlayer {
     val role: String

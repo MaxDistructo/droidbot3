@@ -1,29 +1,25 @@
-package maxdistructo.droidbot2.commands
+package maxdistructo.discord.bots.droidbot.commands.commands
 
 
-import maxdistructo.droidbot2.core.Config
+import maxdistructo.discord.bots.droidbot.BaseBot.client
+import maxdistructo.discord.bots.droidbot.background.Conf
 import maxdistructo.droidbot2.commands.casino.CasinoConfig
+import maxdistructo.droidbot2.core.Config
 import maxdistructo.droidbot2.core.Perms
 import maxdistructo.droidbot2.core.Roles
 import maxdistructo.droidbot2.core.Utils
+import maxdistructo.droidbot2.core.Utils.s
 import maxdistructo.droidbot2.core.message.Message
 import org.json.JSONArray
-import org.json.JSONObject
 import sx.blah.discord.handle.obj.*
 import sx.blah.discord.util.Image
-
+import java.io.File
 import java.io.FileWriter
 import java.io.IOException
-import java.nio.file.Path
 import java.nio.file.Paths
 import java.text.NumberFormat
-import java.util.EnumSet
-
-import maxdistructo.droidbot2.BaseBot.client
-import maxdistructo.droidbot2.background.Conf
-import maxdistructo.droidbot2.core.Utils.s
-import java.io.File
 import java.time.Instant
+import java.util.*
 
 object Admin {
     fun addMod(message: IMessage, mentioned: IUser): String {
@@ -226,19 +222,21 @@ object Admin {
         }
 
     }
-    fun clearChannel(channel : IChannel){
+
+    fun clearChannel(channel: IChannel) {
         val history = channel.fullMessageHistory
-        for(message in history){
-            if(!message.isPinned){
+        for (message in history) {
+            if (!message.isPinned) {
                 message.delete()
             }
             Thread.sleep(1250L)
         }
     }
-    fun backupChat(channel: IChannel){
+
+    fun backupChat(channel: IChannel) {
         val history = channel.fullMessageHistory
         val sb = StringBuilder()
-        for(message in history){
+        for (message in history) {
             sb.append(message.author.getDisplayName(message.guild) + " " + message.timestamp.toString() + "\n" + message.content)
         }
         val file = File(s + "/channelbackup/" + channel.name + "/" + Instant.now().toString() + ".txt")

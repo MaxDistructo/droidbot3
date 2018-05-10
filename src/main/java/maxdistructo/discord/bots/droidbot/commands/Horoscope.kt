@@ -1,13 +1,8 @@
-package maxdistructo.droidbot2.commands
+package maxdistructo.discord.bots.droidbot.commands
 
 import com.mashape.unirest.http.Unirest
 import com.mashape.unirest.http.exceptions.UnirestException
-import maxdistructo.droidbot2.core.api.http.HTTPGet
-import maxdistructo.droidbot2.core.message.Message
 import org.json.JSONObject
-
-import java.net.MalformedURLException
-import java.net.URL
 
 object Horoscope {
 

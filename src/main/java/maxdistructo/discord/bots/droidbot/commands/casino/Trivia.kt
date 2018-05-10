@@ -1,13 +1,11 @@
-package maxdistructo.droidbot2.commands.casino
+package maxdistructo.discord.bots.droidbot.commands.casino
 
-import maxdistructo.droidbot2.BaseBot
 import maxdistructo.droidbot2.core.Config
 import maxdistructo.droidbot2.core.message.Message
 import org.json.JSONArray
 import org.json.JSONObject
 import org.json.JSONTokener
-import sx.blah.discord.handle.obj.*
-
+import sx.blah.discord.handle.obj.IMessage
 import java.io.File
 import java.io.FileWriter
 import java.io.IOException

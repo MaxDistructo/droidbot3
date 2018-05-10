@@ -1,9 +1,10 @@
-package maxdistructo.droidbot2.commands
+package maxdistructo.discord.bots.droidbot.commands
 
 import com.mashape.unirest.http.Unirest
 import com.mashape.unirest.http.exceptions.UnirestException
 import org.json.JSONObject
-import sx.blah.discord.handle.obj.*
+import sx.blah.discord.handle.obj.IMessage
+import sx.blah.discord.handle.obj.IUser
 import java.util.concurrent.ThreadLocalRandom
 
 object Insult {

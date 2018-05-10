@@ -1,8 +1,8 @@
-package maxdistructo.droidbot2.commands.casino
+package maxdistructo.discord.bots.droidbot.commands.casino
 
 import maxdistructo.droidbot2.core.Perms
 import maxdistructo.droidbot2.core.Utils
-import sx.blah.discord.handle.obj.*
+import sx.blah.discord.handle.obj.IMessage
 
 object FiftyFifty {
     //@Command(aliases = {"/50","/fifty"}, description = "Fifty Fifty chance of doubling your money imputed", usage = "/50|fifty <bet>")

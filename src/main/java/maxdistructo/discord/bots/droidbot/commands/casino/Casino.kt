@@ -1,16 +1,12 @@
-package maxdistructo.droidbot2.commands.casino
+package maxdistructo.discord.bots.droidbot.commands.casino
 
-import maxdistructo.droidbot2.background.*
 import maxdistructo.droidbot2.core.message.Message
-import maxdistructo.droidbot2.core.Roles
 import sx.blah.discord.api.internal.json.objects.EmbedObject
-import sx.blah.discord.handle.obj.*
+import sx.blah.discord.handle.obj.IMessage
+import sx.blah.discord.handle.obj.IUser
 import sx.blah.discord.util.EmbedBuilder
-
 import java.text.NumberFormat
 import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
 
 object Casino {
     //@Command(aliases = {"/casino" }, description = "Casino Commands.", usage = "/casino [payday|balance]")

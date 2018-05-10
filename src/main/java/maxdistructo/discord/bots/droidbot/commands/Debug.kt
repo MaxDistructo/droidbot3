@@ -1,8 +1,8 @@
-package maxdistructo.droidbot2.commands
+package maxdistructo.discord.bots.droidbot.commands
 
 
 import maxdistructo.droidbot2.core.Perms
-import sx.blah.discord.handle.obj.*
+import sx.blah.discord.handle.obj.IMessage
 
 object Debug {
     //@Command(aliases = {"/debug"}, description = "Shows debug info for making code for the bot.", usage = "/debug")

@@ -1,10 +1,9 @@
-package maxdistructo.droidbot2.commands
-
-import java.io.IOException
+package maxdistructo.discord.bots.droidbot.commands
 
 import maxdistructo.droidbot2.core.Perms
 import maxdistructo.droidbot2.core.message.Message
 import sx.blah.discord.handle.obj.IMessage
+import java.io.IOException
 
 object Restart {
     fun run(message: IMessage) {

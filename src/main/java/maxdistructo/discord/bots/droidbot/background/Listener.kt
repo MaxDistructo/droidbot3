@@ -1,12 +1,13 @@
 package maxdistructo.discord.bots.droidbot.background
 
-import maxdistructo.droidbot2.BaseBot
-import maxdistructo.droidbot2.BaseBot.client
+import maxdistructo.discord.bots.droidbot.BaseBot
+import maxdistructo.discord.bots.droidbot.BaseBot.client
 import maxdistructo.droidbot2.commands.*
 import maxdistructo.droidbot2.commands.casino.*
 import maxdistructo.droidbot2.core.Utils.s
 import maxdistructo.droidbot2.core.message.Message
-import maxdistructo.droidbot2.background.*
+import maxdistructo.discord.bots.droidbot.commands.Admin
+import maxdistructo.discord.bots.droidbot.commands.Check
 import maxdistructo.droidbot2.core.*
 import org.apache.commons.io.FileUtils
 import sx.blah.discord.api.events.EventSubscriber
@@ -22,7 +23,6 @@ import sx.blah.discord.handle.obj.StatusType
 import sx.blah.discord.util.DiscordException
 import sx.blah.discord.util.MissingPermissionsException
 import sx.blah.discord.util.RateLimitException
-import java.awt.Color
 import java.io.File
 import java.net.URL
 import java.time.Instant

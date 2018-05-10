@@ -1,19 +1,14 @@
-package maxdistructo.droidbot2.commands
+package maxdistructo.discord.bots.droidbot.commands
 
-import maxdistructo.droidbot2.BaseBot
-import maxdistructo.droidbot2.core.Config
 import maxdistructo.droidbot2.core.message.Message
+import org.apache.commons.io.FileUtils
 import org.json.JSONArray
 import org.json.JSONObject
 import org.json.JSONTokener
-import sx.blah.discord.handle.obj.*
-import org.apache.commons.io.*
-
+import sx.blah.discord.handle.obj.IMessage
 import java.io.File
 import java.io.FileWriter
 import java.io.IOException
-import java.net.URI
-import java.nio.file.Path
 import java.nio.file.Paths
 
 object Trivia {

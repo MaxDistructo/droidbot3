@@ -1,13 +1,13 @@
-package maxdistructo.droidbot2.commands.mafia.obj
+package maxdistructo.discord.bots.droidbot.commands.mafia.obj
 
-import maxdistructo.droidbot2.commands.mafia.init.IPlayer
-import maxdistructo.droidbot2.commands.mafia.MafiaConfig
+import maxdistructo.discord.bots.droidbot.commands.mafia.MafiaConfig
+import maxdistructo.discord.bots.droidbot.commands.mafia.init.IPlayer
 import sx.blah.discord.handle.obj.IMessage
 import sx.blah.discord.handle.obj.IUser
 
 class Player : IPlayer {
     private var details: Array<Any>? = null
-    private var privPlayerID : Long? = 0
+    private var privPlayerID: Long? = 0
     override val role: String
         get() = details!![2] as String
 
@@ -27,16 +27,18 @@ class Player : IPlayer {
         details = null
         privPlayerID = null
     }
-    constructor(detailsin : Array<Any>) {
+
+    constructor(detailsin: Array<Any>) {
         details = detailsin
         privPlayerID = null
     }
 
-    constructor(message: IMessage, playerID : Long){
+    constructor(message: IMessage, playerID: Long) {
         details = MafiaConfig.getPlayerDetails(message, playerID)
         privPlayerID = playerID
     }
-    constructor(message: IMessage, player : IUser){
+
+    constructor(message: IMessage, player: IUser) {
         details = MafiaConfig.getPlayerDetails(message, player.longID)
         privPlayerID = player.longID
     }

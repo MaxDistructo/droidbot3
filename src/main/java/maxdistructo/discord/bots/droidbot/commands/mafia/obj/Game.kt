@@ -1,12 +1,11 @@
-package maxdistructo.droidbot2.commands.mafia.obj
+package maxdistructo.discord.bots.droidbot.commands.mafia.obj
 
-import maxdistructo.droidbot2.BaseBot
-import maxdistructo.droidbot2.commands.mafia.init.IGame
+import maxdistructo.discord.bots.droidbot.commands.mafia.init.IGame
 import org.json.JSONObject
 import sx.blah.discord.handle.obj.IChannel
 
-class Game(input: JSONObject) : IGame{
-    private var info : JSONObject = input
+class Game(input: JSONObject) : IGame {
+    private var info: JSONObject = input
     override val adminChannel: IChannel
         get() = BaseBot.client.getChannelByID(info.getLong("admin_chat"))
     override val day: Boolean

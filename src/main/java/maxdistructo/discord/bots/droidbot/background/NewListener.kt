@@ -1,5 +1,7 @@
 package maxdistructo.discord.bots.droidbot.background
 
+import maxdistructo.discord.bots.droidbot.commands.Admin
+import maxdistructo.discord.bots.droidbot.commands.Check
 import maxdistructo.droidbot2.BaseBot
 import maxdistructo.droidbot2.BaseBot.client
 import maxdistructo.droidbot2.commands.*
@@ -22,12 +24,11 @@ import sx.blah.discord.handle.obj.StatusType
 import sx.blah.discord.util.DiscordException
 import sx.blah.discord.util.MissingPermissionsException
 import sx.blah.discord.util.RateLimitException
-import java.awt.Color
 import java.io.File
 import java.net.URL
 import java.time.Instant
 
-class Listener {
+class NewListener {
 
     @EventSubscriber
     @Throws(RateLimitException::class, DiscordException::class, MissingPermissionsException::class)

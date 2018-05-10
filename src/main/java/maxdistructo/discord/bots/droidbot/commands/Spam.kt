@@ -1,10 +1,10 @@
-package maxdistructo.droidbot2.commands
+package maxdistructo.discord.bots.droidbot.commands
 
-import maxdistructo.droidbot2.BaseBot
 import maxdistructo.droidbot2.core.Config
 import maxdistructo.droidbot2.core.Perms
 import maxdistructo.droidbot2.core.message.Message
-import sx.blah.discord.handle.obj.*
+import sx.blah.discord.handle.obj.IMessage
+import sx.blah.discord.handle.obj.IUser
 
 object Spam {
     fun onSpamCommand(args: Array<Any>, message: IMessage, mentioned: IUser): String {

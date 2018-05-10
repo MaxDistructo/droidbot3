@@ -1,6 +1,5 @@
-package maxdistructo.droidbot2.commands
+package maxdistructo.discord.bots.droidbot.commands
 
-import maxdistructo.droidbot2.core.Config
 import maxdistructo.droidbot2.core.Utils
 import maxdistructo.droidbot2.core.message.Message
 import sx.blah.discord.handle.obj.IMessage
