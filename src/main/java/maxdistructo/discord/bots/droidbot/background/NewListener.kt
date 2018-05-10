@@ -6,10 +6,10 @@ import maxdistructo.droidbot2.BaseBot
 import maxdistructo.droidbot2.BaseBot.client
 import maxdistructo.droidbot2.commands.*
 import maxdistructo.droidbot2.commands.casino.*
-import maxdistructo.droidbot2.core.Utils.s
-import maxdistructo.droidbot2.core.message.Message
+import maxdistructo.discord.core.Utils.s
+import maxdistructo.discord.core.message.Message
 import maxdistructo.droidbot2.background.*
-import maxdistructo.droidbot2.core.*
+import maxdistructo.discord.core.*
 import org.apache.commons.io.FileUtils
 import sx.blah.discord.api.events.EventSubscriber
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent

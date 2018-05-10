@@ -3,9 +3,9 @@ package maxdistructo.discord.bots.droidbot.commands.mafia
 
 import maxdistructo.discord.bots.droidbot.commands.mafia.obj.Game
 import maxdistructo.discord.bots.droidbot.commands.mafia.obj.Player
-import maxdistructo.discord.bots.droidbot.core.Client.prefix
-import maxdistructo.discord.bots.droidbot.core.Utils
-import maxdistructo.discord.bots.droidbot.core.message.Message
+import maxdistructo.discord.core.Client.prefix
+import maxdistructo.discord.core.Utils
+import maxdistructo.discord.core.message.Message
 import sx.blah.discord.api.events.EventSubscriber
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 

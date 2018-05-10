@@ -1,15 +1,15 @@
-package maxdistructo.discord.bots.droidbot.commands.commands
+package maxdistructo.discord.bots.droidbot.commands
 
 
 import maxdistructo.discord.bots.droidbot.BaseBot.client
 import maxdistructo.discord.bots.droidbot.background.Conf
-import maxdistructo.droidbot2.commands.casino.CasinoConfig
-import maxdistructo.droidbot2.core.Config
-import maxdistructo.droidbot2.core.Perms
-import maxdistructo.droidbot2.core.Roles
-import maxdistructo.droidbot2.core.Utils
-import maxdistructo.droidbot2.core.Utils.s
-import maxdistructo.droidbot2.core.message.Message
+import maxdistructo.discord.bots.droidbot.commands.casino.CasinoConfig
+import maxdistructo.discord.core.Config
+import maxdistructo.discord.core.Perms
+import maxdistructo.discord.core.Roles
+import maxdistructo.discord.core.Utils
+import maxdistructo.discord.core.Utils.s
+import maxdistructo.discord.core.message.Message
 import org.json.JSONArray
 import sx.blah.discord.handle.obj.*
 import sx.blah.discord.util.Image

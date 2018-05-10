@@ -1,7 +1,7 @@
 package maxdistructo.discord.bots.droidbot.commands
 
 import com.mashape.unirest.http.Unirest
-import maxdistructo.droidbot2.core.message.Message
+import maxdistructo.discord.core.message.Message
 import org.json.JSONObject
 import sx.blah.discord.handle.obj.IMessage
 

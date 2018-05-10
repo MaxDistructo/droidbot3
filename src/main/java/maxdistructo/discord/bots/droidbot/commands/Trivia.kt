@@ -1,6 +1,6 @@
 package maxdistructo.discord.bots.droidbot.commands
 
-import maxdistructo.droidbot2.core.message.Message
+import maxdistructo.discord.core.message.Message
 import org.apache.commons.io.FileUtils
 import org.json.JSONArray
 import org.json.JSONObject

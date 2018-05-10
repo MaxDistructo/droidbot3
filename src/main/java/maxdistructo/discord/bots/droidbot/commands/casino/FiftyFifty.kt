@@ -1,7 +1,7 @@
 package maxdistructo.discord.bots.droidbot.commands.casino
 
-import maxdistructo.droidbot2.core.Perms
-import maxdistructo.droidbot2.core.Utils
+import maxdistructo.discord.core.Perms
+import maxdistructo.discord.core.Utils
 import sx.blah.discord.handle.obj.IMessage
 
 object FiftyFifty {

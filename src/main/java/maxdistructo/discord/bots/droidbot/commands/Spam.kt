@@ -1,8 +1,8 @@
 package maxdistructo.discord.bots.droidbot.commands
 
-import maxdistructo.droidbot2.core.Config
-import maxdistructo.droidbot2.core.Perms
-import maxdistructo.droidbot2.core.message.Message
+import maxdistructo.discord.core.Config
+import maxdistructo.discord.core.Perms
+import maxdistructo.discord.core.message.Message
 import sx.blah.discord.handle.obj.IMessage
 import sx.blah.discord.handle.obj.IUser
 

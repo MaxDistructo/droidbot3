@@ -1,6 +1,6 @@
 package maxdistructo.discord.bots.droidbot.background.filter
 
-import maxdistructo.droidbot2.core.Config
+import maxdistructo.discord.core.Config
 import org.json.JSONArray
 import org.json.JSONObject
 import sx.blah.discord.handle.obj.IMessage

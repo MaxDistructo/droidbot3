@@ -2,13 +2,11 @@ package maxdistructo.discord.bots.droidbot.background
 
 import maxdistructo.discord.bots.droidbot.BaseBot
 import maxdistructo.discord.bots.droidbot.BaseBot.client
-import maxdistructo.droidbot2.commands.*
-import maxdistructo.droidbot2.commands.casino.*
-import maxdistructo.droidbot2.core.Utils.s
-import maxdistructo.droidbot2.core.message.Message
-import maxdistructo.discord.bots.droidbot.commands.Admin
-import maxdistructo.discord.bots.droidbot.commands.Check
-import maxdistructo.droidbot2.core.*
+import maxdistructo.discord.bots.droidbot.commands.*
+import maxdistructo.discord.bots.droidbot.commands.casino.*
+import maxdistructo.discord.core.Utils.s
+import maxdistructo.discord.core.message.Message
+import maxdistructo.discord.core.*
 import org.apache.commons.io.FileUtils
 import sx.blah.discord.api.events.EventSubscriber
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
@@ -136,7 +134,7 @@ class Listener {
                 } else if (messageContent[0] == prefix + "punch") {
                     Message.sendMessage(message.channel, PlayerFun.onPunchCommand(message, mentioned!!))
                     message.delete()
-                } else if (messageContent[0] == prefix + "@admin" && messageContent[1] == "addMod" && Perms.checkAdmin(message)) {
+                } else if (messageContent[0] == "$prefix@admin" && messageContent[1] == "addMod" && Perms.checkAdmin(message)) {
                     Message.sendMessage(message.channel, Admin.addMod(message, mentioned!!))
                 } else if (messageContent[0] == "$prefix@admin" && messageContent[1] == "addAdmin" && Perms.checkAdmin(message)) {
                     Message.sendMessage(message.channel, Admin.addAdmin(message, mentioned!!))
@@ -152,9 +150,9 @@ class Listener {
                     Message.sendMessage(message.channel, Admin.setNickname(messageContent))
                 } else if (messageContent[0] == "$prefix@admin" && messageContent[1] == "image" && Perms.checkOwner(message)) {
                     Message.sendMessage(message.channel, Admin.setProfilePic(messageContent))
-                } else if (messageContent[0] == prefix + "@admin" && messageContent[1] == "leaveGuild" && Perms.checkOwner(message)) {
+                } else if (messageContent[0] == "$prefix@admin" && messageContent[1] == "leaveGuild" && Perms.checkOwner(message)) {
                     Message.sendMessage(message.channel, Admin.leaveGuild(messageContent))
-                } else if (messageContent[0] == prefix + "@admin" && messageContent[1] == "perms" && Perms.checkAdmin(message)) {
+                } else if (messageContent[0] == "$prefix@admin" && messageContent[1] == "perms" && Perms.checkAdmin(message)) {
                     Message.sendMessage(message.channel, Admin.changeRolePerm(message, messageContent))
                 } else if (messageContent[0] == "$prefix@admin" && messageContent[1] == "restart") {
                     Restart.run(message)

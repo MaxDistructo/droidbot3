@@ -1,9 +1,9 @@
 package maxdistructo.discord.bots.droidbot.commands.mafia
 
-import maxdistructo.discord.bots.droidbot.core.Roles
-import maxdistructo.discord.bots.droidbot.core.Utils
-import maxdistructo.discord.bots.droidbot.core.Utils.s
-import maxdistructo.discord.bots.droidbot.core.message.Message
+import maxdistructo.discord.core.Roles
+import maxdistructo.discord.core.Utils
+import maxdistructo.discord.core.Utils.s
+import maxdistructo.discord.core.message.Message
 import org.apache.commons.lang3.ArrayUtils
 import org.json.JSONArray
 import org.json.JSONObject

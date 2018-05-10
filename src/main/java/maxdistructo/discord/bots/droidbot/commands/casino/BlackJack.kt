@@ -1,8 +1,8 @@
 package maxdistructo.discord.bots.droidbot.commands.casino
 
 
-import maxdistructo.droidbot2.core.Utils
-import maxdistructo.droidbot2.core.message.Message
+import maxdistructo.discord.core.Utils
+import maxdistructo.discord.core.message.Message
 import org.json.JSONObject
 import sx.blah.discord.handle.obj.IMessage
 import java.io.File

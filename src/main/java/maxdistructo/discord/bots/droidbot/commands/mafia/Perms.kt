@@ -1,8 +1,8 @@
 package maxdistructo.discord.bots.droidbot.commands.mafia
 
-import maxdistructo.discord.bots.droidbot.core.Client
-import maxdistructo.discord.bots.droidbot.core.Utils
-import maxdistructo.discord.bots.droidbot.core.message.Message
+import maxdistructo.discord.core.Client
+import maxdistructo.discord.core.Utils
+import maxdistructo.discord.core.message.Message
 import org.json.JSONObject
 import org.json.JSONTokener
 import sx.blah.discord.handle.obj.IMessage
