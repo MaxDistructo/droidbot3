@@ -20,6 +20,7 @@ import java.nio.file.Paths
 import java.text.NumberFormat
 import java.time.Instant
 import java.util.*
+import kotlin.coroutines.experimental.*
 
 object Admin {
     fun addMod(message: IMessage, mentioned: IUser): String {
@@ -224,13 +225,13 @@ object Admin {
     }
 
     fun clearChannel(channel: IChannel) {
-        val history = channel.fullMessageHistory
-        for (message in history) {
-            if (!message.isPinned) {
-                message.delete()
-            }
-            Thread.sleep(1250L)
-        }
+            val history = channel.fullMessageHistory
+            for (message in history) {
+             if (!message.isPinned) {
+                    message.delete()
+             }
+             Thread.sleep(1250)
+           }
     }
 
     fun backupChat(channel: IChannel) {
