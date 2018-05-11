@@ -8,6 +8,7 @@ import maxdistructo.discord.core.Utils
 import maxdistructo.discord.core.message.Message
 import sx.blah.discord.api.events.EventSubscriber
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
+import maxdistructo.discord.bots.droidbot.commands.mafia.*
 
 class MafiaListener {
 
@@ -41,6 +42,10 @@ class MafiaListener {
                         }
                         "continue" -> {
                             Mafia.onGameToggle(message)
+                            message.delete()
+                        }
+                        "reset" ->{
+                            MafiaReset.onCommand(game, message.guild)
                             message.delete()
                         }
                         "getInfo" -> {
