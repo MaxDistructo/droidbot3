@@ -237,7 +237,7 @@ object Admin {
         val history = channel.fullMessageHistory
         val sb = StringBuilder()
         for (message in history) {
-            sb.append(message.author.getDisplayName(message.guild) + " " + message.timestamp.toString() + "\n" + message.content)
+            sb.append(message.author.getDisplayName(message.guild) + "-" + message.timestamp.toString() + ":" + message.content)
         }
         val file = File(s + "/channelbackup/" + channel.name + "/" + Instant.now().toString() + ".txt")
         file.parentFile.mkdirs()
