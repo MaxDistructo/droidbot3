@@ -16,6 +16,7 @@ object BaseBot {
     fun main(args: Array<String>) {
         bot = Bot(Config.readToken())
         client = bot.client
+        Client.client = bot.client
         LOGGER = bot.logger
         LOGGER.info("Client Created")
         client.dispatcher.registerListener(Listener())
