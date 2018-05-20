@@ -1,6 +1,7 @@
 package maxdistructo.discord.bots.droidbot.commands.casino
 
 
+import maxdistructo.discord.bots.droidbot.BaseBot
 import maxdistructo.discord.core.Utils
 import maxdistructo.discord.core.message.Message
 import org.json.JSONObject

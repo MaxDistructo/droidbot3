@@ -1,5 +1,7 @@
 package maxdistructo.discord.bots.droidbot.commands
 
+import maxdistructo.discord.bots.droidbot.BaseBot
+import maxdistructo.discord.bots.droidbot.background.Listener
 import maxdistructo.discord.core.message.Message
 import sx.blah.discord.handle.obj.IMessage
 

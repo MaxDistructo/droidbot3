@@ -2,8 +2,9 @@ package maxdistructo.discord.bots.droidbot
 
 import maxdistructo.discord.bots.droidbot.background.Listener
 import maxdistructo.discord.bots.droidbot.commands.mafia.MafiaListener
-import maxdistructo.droidbot2.core.Config
-import maxdistructo.droidbot2.core.impl.Bot
+import maxdistructo.discord.core.Client
+import maxdistructo.discord.core.Config
+import maxdistructo.discord.core.impl.Bot
 import org.slf4j.Logger
 import sx.blah.discord.api.IDiscordClient
 

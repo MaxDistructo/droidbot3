@@ -134,4 +134,11 @@ object MafiaConfig {
         val json = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_actions.txt")
         return json.getJSONObject("invest_results")
     }
+    fun checkRevealed(message : IMessage) : Boolean{
+        if (!Perms.checkMod(message)) {
+            val root1 = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_playerdat.txt")
+            return root1.getBoolean("revealed")
+        }
+        return false
+    }
 }

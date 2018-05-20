@@ -128,6 +128,11 @@ object UserDo {
             }
             "mayor" -> {
                 Message.sendMessage(message.channel, message.author.getDisplayName(message.guild) + " has revealed themselves as the Mayor!")
+                //Set the variable for mayor reveal to true
+                val f = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_playerdat.txt").getJSONObject("" + message.author.longID)
+                f.remove("revealed")
+                f.put("revealed", true)
+                MafiaConfig.writeGame(message, f)
                 Message.sendMessage(game.adminChannel, message.author.getDisplayName(message.guild) + " has revealed as the mayor. Their votes now count as 3.")
                 message.delete()
             }

@@ -1,5 +1,6 @@
 package maxdistructo.discord.bots.droidbot.commands
 
+import maxdistructo.discord.bots.droidbot.BaseBot
 import maxdistructo.discord.core.Perms
 import maxdistructo.discord.core.message.Message
 import org.apache.commons.io.FileUtils

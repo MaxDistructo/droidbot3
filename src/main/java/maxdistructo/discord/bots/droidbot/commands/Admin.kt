@@ -16,6 +16,7 @@ import sx.blah.discord.util.Image
 import java.io.File
 import java.io.FileWriter
 import java.io.IOException
+import java.nio.file.Files
 import java.nio.file.Paths
 import java.text.NumberFormat
 import java.time.Instant
@@ -230,7 +231,7 @@ object Admin {
              if (!message.isPinned) {
                     message.delete()
              }
-             Thread.sleep(1250)
+             Thread.sleep(2000L)
            }
     }
 
@@ -240,8 +241,10 @@ object Admin {
         for (message in history) {
             sb.append(message.author.getDisplayName(message.guild) + "-" + message.timestamp.toString() + ":" + message.content)
         }
-        val file = File(s + "/channelbackup/" + channel.name + "/" + Instant.now().toString() + ".txt")
-        file.parentFile.mkdirs()
+        println(Utils.s + "/channelbackup/" + channel.name + "/" + Instant.now().toString() + ".txt")
+        val file = File(Utils.s + "/channelbackup/" + channel.name + "/" + Instant.now().toString() + ".txt")
+        val parent = file.parentFile
+        parent.mkdirs()
         file.createNewFile()
         val fw = FileWriter(file)
         fw.write(sb.toString())

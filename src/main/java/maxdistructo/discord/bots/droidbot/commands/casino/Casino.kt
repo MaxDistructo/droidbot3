@@ -1,5 +1,7 @@
 package maxdistructo.discord.bots.droidbot.commands.casino
 
+import maxdistructo.discord.bots.droidbot.background.Conf
+import maxdistructo.discord.bots.droidbot.background.Listener
 import maxdistructo.discord.core.message.Message
 import sx.blah.discord.api.internal.json.objects.EmbedObject
 import sx.blah.discord.handle.obj.IMessage

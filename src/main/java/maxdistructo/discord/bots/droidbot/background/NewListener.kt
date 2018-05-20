@@ -2,13 +2,13 @@ package maxdistructo.discord.bots.droidbot.background
 
 import maxdistructo.discord.bots.droidbot.commands.Admin
 import maxdistructo.discord.bots.droidbot.commands.Check
-import maxdistructo.droidbot2.BaseBot
-import maxdistructo.droidbot2.BaseBot.client
-import maxdistructo.droidbot2.commands.*
-import maxdistructo.droidbot2.commands.casino.*
+import maxdistructo.discord.bots.droidbot.BaseBot
+import maxdistructo.discord.bots.droidbot.BaseBot.client
+import maxdistructo.discord.bots.droidbot.commands.*
+import maxdistructo.discord.bots.droidbot.commands.casino.*
 import maxdistructo.discord.core.Utils.s
 import maxdistructo.discord.core.message.Message
-import maxdistructo.droidbot2.background.*
+import maxdistructo.discord.bots.droidbot.background.*
 import maxdistructo.discord.core.*
 import org.apache.commons.io.FileUtils
 import sx.blah.discord.api.events.EventSubscriber
@@ -33,7 +33,6 @@ class NewListener {
     @EventSubscriber
     @Throws(RateLimitException::class, DiscordException::class, MissingPermissionsException::class)
     fun onMessageReceivedEvent(event: MessageReceivedEvent) {
-    execute{
         try {
             val message = event.message
             val guild = message.guild
@@ -108,10 +107,6 @@ class NewListener {
                     }
                   }
                 }
-                if(Perms.checkMod(message) && Perms.checkGames(message)){
-                  when(messageContent[0].toString().replace(prefix, "")){
-                  }
-                }
                 if(Perms.checkMod(message)){
                   when(messageContent[0].toString().replace(prefix, "")){
                     "debug" ->{
@@ -122,8 +117,10 @@ class NewListener {
                 }
                 if(Perms.checkOwner(message)){
                   when(messageContent[0].toString().replace(prefix, "")){
-                    message.reply("", Message.simpleEmbed(message.author, "Shutdown", Shutdown.onShutdownCommand(message), message))
-                    message.delete()
+                   "shutdown" -> {
+                       message.reply("", Message.simpleEmbed(message.author, "Shutdown", Shutdown.onShutdownCommand(message), message))
+                       message.delete()
+                   }
                   }
                 }
                 
@@ -258,7 +255,6 @@ class NewListener {
             Message.throwError(e)
         }
       }
-    }
 
 
     @EventSubscriber

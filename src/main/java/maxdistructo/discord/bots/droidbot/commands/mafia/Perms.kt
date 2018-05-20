@@ -118,6 +118,9 @@ object Perms {
             }
         }
         return false
+    }
 
+    fun checkSpectator(message: IMessage) : Boolean{
+        return message.author.hasRole(message.guild.getRolesByName("Mafia(Spectator)")[0])
     }
 }
