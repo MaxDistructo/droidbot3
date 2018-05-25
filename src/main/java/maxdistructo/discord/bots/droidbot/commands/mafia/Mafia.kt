@@ -1,5 +1,6 @@
 package maxdistructo.discord.bots.droidbot.commands.mafia
 
+import maxdistructo.discord.bots.droidbot.BaseBot
 import maxdistructo.discord.bots.droidbot.commands.mafia.obj.Game
 import maxdistructo.discord.bots.droidbot.commands.mafia.obj.Player
 import maxdistructo.discord.core.Roles
@@ -38,7 +39,7 @@ object Mafia {
         val adminChannel = game.adminChannel
         val dayChannel = game.dayChannel
         assignRoles(message)
-        Message.sendMessage(dayChannel, "@everyone The Mafia game has started! \n Day 1 has begun!")
+        Message.sendMessage(dayChannel, "@Mafia Folks The Mafia game has started! \n Day 1 has begun!")
         Message.sendMessage(adminChannel, message.author.getDisplayName(message.guild) + message.author.discriminator + " has started the Mafia game.")
         val players = MafiaConfig.getPlayers(message, "Mafia Folks")
         resetChannelOverrides(message, players)
@@ -126,6 +127,8 @@ object Mafia {
             root.put("day", false)
             MafiaConfig.writeGameDat(message, root)
             Message.sendMessage(game.adminChannel, "Successfully converted over to night mode.")
+            Message.sendMessage(game.dayChannel, message.guild.getRolesByName("Alive(Mafia)")[0].mention() +" Night " + game.dayNum + " is now active.")
+            game.dayChannel.changeTopic("Night " + game.dayNum + " - " +  message.guild.getUsersByRole(message.guild.getRolesByName("Alive(Mafia)")[0]) + " alive, "  + message.guild.getUsersByRole(message.guild.getRolesByName("Dead(Mafia)")[0]) + " dead")
         } else {
             Message.sendMessage(game.adminChannel, "Starting change over to day mode. Please wait.")
             resetChannelOverrides(message, players)
@@ -167,8 +170,13 @@ object Mafia {
             val root = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt")
             root.remove("day")
             root.put("day", true)
+            root.remove("daynum")
+            root.put("daynum", game.dayNum + 1)
             MafiaConfig.writeGameDat(message, root)
             Message.sendMessage(game.adminChannel, "Successfully converted over to day mode.")
+            val daynumber = game.dayNum + 1
+            Message.sendMessage(game.dayChannel, message.guild.getRolesByName("Alive(Mafia)")[0].mention() + " Day $daynumber has started. " + message.guild.getUsersByRole(message.guild.getRolesByName("Alive(Mafia)")[0]).size/2 + " votes needed to vote someone up.")
+            game.dayChannel.changeTopic("Day " + daynumber + " - " +  message.guild.getUsersByRole(message.guild.getRolesByName("Alive(Mafia)")[0]) + " alive, "  + message.guild.getUsersByRole(message.guild.getRolesByName("Dead(Mafia)")[0]) + " dead")
         }
     }
 

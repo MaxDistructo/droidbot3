@@ -1,5 +1,6 @@
 package maxdistructo.discord.bots.droidbot.background
 
+import kotlinx.coroutines.experimental.launch
 import maxdistructo.discord.bots.droidbot.BaseBot
 import maxdistructo.discord.bots.droidbot.BaseBot.client
 import maxdistructo.discord.bots.droidbot.commands.*
@@ -31,195 +32,203 @@ class Listener {
     @Throws(RateLimitException::class, DiscordException::class, MissingPermissionsException::class)
     fun onMessageReceivedEvent(event: MessageReceivedEvent) {
         try {
-            val message = event.message
-            val guild = message.guild
-            val prefix = Config.readPrefix() // To allow for easy compatability with old code. All new code will reference
-            val channelMention = Utils.getMentionedChannel(message)
-            val mentioned = Utils.getMentionedUser(message)
+            if (event.message.content.contains(Config.readPrefix())) {
+                launch {
+                    val message = event.message
+                    val guild = message.guild
+                    val prefix = Config.readPrefix() // To allow for easy compatability with old code. All new code will reference
+                    val channelMention = Utils.getMentionedChannel(message)
+                    val mentioned = Utils.getMentionedUser(message)
 
-            val content = message.content
-            val messageContent = content.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-            val messageContentAny = content.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray() as Array<Any>
+                    val content = message.content
+                    val messageContent = content.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+                    val messageContentAny = content.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray() as Array<Any>
 
-            if (!Conf.checkForBotAbuse(message) && messageContent.isNotEmpty()) {
-                if (messageContent[0] == prefix + "bj") {
-                    message.reply(BlackJack.blackjack(messageContentAny, message))
-                } else if (messageContent[0].toLowerCase() == "hit" && Perms.checkGames(message) || messageContent[0].toLowerCase() == "stay" && Perms.checkGames(message)) {
-                    message.reply(BlackJack.continueGame(message, messageContent, CasinoConfig.readBJFields(message)))
-                } else if (messageContent[0] == prefix + "check") { //Works
-                    Message.sendMessage(message.channel, Message.simpleEmbed(message.author, "Check", Check.onCheckCommand(messageContent, message), message))
-                    message.delete()
-                } else if (messageContent[0] == prefix + "casino" && messageContent[1] == "info" && mentioned != null && Perms.checkGames(message)) { //Works except for admin commands
-                    message.reply("", Casino.onCasinoInfo(message, mentioned))
-                    message.delete()
-                } else if (messageContent[0] == prefix + "casino" && messageContent[1] == "info" && Perms.checkGames(message)) { //Works except for admin commands
-                    message.reply("", Casino.onCasinoInfo(message))
-                    message.delete()
-                } else if (messageContent[0] == prefix + "casino" && Perms.checkGames(message)) { //Works except for admin commands
-                    message.reply("", Message.simpleEmbed(message.author, "Casino", Casino.onCasinoCommand(messageContent, message, message.author), message))
-                    message.delete()
-                } else if (messageContent[0] == prefix + "50" || messageContent[0] == prefix + "fifty" && Perms.checkGames(message)) { //Works
-                    message.reply("", Message.simpleEmbed(message.author, "FiftyFifty", FiftyFifty.onFiftyCommand(messageContentAny, message), message))
-                    message.delete()
-                } else if (messageContent[0] == prefix + "fortune") { //Works
-                    message.reply("", Message.simpleEmbed(message.author, "Fortune", Fortune.onFortuneCommand(message), message))
-                    message.delete()
-                } else if (messageContent[0] == prefix + "horoscope") { //Works
-                    message.reply("", Message.simpleEmbed(message.author, "Horoscope", Horoscope.onHoroscopeCommand(messageContent), message))
-                    message.delete()
-                } else if (messageContent[0] == prefix + "info") { //Works Well
-                    Message.sendMessage(message.channel, Message.simpleEmbed(message.author, "Info", Info.onInfoCommand(messageContent, message, mentioned), message))
-                    message.delete()
-                } else if (messageContent[0] == prefix + "insult") { //Works
-                    Message.sendMessage(message.channel, Message.simpleEmbed(message.author, "Insult", Insult.onInsultCommand(messageContent, message, mentioned!!), message))
-                    message.delete()
-                } else if (messageContent[0] == prefix + "debug") { //Needs perms set.
-                    message.reply("", Message.simpleEmbed(message.author, "Debug", Debug.onDebugCommand(messageContent, message), message))
-                    message.delete()
-                } else if (messageContent[0] == prefix + "shutdown") { //Works
-                    message.reply("", Message.simpleEmbed(message.author, "Shutdown", Shutdown.onShutdownCommand(message), message))
-                    message.delete()
-                } else if (messageContent[0] == prefix + "help") {
-                    if (Perms.checkAdmin(message)) {
-                         Help1.onAdminHelpCommand(message)
-                    } else {
-                       Message.sendDM(message.author, Help1.onHelpCommand())
+                    if (!Conf.checkForBotAbuse(message) && messageContent.isNotEmpty()) {
+                        if (messageContent[0] == prefix + "bj") {
+                            message.reply(BlackJack.blackjack(messageContentAny, message))
+                        } else if (messageContent[0].toLowerCase() == "hit" && Perms.checkGames(message) || messageContent[0].toLowerCase() == "stay" && Perms.checkGames(message)) {
+                            message.reply(BlackJack.continueGame(message, messageContent, CasinoConfig.readBJFields(message)))
+                        } else if (messageContent[0] == prefix + "check") { //Works
+                            Message.sendMessage(message.channel, Message.simpleEmbed(message.author, "Check", Check.onCheckCommand(messageContent, message), message))
+                            message.delete()
+                        } else if (messageContent[0] == prefix + "casino" && messageContent[1] == "info" && mentioned != null && Perms.checkGames(message)) { //Works except for admin commands
+                            message.reply("", Casino.onCasinoInfo(message, mentioned))
+                            message.delete()
+                        } else if (messageContent[0] == prefix + "casino" && messageContent[1] == "info" && Perms.checkGames(message)) { //Works except for admin commands
+                            message.reply("", Casino.onCasinoInfo(message))
+                            message.delete()
+                        } else if (messageContent[0] == prefix + "casino" && Perms.checkGames(message)) { //Works except for admin commands
+                            message.reply("", Message.simpleEmbed(message.author, "Casino", Casino.onCasinoCommand(messageContent, message, message.author), message))
+                            message.delete()
+                        } else if (messageContent[0] == prefix + "50" || messageContent[0] == prefix + "fifty" && Perms.checkGames(message)) { //Works
+                            message.reply("", Message.simpleEmbed(message.author, "FiftyFifty", FiftyFifty.onFiftyCommand(messageContentAny, message), message))
+                            message.delete()
+                        } else if (messageContent[0] == prefix + "fortune") { //Works
+                            message.reply("", Message.simpleEmbed(message.author, "Fortune", Fortune.onFortuneCommand(message), message))
+                            message.delete()
+                        } else if (messageContent[0] == prefix + "horoscope") { //Works
+                            message.reply("", Message.simpleEmbed(message.author, "Horoscope", Horoscope.onHoroscopeCommand(messageContent), message))
+                            message.delete()
+                        } else if (messageContent[0] == prefix + "info") { //Works Well
+                            Message.sendMessage(message.channel, Message.simpleEmbed(message.author, "Info", Info.onInfoCommand(messageContent, message, mentioned), message))
+                            message.delete()
+                        } else if (messageContent[0] == prefix + "insult") { //Works
+                            Message.sendMessage(message.channel, Message.simpleEmbed(message.author, "Insult", Insult.onInsultCommand(messageContent, message, mentioned!!), message))
+                            message.delete()
+                        } else if (messageContent[0] == prefix + "debug") { //Needs perms set.
+                            message.reply("", Message.simpleEmbed(message.author, "Debug", Debug.onDebugCommand(messageContent, message), message))
+                            message.delete()
+                        } else if (messageContent[0] == prefix + "shutdown") { //Works
+                            message.reply("", Message.simpleEmbed(message.author, "Shutdown", Shutdown.onShutdownCommand(message), message))
+                            message.delete()
+                        } else if (messageContent[0] == prefix + "help") {
+                            if (Perms.checkAdmin(message)) {
+                                Help1.onAdminHelpCommand(message)
+                            } else {
+                                Message.sendDM(message.author, Help1.onHelpCommand())
+                            }
+                            message.delete()
+                        } else if (messageContent[0] == prefix + "allin" && Perms.checkGames(message)) {
+                            message.reply("", Message.simpleEmbed(message.author, "Allin", Allin.onAllinCommand(messageContentAny, message), message));
+                            message.delete()
+                        } else if (messageContent[0] == prefix + "say" && channelMention != null) {
+                            Message.sendMessage(channelMention, Say.onSayCommand(messageContentAny, message, channelMention))
+                            message.delete()
+                        } else if (messageContent[0] == prefix + "say") {
+                            Message.sendMessage(message.channel, Say.onSayCommand(messageContentAny, message, channelMention))
+                            message.delete()
+                        } else if (messageContent[0] == prefix + "spam") {
+                            Message.sendMessage(message.channel, Spam.onSpamCommand(messageContentAny, message, mentioned!!))
+                            message.delete()
+                        } else if (messageContent[0] == prefix + "slap") {
+                            Message.sendMessage(message.channel, PlayerFun.onSlapCommand(message, mentioned!!))
+                            message.delete()
+                        } else if (messageContent[0] == prefix + "tnt") {
+                            Message.sendMessage(message.channel, PlayerFun.onTntCommand(message, mentioned!!))
+                            message.delete()
+                        } else if (messageContent[0] == prefix + "kiss") {
+                            Message.sendMessage(message.channel, PlayerFun.onKissCommand(message, mentioned!!))
+                            message.delete()
+                        } else if (messageContent[0] == prefix + "hug") {
+                            Message.sendMessage(message.channel, PlayerFun.onHugCommand(message, mentioned!!))
+                            message.delete()
+                        } else if (messageContent[0] == prefix + "poke") {
+                            Message.sendMessage(message.channel, PlayerFun.onPokeCommand(message, mentioned!!))
+                            message.delete()
+                        } else if (messageContent[0] == prefix + "respect" || messageContent[0] == "/f") {
+                            Message.sendMessage(message.channel, PlayerFun.onPayRespects(message, mentioned))
+                            message.delete()
+                        } else if (messageContent[0] == prefix + "banhammer") {
+                            Message.sendMessage(message.channel, PlayerFun.onBanHammer(message, mentioned!!))
+                            message.delete()
+                        } else if (messageContent[0] == prefix + "shoot") {
+                            Message.sendMessage(message.channel, PlayerFun.onShootCommand(message, mentioned!!))
+                            message.delete()
+                        } else if (messageContent[0] == prefix + "stab") {
+                            Message.sendMessage(message.channel, PlayerFun.onStabCommand(message, mentioned!!))
+                            message.delete()
+                        } else if (messageContent[0] == prefix + "ping") {
+                            Ping.onPingCommand(message)
+                            message.delete()
+                        } else if (messageContent[0] == prefix + "xp") {
+                            Message.sendMessage(message.channel, PlayerFun.onXpCommand(mentioned!!))
+                            message.delete()
+                        } else if (messageContent[0] == prefix + "punch") {
+                            Message.sendMessage(message.channel, PlayerFun.onPunchCommand(message, mentioned!!))
+                            message.delete()
+                        } else if (messageContent[0] == "$prefix@admin" && messageContent[1] == "addMod" && Perms.checkAdmin(message)) {
+                            Message.sendMessage(message.channel, Admin.addMod(message, mentioned!!))
+                        } else if (messageContent[0] == "$prefix@admin" && messageContent[1] == "addAdmin" && Perms.checkAdmin(message)) {
+                            Message.sendMessage(message.channel, Admin.addAdmin(message, mentioned!!))
+                        } else if (messageContent[0] == "$prefix@casino" && messageContent[1] == "balance" && messageContent[2] == "add" && Utils.convertToInt(messageContent[4]) != 0 && mentioned != null && Perms.checkAdmin(message)) {
+                            Message.sendMessage(message.channel, Admin.addCasinoBalance(messageContent, message, mentioned))
+                        } else if (messageContent[0] == "$prefix@casino" && messageContent[1] == "balance" && messageContent[2] == "remove" && Utils.convertToInt(messageContent[4]) != 0 && mentioned != null && Perms.checkAdmin(message)) {
+                            Message.sendMessage(message.channel, Admin.subtractCasinoBalance(messageContent, message, mentioned))
+                        } else if (messageContent[0] == "$prefix@casino" && messageContent[1] == "balance" && messageContent[2] == "set" && Utils.convertToInt(messageContent[4]) != 0 && mentioned != null && Perms.checkAdmin(message)) {
+                            Message.sendMessage(message.channel, Admin.setCasinoBalance(messageContent, message, mentioned))
+                        } else if (messageContent[0] == "$prefix@admin" && messageContent[1] == "botAbuse" && Perms.checkAdmin(message)) {
+                            Message.sendMessage(message.channel, Admin.setBotAbuser(messageContent, message, mentioned!!))
+                        } else if (messageContent[0] == "$prefix@admin" && messageContent[1] == "name" && Perms.checkOwner(message)) {
+                            Message.sendMessage(message.channel, Admin.setNickname(messageContent))
+                        } else if (messageContent[0] == "$prefix@admin" && messageContent[1] == "image" && Perms.checkOwner(message)) {
+                            Message.sendMessage(message.channel, Admin.setProfilePic(messageContent))
+                        } else if (messageContent[0] == "$prefix@admin" && messageContent[1] == "leaveGuild" && Perms.checkOwner(message)) {
+                            Message.sendMessage(message.channel, Admin.leaveGuild(messageContent))
+                        } else if (messageContent[0] == "$prefix@admin" && messageContent[1] == "perms" && Perms.checkAdmin(message)) {
+                            Message.sendMessage(message.channel, Admin.changeRolePerm(message, messageContent))
+                        } else if (messageContent[0] == "$prefix@admin" && messageContent[1] == "restart") {
+                            Restart.run(message)
+                        } else if (messageContent[0] == prefix + "emote" && messageContent[1] == "add") {
+                            Emote.addEmoteCommand(message, messageContent)
+                            message.addReaction(ReactionEmoji.of("/:heavy_check_mark:"))
+                        } else if (messageContent[0] == prefix + "emote" && messageContent[1] == "request") {
+                            Emote.requestEmoteCommand(message, messageContent)
+                            message.delete()
+                        } else if (messageContent[0] == prefix + "emote") {
+                            Emote.onEmoteCommand(message, messageContent)
+                            message.delete()
+                        } else if (messageContent[0] == prefix + "admin" && messageContent[1] == "fixPerms") {
+                            if (Perms.checkOwner(message)) {
+                                Message.sendDM(message.guild.owner, client.applicationName + "has left your server because the bot owner though it was missing perms or its permissions were screwed up. Please use this url to re-add " + client.applicationName + " to your server. Your server's data has not been affected. https://discordapp.com/oauth2/authorize?client_id=423268575718014976&scope=bot&permissions=470281296")
+                                message.guild.leave()
+                            }
+                        } else if (messageContent[0] == prefix + "@admin" && messageContent[1] == "setColor" && Perms.checkMod(message)) {
+                            Roles.changeColor(Roles.getRole(message, messageContent[2])!!, messageContent[3])
+                            message.delete()
+                        } else if (messageContent[0] == prefix + "@mute" && Perms.checkAdmin(message)) { //!@mute @User time
+                            Admin.muteUser(message, mentioned!!, Utils.convertToInt(messageContent[2]))
+                            message.delete()
+                        } else if (messageContent[0] == prefix + "@unmute" && Perms.checkAdmin(message) && channelMention != null) {
+                            Admin.unmuteUser(message, mentioned!!, channelMention)
+                            message.delete()
+                        } else if (messageContent[0] == prefix + "@unmute" && Perms.checkAdmin(message)) {
+                            Admin.unmuteUser(message, mentioned!!)
+                            message.delete()
+                        } else if (messageContent[0] == prefix + "@announce") {
+                            Admin.onAnnounceCommand(messageContentAny, message)
+                            message.delete()
+                        } else if (messageContent[0] == prefix + "fixServer" && Perms.checkOwner_Guild(message)) { //Due to requirement of server configs (Blame Swear Filter), this command is separated so that if errors are being thrown this command can still run.
+                            try {
+                                FileUtils.copyURLToFile(URL("https://maxdistructo.github.io/droidbot2/downloads/config/defaultconfig.txt"), File(s + "/droidbot/config/" + message.guild.longID + ".txt"))
+                            } catch (e: Exception) {
+                                Message.throwError(e, message)
+                            }
+
+                            Roles.makeNewRole(guild, "Voice Chatting", false, false)
+                            Roles.makeNewRole(guild, "Payday", false, false)
+                            Roles.makeNewRole(guild, "Bot Abuser", false, false)
+                            Message.sendMessage(guild.defaultChannel, "Thank you for letting me join your server. I am " + client.ourUser.name + " and my features can be found by using the command " + prefix + "help.")
+
+                        } else if (messageContent[0] == prefix + "getMentions" && Perms.checkOwner(message)) {
+                            val mentionedList = message.mentions
+                            val mentionedArray = mentionedList.toTypedArray()
+                            val target = mentionedArray[0] as IUser
+                            val invest = mentionedArray[1] as IUser
+                            Message.sendDM(message.author, "The user in slot 0 is " + target.getDisplayName(message.guild) + "\n The user in slot 1 is " + invest.getDisplayName(message.guild))
+                        } else if (messageContent[0] == prefix + "@clear" && Perms.checkAdmin(message)) {
+                            Message.sendMessage(message.channel, "Deleting all messages that are not pinned in this channel. Please wait.")
+                            Admin.clearChannel(message.channel)
+                            Message.sendMessage(message.channel, "Cleared Channel Messages at " + Instant.now())
+                        } else if (messageContent[0] == prefix + "@backup" && Perms.checkAdmin(message)) {
+                            Message.sendMessage(message.channel, "Backing up this channel.")
+                            Admin.backupChat(message.channel)
+                            message.delete()
+                        } else if (messageContent[0] ==  prefix + "webhook" && Perms.checkMod(message)){
+                            Say.onWebhookSay(messageContentAny, message, channelMention)
+                            message.delete()
+                        }
+
+
                     }
-                    message.delete()
-                } else if (messageContent[0] == prefix + "allin" && Perms.checkGames(message)) {
-                    message.reply("", Message.simpleEmbed(message.author, "Allin", Allin.onAllinCommand(messageContentAny, message), message));
-                    message.delete()
-                } else if (messageContent[0] == prefix + "say" && channelMention != null) {
-                    Message.sendMessage(channelMention, Say.onSayCommand(messageContentAny, message, channelMention))
-                    message.delete()
-                } else if (messageContent[0] == prefix + "say") {
-                    Message.sendMessage(message.channel, Say.onSayCommand(messageContentAny, message, channelMention))
-                    message.delete()
-                } else if (messageContent[0] == prefix + "spam") {
-                    Message.sendMessage(message.channel, Spam.onSpamCommand(messageContentAny, message, mentioned!!))
-                    message.delete()
-                } else if (messageContent[0] == prefix + "slap") {
-                    Message.sendMessage(message.channel, PlayerFun.onSlapCommand(message, mentioned!!))
-                    message.delete()
-                } else if (messageContent[0] == prefix + "tnt") {
-                    Message.sendMessage(message.channel, PlayerFun.onTntCommand(message, mentioned!!))
-                    message.delete()
-                } else if (messageContent[0] == prefix + "kiss") {
-                    Message.sendMessage(message.channel, PlayerFun.onKissCommand(message, mentioned!!))
-                    message.delete()
-                } else if (messageContent[0] == prefix + "hug") {
-                    Message.sendMessage(message.channel, PlayerFun.onHugCommand(message, mentioned!!))
-                    message.delete()
-                } else if (messageContent[0] == prefix + "poke") {
-                    Message.sendMessage(message.channel, PlayerFun.onPokeCommand(message, mentioned!!))
-                    message.delete()
-                } else if (messageContent[0] == prefix + "respect" || messageContent[0] == "/f") {
-                    Message.sendMessage(message.channel, PlayerFun.onPayRespects(message, mentioned))
-                    message.delete()
-                } else if (messageContent[0] == prefix + "banhammer") {
-                    Message.sendMessage(message.channel, PlayerFun.onBanHammer(message, mentioned!!))
-                    message.delete()
-                } else if (messageContent[0] == prefix + "shoot") {
-                    Message.sendMessage(message.channel, PlayerFun.onShootCommand(message, mentioned!!))
-                    message.delete()
-                } else if (messageContent[0] == prefix + "stab") {
-                    Message.sendMessage(message.channel, PlayerFun.onStabCommand(message, mentioned!!))
-                    message.delete()
-                } else if (messageContent[0] == prefix + "ping") {
-                    Ping.onPingCommand(message)
-                    message.delete()
-                } else if (messageContent[0] == prefix + "xp") {
-                    Message.sendMessage(message.channel, PlayerFun.onXpCommand(mentioned!!))
-                    message.delete()
-                } else if (messageContent[0] == prefix + "punch") {
-                    Message.sendMessage(message.channel, PlayerFun.onPunchCommand(message, mentioned!!))
-                    message.delete()
-                } else if (messageContent[0] == "$prefix@admin" && messageContent[1] == "addMod" && Perms.checkAdmin(message)) {
-                    Message.sendMessage(message.channel, Admin.addMod(message, mentioned!!))
-                } else if (messageContent[0] == "$prefix@admin" && messageContent[1] == "addAdmin" && Perms.checkAdmin(message)) {
-                    Message.sendMessage(message.channel, Admin.addAdmin(message, mentioned!!))
-                } else if (messageContent[0] == "$prefix@casino" && messageContent[1] == "balance" && messageContent[2] == "add" && Utils.convertToInt(messageContent[4]) != 0 && mentioned != null && Perms.checkAdmin(message)) {
-                    Message.sendMessage(message.channel, Admin.addCasinoBalance(messageContent, message, mentioned))
-                } else if (messageContent[0] == "$prefix@casino" && messageContent[1] == "balance" && messageContent[2] == "remove" && Utils.convertToInt(messageContent[4]) != 0 && mentioned != null && Perms.checkAdmin(message)) {
-                    Message.sendMessage(message.channel, Admin.subtractCasinoBalance(messageContent, message, mentioned))
-                } else if (messageContent[0] == "$prefix@casino" && messageContent[1] == "balance" && messageContent[2] == "set" && Utils.convertToInt(messageContent[4]) != 0 && mentioned != null && Perms.checkAdmin(message)) {
-                    Message.sendMessage(message.channel, Admin.setCasinoBalance(messageContent, message, mentioned))
-                } else if (messageContent[0] == "$prefix@admin" && messageContent[1] == "botAbuse" && Perms.checkAdmin(message)) {
-                    Message.sendMessage(message.channel, Admin.setBotAbuser(messageContent, message, mentioned!!))
-                } else if (messageContent[0] == "$prefix@admin" && messageContent[1] == "name" && Perms.checkOwner(message)) {
-                    Message.sendMessage(message.channel, Admin.setNickname(messageContent))
-                } else if (messageContent[0] == "$prefix@admin" && messageContent[1] == "image" && Perms.checkOwner(message)) {
-                    Message.sendMessage(message.channel, Admin.setProfilePic(messageContent))
-                } else if (messageContent[0] == "$prefix@admin" && messageContent[1] == "leaveGuild" && Perms.checkOwner(message)) {
-                    Message.sendMessage(message.channel, Admin.leaveGuild(messageContent))
-                } else if (messageContent[0] == "$prefix@admin" && messageContent[1] == "perms" && Perms.checkAdmin(message)) {
-                    Message.sendMessage(message.channel, Admin.changeRolePerm(message, messageContent))
-                } else if (messageContent[0] == "$prefix@admin" && messageContent[1] == "restart") {
-                    Restart.run(message)
-                } else if (messageContent[0] == prefix + "emote" && messageContent[1] == "add") {
-                    Emote.addEmoteCommand(message, messageContent)
-                    message.addReaction(ReactionEmoji.of("/:heavy_check_mark:"))
-                } else if (messageContent[0] == prefix + "emote" && messageContent[1] == "request") {
-                    Emote.requestEmoteCommand(message, messageContent)
-                    message.delete()
-                } else if (messageContent[0] == prefix + "emote") {
-                    Emote.onEmoteCommand(message, messageContent)
-                    message.delete()
-                } else if (messageContent[0] == prefix + "admin" && messageContent[1] == "fixPerms") {
-                    if (Perms.checkOwner(message)) {
-                        Message.sendDM(message.guild.owner, client.applicationName + "has left your server because the bot owner though it was missing perms or its permissions were screwed up. Please use this url to re-add " + client.applicationName + " to your server. Your server's data has not been affected. https://discordapp.com/oauth2/authorize?client_id=423268575718014976&scope=bot&permissions=470281296")
-                        message.guild.leave()
-                    }
-                } else if (messageContent[0] == prefix + "@admin" && messageContent[1] == "setColor" && Perms.checkMod(message)) {
-                    Roles.changeColor(Roles.getRole(message, messageContent[2])!!, messageContent[3])
-                    message.delete()
-                } else if (messageContent[0] == prefix + "@mute" && Perms.checkAdmin(message)) { //!@mute @User time
-                    Admin.muteUser(message, mentioned!!, Utils.convertToInt(messageContent[2]))
-                    message.delete()
-                } else if (messageContent[0] == prefix + "@unmute" && Perms.checkAdmin(message) && channelMention != null) {
-                    Admin.unmuteUser(message, mentioned!!, channelMention)
-                    message.delete()
-                } else if (messageContent[0] == prefix + "@unmute" && Perms.checkAdmin(message)) {
-                    Admin.unmuteUser(message, mentioned!!)
-                    message.delete()
-                } else if (messageContent[0] == prefix + "@announce") {
-                    Admin.onAnnounceCommand(messageContentAny, message)
-                    message.delete()
-                } else if (messageContent[0] == prefix + "fixServer" && Perms.checkOwner_Guild(message)) { //Due to requirement of server configs (Blame Swear Filter), this command is separated so that if errors are being thrown this command can still run.
-                    try {
-                        FileUtils.copyURLToFile(URL("https://maxdistructo.github.io/droidbot2/downloads/config/defaultconfig.txt"), File(s + "/droidbot/config/" + message.guild.longID + ".txt"))
-                    } catch (e: Exception) {
-                        Message.throwError(e, message)
-                    }
-
-                    Roles.makeNewRole(guild, "Voice Chatting", false, false)
-                    Roles.makeNewRole(guild, "Payday", false, false)
-                    Roles.makeNewRole(guild, "Bot Abuser", false, false)
-                    Message.sendMessage(guild.defaultChannel, "Thank you for letting me join your server. I am " + client.ourUser.name + " and my features can be found by using the command " + prefix + "help.")
-
-                } else if (messageContent[0] == prefix + "getMentions" && Perms.checkOwner(message)) {
-                    val mentionedList = message.mentions
-                    val mentionedArray = mentionedList.toTypedArray()
-                    val target = mentionedArray[0] as IUser
-                    val invest = mentionedArray[1] as IUser
-                    Message.sendDM(message.author, "The user in slot 0 is " + target.getDisplayName(message.guild) + "\n The user in slot 1 is " + invest.getDisplayName(message.guild))
-                } else if(messageContent[0] == prefix + "@clear" && Perms.checkAdmin(message)){
-                    Message.sendMessage(message.channel, "Deleting all messages that are not pinned in this channel. Please wait.")
-                    Admin.clearChannel(message.channel)
-                    Message.sendMessage(message.channel, "Cleared Channel Messages at " + Instant.now())
-                } else if(messageContent[0] == prefix + "@backup" && Perms.checkAdmin(message)){
-                    Message.sendMessage(message.channel, "Backing up this channel.")
-                    Admin.backupChat(message.channel)
-                    message.delete()
                 }
-
-
             }
         }
-        catch(e : Exception){
+        catch(e : Exception) {
             Message.throwError(e)
         }
     }
+
 
 
     @EventSubscriber

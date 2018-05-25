@@ -507,7 +507,7 @@ object RoleCards {
                 val guild = message.guild
                 builder.appendField("Class", "Neutral Killing (NK)", true)
                 builder.appendField("Goal", "See everyone burn.", true)
-                builder.appendField("Attack: 3 - Defence: 2", "Survivor, Witch, Pirate, Guardian Angels, and other Arsonists are your allies.", false)
+                builder.appendField("Attack: 3 - Defence: 1", "Survivor, Witch, Pirate, Guardian Angels, and other Arsonists are your allies.", false)
                 builder.appendField("Summary", "A pyromaniac that wants to burn everyone.", false)
                 builder.withAuthorName("Arsonist")
                 builder.withAuthorIcon("https://vignette.wikia.nocookie.net/town-of-salem/images/c/cf/Achievement_Arsonist.png/revision/latest/scale-to-width-down/50?cb=20140825150335")
@@ -524,7 +524,7 @@ object RoleCards {
                 val guild = message.guild
                 builder.appendField("Class", "Neutral Killing (NK)", true)
                 builder.appendField("Goal", "Kill everyone who would oppose you.", true)
-                builder.appendField("Attack: 1 - Defence: 2", "Survivor, Witch, Pirate, Guardian Angels, and other Serial Killers are your allies.", false)
+                builder.appendField("Attack: 1 - Defence: 1", "Survivor, Witch, Pirate, Guardian Angels, and other Serial Killers are your allies.", false)
                 builder.appendField("Summary", "A psychotic criminal who wants everyone to die.", false)
                 builder.withAuthorName("Serial Killer")
                 builder.withAuthorIcon("https://vignette.wikia.nocookie.net/town-of-salem/images/9/98/Achievement_Serial_Killer.png/revision/latest/scale-to-width-down/50?cb=20140723234035")
@@ -541,12 +541,29 @@ object RoleCards {
                 val guild = message.guild
                 builder.appendField("Class", "Neutral Killing (NK)", true)
                 builder.appendField("Goal", "Kill everyone who would oppose you.", true)
-                builder.appendField("Attack: 3 - Defence: 2", "Survivor, Witch, Pirate, Guardian Angels, and other Werewolves are your allies.", false)
+                builder.appendField("Attack: 2 - Defence: 1", "Survivor, Witch, Pirate, Guardian Angels, and other Werewolves are your allies.", false)
                 builder.appendField("Summary", "A normal citizen who transforms during the full moon.", false)
                 builder.withAuthorName("Werewolf")
                 builder.withAuthorIcon("https://vignette.wikia.nocookie.net/town-of-salem/images/0/07/Achievement_Werewolf2.png/revision/latest?cb=20170730212305")
                 builder.withThumbnail("https://vignette.wikia.nocookie.net/town-of-salem/images/c/c1/Lycanthrope.png/revision/latest/scale-to-width-down/151?cb=20160506214350")
                 builder.withDescription("You will go on a rampage every other night. Going on a rampage means that all people who visit your target will die. If you do not chose a target, then all people who visit you will die")
+                builder.withTimestamp(Instant.now())
+                builder.withFooterIcon(guild.iconURL)
+                builder.withFooterText(guild.name)
+                builder.withColor(user.getColorForGuild(message.guild))
+                return builder.build()
+            }
+            "vampire" -> {
+                val builder = EmbedBuilder()
+                val guild = message.guild
+                builder.appendField("Class", "Neutral Chaos (NC)", true)
+                builder.appendField("Goal", "Convert everyone who would oppose you.", true)
+                builder.appendField("Attack: 1 - Defence: 0", "Survivor, Witch, Pirate, Guardian Angels, and other Vampires are your allies.", false)
+                builder.appendField("Summary", "Someone among the undead who turns others at night.", false)
+                builder.withAuthorName("Vampire")
+                builder.withAuthorIcon("https://vignette.wikia.nocookie.net/town-of-salem/images/7/75/Achievement_Vampire.png/revision/latest/scale-to-width-down/50?cb=20151130211326")
+                builder.withThumbnail("https://vignette.wikia.nocookie.net/town-of-salem/images/4/4e/Vampire.png/revision/latest/scale-to-width-down/150?cb=20151101133009")
+                builder.withDescription("Every other night you may bite someone who is not already a Vampire. If this person is a Vampire Hunter, you will die. If this person is a Mafia Member, they will die. Your bite does not go through Night Immunity.")
                 builder.withTimestamp(Instant.now())
                 builder.withFooterIcon(guild.iconURL)
                 builder.withFooterText(guild.name)

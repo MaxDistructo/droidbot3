@@ -12,4 +12,7 @@ interface IGame {
     val jailorChannel: IChannel
     val jailedChannel: IChannel
     val dayChannel: IChannel
+    val vampChannel : IChannel
+    val vamphunterChannel : IChannel
+    val dayNum : Int
 }

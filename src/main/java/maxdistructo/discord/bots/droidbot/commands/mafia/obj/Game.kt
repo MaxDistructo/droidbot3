@@ -25,4 +25,10 @@ class Game(input: JSONObject) : IGame {
         get() = BaseBot.client.getChannelByID(info.getLong("spy_chat"))
     override val dayChannel: IChannel
         get() = BaseBot.client.getChannelByID(info.getLong("day_chat"))
+    override val vampChannel: IChannel
+        get() = BaseBot.client.getChannelByID(info.getLong("vamp_chat"))
+    override val vamphunterChannel: IChannel
+        get() = BaseBot.client.getChannelByID(info.getLong("vamphunter_chat"))
+    override val dayNum: Int
+        get() = info.getInt("daynum")
 }

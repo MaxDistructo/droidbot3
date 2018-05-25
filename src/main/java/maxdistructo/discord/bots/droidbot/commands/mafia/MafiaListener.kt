@@ -1,38 +1,43 @@
 package maxdistructo.discord.bots.droidbot.commands.mafia
 
 
+import maxdistructo.discord.bots.droidbot.BaseBot
 import maxdistructo.discord.bots.droidbot.commands.mafia.obj.Game
 import maxdistructo.discord.bots.droidbot.commands.mafia.obj.Player
-import maxdistructo.discord.core.Client.prefix
+import maxdistructo.discord.core.Config
 import maxdistructo.discord.core.Utils
 import maxdistructo.discord.core.message.Message
+import maxdistructo.discord.core.message.Webhook
 import sx.blah.discord.api.events.EventSubscriber
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
-import maxdistructo.discord.bots.droidbot.commands.mafia.*
 
 class MafiaListener {
 
     @EventSubscriber
     fun onMessageReceivedEvent(event: MessageReceivedEvent) {
         val message = event.message
+        val prefix = Config.readPrefix()
         val messageContent = message.content.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray() as Array<Any>
         if (messageContent.isNotEmpty()) {
             if (message.guild.longID == 249615705517981706L || message.guild.longID == 268370862661435392L && Perms.checkMafiaChannels(message)) {
                 var game = Game(Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt"))
                 if (!game.day && message.channel === game.deadChannel && !message.author.isBot && !Perms.checkMod(message) && !Perms.checkSpectator(message)) { //Dead to Medium
-                    Message.sendMessage(game.mediumChannel, message.author.getDisplayName(message.guild) + ": " + message.content)
+                    Webhook.send(BaseBot.bot, game.mediumChannel, message.author.getDisplayName(message.guild), message.author.avatarURL, message.formattedContent)
                 }
                 if (!game.day && message.channel === game.mediumChannel && !message.author.isBot && MafiaConfig.getJailed(message) != message.author.longID && !Perms.checkMod(message)&& !Perms.checkSpectator(message)) { //Medium to Dead
-                    Message.sendMessage(game.deadChannel, "Medium:" + message.content)
+                    Webhook.send(BaseBot.bot, game.deadChannel, "Medium", "https://i.imgur.com/WBTx4Kx.png", message.formattedContent)
                 }
                 if (message.channel === game.mafiaChannel && !Perms.checkMod(message)&& !Perms.checkSpectator(message)) { //Mafia to Spy
-                    Message.sendMessage(game.spyChannel, "Mafia: " + message.content)
+                    Webhook.send(BaseBot.bot, game.spyChannel, "Mafia", "https://vignette.wikia.nocookie.net/town-of-salem/images/7/70/DarkRevenant.png/revision/latest/scale-to-width-down/87?cb=20140701002425", message.formattedContent)
                 }
                 if (message.channel === game.jailorChannel && !Perms.checkMod(message)&& !Perms.checkSpectator(message)) {
-                    Message.sendMessage(game.jailedChannel, "Jailor: " + message.content)
+                    Webhook.send(BaseBot.bot, game.jailedChannel, "Jailor", "https://vignette.wikia.nocookie.net/town-of-salem/images/7/7e/Jailor.png/revision/latest/scale-to-width-down/150?cb=20151021224315", message.formattedContent)
                 }
                 if (message.channel === game.jailedChannel && !Perms.checkMod(message)&& !Perms.checkSpectator(message)) { //Jailed to Jailor
-                    Message.sendMessage(game.jailorChannel, message.author.getDisplayName(message.guild) + ": " + message.content)
+                    Webhook.send(BaseBot.bot, game.jailorChannel, message.author.getDisplayName(message.guild), message.author.avatarURL, message.formattedContent)
+                }
+                if(message.channel == game.vampChannel && !Perms.checkMod(message) && !Perms.checkSpectator(message)){
+                    Webhook.send(BaseBot.bot, game.vamphunterChannel, "Vampire", "https://vignette.wikia.nocookie.net/town-of-salem/images/4/4e/Vampire.png/revision/latest/scale-to-width-down/150?cb=20151101133009", message.formattedContent)
                 }
                 if (Perms.checkMod(message) && messageContent.size >= 2 && Perms.checkMafiaChannels(message) && messageContent[0] == prefix + "mafia") {
                     when (messageContent[1]) {
@@ -75,7 +80,7 @@ class MafiaListener {
                         }
                         "kill" -> {
                             Mafia.killPlayer(message, Utils.getUserFromInput(message, messageContent[2])!!.longID)
-                            Message.sendMessage(game.dayChannel, Kill.message(message, messageContent))
+                            Webhook.send(BaseBot.bot, game.dayChannel, "Graveyard", "https://cdn.discordapp.com/emojis/294160585179004928.png", Kill.message(message, messageContent))
                             message.delete()
                         }
                         "revive" -> {
