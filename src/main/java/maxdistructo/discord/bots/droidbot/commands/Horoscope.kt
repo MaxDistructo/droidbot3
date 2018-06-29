@@ -2,9 +2,22 @@ package maxdistructo.discord.bots.droidbot.commands
 
 import com.mashape.unirest.http.Unirest
 import com.mashape.unirest.http.exceptions.UnirestException
+import maxdistructo.discord.bots.droidbot.background.PrivUtils
+import maxdistructo.discord.bots.droidbot.background.constructor.BaseCommand
 import org.json.JSONObject
+import sx.blah.discord.handle.obj.IMessage
 
-object Horoscope {
+class Horoscope : BaseCommand() {
+
+    override val commandName: String
+        get() = "horoscope"
+    override val helpMessage: String
+        get() = "horoscope <AstralSign> - Gets the horoscope for the provided astral sign."
+
+    override fun init(message: IMessage, args: List<String>): String {
+        return onHoroscopeCommand(PrivUtils.listToArray(args))
+    }
+
 
     fun onHoroscopeCommand(args: Array<String>): String { // !horoscope <AstralSign>
         val signIn = args[1].toString().toLowerCase() //If command parameters above is met, this will be the astral sign.

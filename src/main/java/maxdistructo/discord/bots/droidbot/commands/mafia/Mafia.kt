@@ -66,11 +66,7 @@ object Mafia {
 
     fun onGameToggle(message: IMessage) {
         val game = Game(Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt"))
-        val dayChannel = game.dayChannel
-        val players = MafiaConfig.getPlayers(message, "Mafia Folks")
-
         //runActions();
-
         if (game.day) {
             toggleToNight(message)
         } else {
@@ -373,7 +369,7 @@ object Mafia {
             
         }
         else{
-            val root = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_playerdat.txt")
+            val root = PrivUtils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_playerdat.txt")
             val playerInfo = root.getJSONObject("" + playerID)
             playerInfo.remove("reaped")
             playerInfo.put("reaped", true)

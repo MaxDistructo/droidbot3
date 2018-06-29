@@ -8,6 +8,7 @@
     </JAVADOC>
     <SOURCES>
       <root url="jar://$MAVEN_REPOSITORY$/com/github/MaxDistructo/mdCore-Discord4J/2.0.9/mdCore-Discord4J-2.0.9-sources.jar!/" />
+      <root url="file://$PROJECT_DIR$/../mdCore-Discord4J" />
     </SOURCES>
   </library>
 </component>

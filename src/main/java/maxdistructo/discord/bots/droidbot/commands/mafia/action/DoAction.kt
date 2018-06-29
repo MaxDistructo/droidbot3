@@ -125,6 +125,29 @@ class DoAction {
             }
         }
     }
+    fun sheriff(message : IMessage){
+        val actions = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_actions.txt")
+        for (user in MafiaConfig.getPlayers(message, "Mafia Folks")) {
+            lateinit var action: Action
+            try {
+                action = Action(user, actions.getJSONObject("" + user))
+            } catch (e: Exception) {
+                e.localizedMessage
+            }
+            if (action.action == "sheriff") {
+                val target = Player(message, user)
+                if(target.allignment == "town" || target.role == "godfather" || target.role == "amnesiac" || target.role == "survivor" || target.role == "witch") {
+                    Message.sendDM(message.guild.getUserByID(user), message.guild.getUserByID(user).getDisplayName(message.guild) + "is Not Suspicious.")
+                }
+                else if(target.allignment == "mafia"){
+                    Message.sendDM(message.guild.getUserByID(user), message.guild.getUserByID(user).getDisplayName(message.guild) + "is a Member of the Mafia!")
+                }
+                else{
+                    Message.sendDM(message.guild.getUserByID(user), message.guild.getUserByID(user).getDisplayName(message.guild) + "is a " + target.role.toUpperCase() + "!")
+                }
+            }
+        }
+    }
 
 
 }

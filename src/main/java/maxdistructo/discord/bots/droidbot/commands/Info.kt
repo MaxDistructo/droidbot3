@@ -1,13 +1,25 @@
 package maxdistructo.discord.bots.droidbot.commands
 
+import maxdistructo.discord.bots.droidbot.background.PrivUtils
+import maxdistructo.discord.bots.droidbot.background.constructor.BaseCommand
 import maxdistructo.discord.core.Perms
+import maxdistructo.discord.core.Utils
 import sx.blah.discord.handle.obj.IMessage
 import sx.blah.discord.handle.obj.IRole
 import sx.blah.discord.handle.obj.IUser
 
 
-object Info {
-    // @Command(aliases = {"/i", "/info"}, description = "Gets your info. Mods can get info on any user.", usage = "/i|info @User#0000")
+class Info : BaseCommand() {
+
+    override val commandName: String
+        get() = "info"
+    override val helpMessage: String
+        get() = "info - Gets your info in this server. Mods can mention a user to get information on another user"
+
+    override fun init(message: IMessage, args: List<String>): String {
+        return onInfoCommand(PrivUtils.listToArray(args), message, Utils.getMentionedUser(message))
+    }
+
     fun onInfoCommand(args: Array<String>, message: IMessage, mentioned: IUser?): String {
         val author = message.author
         val guild = message.guild

@@ -1,7 +1,6 @@
 package maxdistructo.discord.bots.droidbot.commands.casino
 
 import maxdistructo.discord.bots.droidbot.background.Conf
-import maxdistructo.discord.bots.droidbot.background.Listener
 import maxdistructo.discord.core.message.Message
 import sx.blah.discord.api.internal.json.objects.EmbedObject
 import sx.blah.discord.handle.obj.IMessage
@@ -137,7 +136,7 @@ object Casino {
                         payday(message, message.author)
                         return author.mention(true) + "Your payday is ready!"
                     }
-                    else -> return "Command " + Listener.prefix + "casino payday has errored. Your balance has not been affected."
+                    else -> return "Command casino payday has errored. Your balance has not been affected."
                 }
             } else if (args[1] == "balance") {
                 CasinoConfig.readCasino(message)

@@ -1,13 +1,23 @@
 package maxdistructo.discord.bots.droidbot.commands
 
 import com.mashape.unirest.http.Unirest
+import maxdistructo.discord.bots.droidbot.background.constructor.BaseCommand
 import maxdistructo.discord.core.message.Message
 import org.json.JSONObject
 import sx.blah.discord.handle.obj.IMessage
 
-object Fortune {
+class Fortune : BaseCommand() {
 
-    fun onFortuneCommand(message: IMessage): String {
+    override val commandName: String
+        get() = "fortune"
+    override val helpMessage: String
+        get() = "fortune - Gets your fortune"
+
+    override fun init(message: IMessage, args: List<String>): String {
+        return onFortuneCommand(message)
+    }
+
+    private fun onFortuneCommand(message: IMessage): String {
         var fortune: JSONObject? = null
         try {
             fortune = Unirest.get("https://helloacm.com/api/fortune").asJson().body.`object`

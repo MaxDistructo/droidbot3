@@ -1,11 +1,23 @@
 package maxdistructo.discord.bots.droidbot.commands
 
 
+import maxdistructo.discord.bots.droidbot.background.PrivUtils
+import maxdistructo.discord.bots.droidbot.background.constructor.BaseCommand
 import maxdistructo.discord.core.Perms
 import sx.blah.discord.handle.obj.IMessage
 
-object Debug {
-    //@Command(aliases = {"/debug"}, description = "Shows debug info for making code for the bot.", usage = "/debug")
+class Debug : BaseCommand() {
+    override val commandName: String
+        get() = "debug"
+    override val helpMessage: String
+        get() = "debug - Debug information"
+    override val requiresAdmin: Boolean
+        get() = true
+
+    override fun init(message: IMessage, args: List<String>): String {
+       return onDebugCommand(PrivUtils.listToArray(args), message)
+    }
+
     fun onDebugCommand(args: Array<String>, message: IMessage): String {
         val author = message.author
         val channel = message.channel

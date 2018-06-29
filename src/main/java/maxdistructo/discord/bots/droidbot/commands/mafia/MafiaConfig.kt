@@ -6,9 +6,11 @@ import maxdistructo.discord.core.Utils
 import maxdistructo.discord.core.Utils.s
 import maxdistructo.discord.core.message.Message
 import org.apache.commons.lang3.ArrayUtils
+import org.apache.commons.lang3.mutable.Mutable
 import org.json.JSONArray
 import org.json.JSONObject
 import sx.blah.discord.handle.obj.IMessage
+import sx.blah.discord.handle.obj.IUser
 import java.io.File
 import java.io.FileWriter
 import java.io.IOException
@@ -27,12 +29,19 @@ object MafiaConfig {
 
     fun getPlayers(message: IMessage, role: String): LongArray {
         val usersList = message.guild.getUsersByRole(Roles.getRole(message, role))
-        usersList.remove(message.client.ourUser)
+        val removeList = mutableListOf<IUser>()
         for (user in usersList) {
-            if (Perms.checkMod(message, user.longID) && !message.author.hasRole(message.guild.getRolesByName("Alive(Mafia)")[0]) || !message.author.hasRole(message.guild.getRolesByName("Dead(Mafia)")[0])) {
-                usersList.remove(user)
+            if (Perms.checkMod(message, user.longID)) {
+                removeList.add(user)
+                if(user.hasRole(Roles.getRole(message, "Alive(Mafia)")) || user.hasRole(Roles.getRole(message, "Dead(Mafia)"))){
+                    removeList.remove(user)
+                }
             }
         }
+        if(usersList.contains(message.client.ourUser)){
+            removeList.add(message.client.ourUser)
+        }
+        usersList.removeAll(removeList)
         val players = LongArray(usersList.size)
         var i = 0
         for (user in usersList) {
@@ -64,15 +73,15 @@ object MafiaConfig {
         if (!Perms.checkMod(message, playerID)) {
             val root1 = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_playerdat.txt")
             val root = root1.getJSONObject("" + playerID)
-            val list = arrayListOf<Any>(root.getString("alignment"), root.getString("class"), root.getString("role"), message.guild.getUserByID(playerID).getRolesForGuild(message.guild).contains(Roles.getRole(message, "Dead(Mafia)")), root.getInt("attack"), root.getInt("defense"))
+            val list = arrayListOf<Any>(root.getString("alignment"), root.getString("class"), root.getString("role"), message.guild.getUserByID(playerID).getRolesForGuild(message.guild).contains(Roles.getRole(message, "Dead(Mafia)")), root.getInt("attack"), root.getInt("defense"), root.getString("extra"))
             return list.toArray()
         } else if(Perms.checkMod(message, playerID) && message.guild.getUserByID(playerID).hasRole(message.guild.getRolesByName("Alive(Mafia)")[0]) || message.guild.getUserByID(playerID).hasRole(message.guild.getRolesByName("Dead(Mafia)")[0])){
             val root1 = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_playerdat.txt")
             val root = root1.getJSONObject("" + message.author.longID)
-            val list = arrayListOf<Any>(root.getString("alignment"), root.getString("class"), root.getString("role"), message.author.getRolesForGuild(message.guild).contains(Roles.getRole(message, "Dead(Mafia)")), root.getInt("attack"), root.getInt("defense"))
+            val list = arrayListOf<Any>(root.getString("alignment"), root.getString("class"), root.getString("role"), message.author.getRolesForGuild(message.guild).contains(Roles.getRole(message, "Dead(Mafia)")), root.getInt("attack"), root.getInt("defense"), root.getString("extra"))
             return list.toArray()
         } else {
-            val list = arrayListOf<Any>("admin", "admin", "admin", false, 3, 3)
+            val list = arrayListOf<Any>("admin", "admin", "admin", false, 3, 3,"")
             return list.toArray()
         }
     }

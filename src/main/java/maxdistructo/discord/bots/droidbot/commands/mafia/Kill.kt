@@ -38,7 +38,12 @@ object Kill {
         if (!messageContent.contains("-clean")) {
             message.append(" ")
             val player = Player(MafiaConfig.getPlayerDetails(message1, mentioned.longID))
-            message.append("Their role was __**" + player.role.toUpperCase() + "**__.")
+            if(player.role == "disguiser") {
+                message.append("Their role was __**" + Player(MafiaConfig.getPlayerDetails(message1, Utils.convertToLong(MafiaConfig.getPlayerDetails(message1, mentioned.longID)[6])!!)).role.toUpperCase() + "**__.")
+            }
+            else{
+                message.append("Their role was __**" + player.role.toUpperCase() + "**__.")
+            }
         } else {
             message.append(" ")
             message.append("Their role was Cleaned")

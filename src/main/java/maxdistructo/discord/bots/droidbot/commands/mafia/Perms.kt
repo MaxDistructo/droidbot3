@@ -82,7 +82,7 @@ object Perms {
 
     fun checkMafiaChannels(message: IMessage): Boolean {
         val root = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt")
-        val channels = arrayListOf(root.getLong("admin_chat"), root.getLong("day_chat"), root.getLong("mafia_chat"), root.getLong("medium_chat"), root.getLong("spy_chat"), root.getLong("dead_chat"), root.getLong("jailor_chat"), root.getLong("jailed_chat"), 422457248724549632L)
+        val channels = arrayListOf(root.getLong("admin_chat"), root.getLong("day_chat"), root.getLong("mafia_chat"), root.getLong("medium_chat"), root.getLong("spy_chat"), root.getLong("dead_chat"), root.getLong("jailor_chat"), root.getLong("jailed_chat"), 422457248724549632L, 450415346671812608)
         return channels.contains(message.channel.longID)
     }
 

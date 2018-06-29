@@ -2,13 +2,25 @@ package maxdistructo.discord.bots.droidbot.commands
 
 import com.mashape.unirest.http.Unirest
 import com.mashape.unirest.http.exceptions.UnirestException
+import maxdistructo.discord.bots.droidbot.background.PrivUtils
+import maxdistructo.discord.bots.droidbot.background.constructor.BaseCommand
+import maxdistructo.discord.core.Utils
 import org.json.JSONObject
 import sx.blah.discord.handle.obj.IMessage
 import sx.blah.discord.handle.obj.IUser
 import java.util.concurrent.ThreadLocalRandom
 
-object Insult {
-    fun onInsultCommand(args: Array<String>, message: IMessage, mentioned: IUser): String {
+class Insult : BaseCommand() {
+    override val commandName: String
+        get() = "insult"
+    override val helpMessage: String
+        get() = "insult <@User> - Insults the provided user."
+
+    override fun init(message: IMessage, args: List<String>): String {
+        return onInsultCommand(PrivUtils.listToArray(args), message, Utils.getMentionedUser(message)!!)
+    }
+
+    private fun onInsultCommand(args: Array<String>, message: IMessage, mentioned: IUser): String {
         val author = message.author
         val guild = message.guild
         val name = mentioned.getDisplayName(guild)

@@ -1,63 +1,57 @@
 package maxdistructo.discord.bots.droidbot.commands
 
 import maxdistructo.discord.bots.droidbot.BaseBot
-import maxdistructo.discord.bots.droidbot.background.Listener
+import maxdistructo.discord.bots.droidbot.background.constructor.BaseCommand
+import maxdistructo.discord.bots.droidbot.commands.mafia.Perms
+import maxdistructo.discord.core.Config
 import maxdistructo.discord.core.message.Message
 import sx.blah.discord.handle.obj.IMessage
 
-object Help1 {
+class Help1 : BaseCommand(){
 
-    fun onHelpCommand(): String {
-        val user = BaseBot.client.ourUser
-        return "Commands List for " + user.mention(true) + "\n \n" +
-                Listener.prefix + "50|fifty <bet>: A fifty fifty game for the casino. \n" +
-                Listener.prefix + "allin <multiplier>: You bet all your chips hoping to mulitply your balance by the multiplier. \n" +
-                Listener.prefix + "banhammer <@user>: Hits another user with the banhammer maybe\n" +
-                Listener.prefix + "bj <bet>: Modified Blackjack Game\n" +
-                Listener.prefix + "casino <join|payday|balance>: Casino Commands\n" +
-                Listener.prefix + "check: Checks if user has any special perms.\n" +
-                Listener.prefix + "emote <request|emote name>: Will display the emote or create a request to add it \n" +
-                Listener.prefix + "fortune: Gets your fortune\n" +
-                Listener.prefix + "hug <@user>: Hugs another user\n" +
-                Listener.prefix + "info: Gets your info\n" +
-                Listener.prefix + "insult <@user>: Insults another discord user \n" +
-                Listener.prefix + "kiss <@user>: Kiss another user.\n" +
-                Listener.prefix + "mute <@user>: Mutes another user maybe\n" +
-                Listener.prefix + "poke <@user>: Pokes another user\n" +
-                Listener.prefix + "punch <@user>: Punches another user\n" +
-                Listener.prefix + "respect | /f: Pays Respects \n" +
-                Listener.prefix + "say [channel]: Says the following message in this channel or another specified channel\n" +
-                Listener.prefix + "shoot <@user>: Shoots a user with a gun\n" +
-                Listener.prefix + "slap <@user>: Slaps another user.\n" +
-                Listener.prefix + "spam <@user>: Spams the other user in DMs. MUST BE MOD+ TO USE ON OTHER USERS!\n" +
-                Listener.prefix + "stab <@user>: Stabs a user\n" +
-                Listener.prefix + "tnt <@user>: Blow up another user." +
-                Listener.prefix + "xp [@user]: Shows the rules on Tatsu XP system. Can have a user mention to show another user.\n"
+    override val commandName: String
+        get() = "help"
+    override val helpMessage: String
+        get() = "help - Resends this message"
+    override val hasOutput: Boolean
+        get() = false
+
+    override fun init(message: IMessage, args: List<String>): String {
+        val builder = StringBuilder()
+        when{
+            Perms.checkAdmin(message) ->{
+                var i = 0
+                for(command in BaseBot.listener.adminCommands){
+                    if(i != 0) {
+                        builder.append(Config.readPrefix() + command.helpMessage)
+                        builder.append("\n")
+                    }
+                    i++
+                }
+            }
+            Perms.checkMod(message) ->{
+                var i = 0
+                    for (command in BaseBot.listener.modCommands) {
+                        if(i != 0) {
+                            builder.append(Config.readPrefix() + command.helpMessage)
+                            builder.append("\n")
+                        }
+                        i++
+                    }
+
+            }
+            else ->{
+                var i = 0
+                for(command in BaseBot.listener.commandsArray){
+                    if(i != 0) {
+                        builder.append(Config.readPrefix() + command.helpMessage)
+                        builder.append("\n")
+                    }
+                    i++
+                }
+            }
+        }
+        Message.sendDM(message.author, builder.toString())
+        return ""
     }
-
-    fun onAdminHelpCommand(message: IMessage) {
-        Message.sendDM(message.author, onHelpCommand())
-        val sendMessage = "Admin Commands List for " + BaseBot.client.ourUser.mention(true) + "\n \n" +
-                Listener.prefix + "@admin addMod <@User>: Adds a user as a Moderator\n" +
-                Listener.prefix + "@admin addAdmin <@User>: Adds a user as a Administrator\n" +
-                Listener.prefix + "@casino balance add|remove|set <@User> <balanceChange: Changes a Users Casino balance.\n" +
-                Listener.prefix + "@admin botAbuse <@User>: Marks a user as a bot abuser and denies them access to bot commands.\n"
-        Message.sendDM(message.author, sendMessage)
-
-    }
-
-    fun registerHelp() {
-        //    Help.registerCommand(prefix + "check <@User>: Checks permissions for a user.");
-        //  Help.registerAdminCommand(prefix + "debug: Outputs debug information. (This is locked because of @Everyone mention in it.)");
-        //Help.registerCommand(prefix + "emote <request <EmoteURL> |emote name>: Displays the emote or allows you to create a request for one");
-        //Help.registerCommand(prefix + "info: Gets your info");
-        //Help.registerModCommand(prefix + "info <@User>: Displays the info of the mentioned user.");
-        //Help.registerCommand(prefix + "ping: Pings the bot for responce time");
-        //Help.registerCommand(prefix + "say: Has the bot say what you tell it in your channel");
-        //Help.registerModCommand(prefix + "say <#channel>: Has the bot say what you input but in another channel");
-        //Help.registerAdminCommand(prefix + "@admin <addMod <@User>|addAdmin <@User>|botAbuse <@User>|perms RoleName addedPerm| setColor RoleName colorCode");
-        //Help.registerModCommand(prefix + "@mute <@User>: Mutes a user");
-        //Help.registerModCommand(prefix + "@unmute <@User> [#channel]: Unmutes a user in a specified channel or if no channel is specified, all channels.");
-    }
-
 }

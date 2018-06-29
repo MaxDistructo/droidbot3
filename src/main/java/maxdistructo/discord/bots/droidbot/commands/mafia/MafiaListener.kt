@@ -119,6 +119,9 @@ class MafiaListener {
                             }
                             message.delete()
                         }
+                        "do" -> {
+                            UserDo.message(message, messageContent)
+                        }
                     }
                 } else if (messageContent.size >= 2 && Perms.checkMafiaChannels(message) && messageContent[0] == prefix + "mafia") { //This is all this listener will handle so putting this requirement for the rest of the code to execute.
                     val player = Player(MafiaConfig.getPlayerDetails(message))

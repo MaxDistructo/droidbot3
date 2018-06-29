@@ -3,12 +3,9 @@ package maxdistructo.discord.bots.droidbot.commands
 
 import maxdistructo.discord.bots.droidbot.BaseBot.client
 import maxdistructo.discord.bots.droidbot.background.Conf
+import maxdistructo.discord.bots.droidbot.background.constructor.BaseCommand
 import maxdistructo.discord.bots.droidbot.commands.casino.CasinoConfig
-import maxdistructo.discord.core.Config
-import maxdistructo.discord.core.Perms
-import maxdistructo.discord.core.Roles
-import maxdistructo.discord.core.Utils
-import maxdistructo.discord.core.Utils.s
+import maxdistructo.discord.core.*
 import maxdistructo.discord.core.message.Message
 import org.json.JSONArray
 import sx.blah.discord.handle.obj.*
@@ -16,14 +13,26 @@ import sx.blah.discord.util.Image
 import java.io.File
 import java.io.FileWriter
 import java.io.IOException
-import java.nio.file.Files
 import java.nio.file.Paths
 import java.text.NumberFormat
 import java.time.Instant
 import java.util.*
-import kotlin.coroutines.experimental.*
 
-object Admin {
+class Admin : BaseCommand() {
+    override val commandName: String
+        get() = "admin"
+    override val helpMessage: String
+        get() = "admin [subcommand] <arguments>"
+    override val requiresAdmin: Boolean
+        get() = true
+    override val requiresMod: Boolean
+        get() = super.requiresMod
+
+    override fun init(message: IMessage, args: List<String>) : String {
+
+        return "Command Error: $commandName"
+    }
+
     fun addMod(message: IMessage, mentioned: IUser): String {
         if (Perms.checkOwner_Guild(message)) {
             val root = Config.readServerConfig(message.guild)
@@ -226,13 +235,13 @@ object Admin {
     }
 
     fun clearChannel(channel: IChannel) {
-            val history = channel.fullMessageHistory
-            for (message in history) {
-             if (!message.isPinned) {
-                    message.delete()
-             }
-             Thread.sleep(2000L)
-           }
+        val history = channel.fullMessageHistory
+        for (message in history) {
+            if (!message.isPinned) {
+                message.delete()
+            }
+            Thread.sleep(2000L)
+        }
     }
 
     fun backupChat(channel: IChannel) {
