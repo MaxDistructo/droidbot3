@@ -2,7 +2,8 @@ package maxdistructo.discord.bots.droidbot.commands
 
 import maxdistructo.discord.bots.droidbot.BaseBot
 import maxdistructo.discord.bots.droidbot.background.constructor.BaseCommand
-import maxdistructo.discord.bots.droidbot.commands.mafia.Perms
+import maxdistructo.discord.bots.droidbot.background.constructor.BaseListener
+import maxdistructo.discord.bots.droidbot.commands.mafia.methods.Perms
 import maxdistructo.discord.core.Config
 import maxdistructo.discord.core.message.Message
 import sx.blah.discord.handle.obj.IMessage

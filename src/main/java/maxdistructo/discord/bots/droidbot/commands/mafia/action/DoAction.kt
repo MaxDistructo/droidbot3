@@ -1,7 +1,7 @@
 package maxdistructo.discord.bots.droidbot.commands.mafia.action
 
-import maxdistructo.discord.bots.droidbot.commands.mafia.Kill
-import maxdistructo.discord.bots.droidbot.commands.mafia.MafiaConfig
+import maxdistructo.discord.bots.droidbot.commands.mafia.methods.Kill
+import maxdistructo.discord.bots.droidbot.commands.mafia.methods.MafiaConfig
 import maxdistructo.discord.bots.droidbot.commands.mafia.obj.Action
 import maxdistructo.discord.bots.droidbot.commands.mafia.obj.Player
 import maxdistructo.discord.core.Utils

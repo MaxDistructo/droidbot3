@@ -1,0 +1,125 @@
+package maxdistructo.discord.bots.droidbot.commands.mafia
+
+import maxdistructo.discord.bots.droidbot.BaseBot
+import maxdistructo.discord.bots.droidbot.background.PrivUtils
+import maxdistructo.discord.bots.droidbot.background.constructor.BaseListener
+import maxdistructo.discord.bots.droidbot.commands.Help1
+import maxdistructo.discord.bots.droidbot.commands.mafia.methods.Mafia
+import maxdistructo.discord.bots.droidbot.commands.mafia.methods.MafiaConfig
+import maxdistructo.discord.bots.droidbot.commands.mafia.methods.RoleCards
+import maxdistructo.discord.bots.droidbot.commands.mafia.methods.UserDo
+import maxdistructo.discord.bots.droidbot.commands.mafia.obj.Game
+import maxdistructo.discord.bots.droidbot.commands.mafia.obj.Player
+import maxdistructo.discord.core.Utils
+import maxdistructo.discord.core.message.Message
+import sx.blah.discord.handle.obj.IMessage
+
+object MafiaCommands {
+
+    val userDo = Do()
+    val join = Join()
+    val gameContinue = Continue()
+    val start = Start()
+    val info = Info()
+    val modInfo = ModInfo()
+    val roleCard = RoleCard()
+    val setRole = SetRole()
+
+    class Do : MafiaCommand(){
+        override val commandName: String
+            get() = "do"
+        override val helpMessage: String
+            get() = "mafia do <User> - Uses your night action on the provided user"
+        override fun init(message: IMessage, args: List<String>): String {
+            UserDo.message(message, PrivUtils.listToArray(args) as Array<Any>)
+            return ""
+        }
+    }
+    class Join : MafiaCommand(){
+        override val commandName: String
+            get() = "join"
+        override val helpMessage: String
+            get() = "mafia join - Adds yourself to the next mafia game"
+        override fun init(message: IMessage, args: List<String>): String {
+            Mafia.onGameJoinCommand(message)
+            return ""
+        }
+    }
+    class Continue : MafiaCommand(){
+        override val commandName: String
+            get() = "continue"
+        override val helpMessage: String
+            get() = "mafia continue - Moves the game forward to the next night/day"
+        override val requiresAdmin: Boolean
+            get() = true
+        override fun init(message: IMessage, args: List<String>): String {
+            Mafia.onGameToggle(message)
+            return ""
+        }
+    }
+    class Start : MafiaCommand(){
+        override val commandName: String
+            get() = "start"
+        override val helpMessage: String
+            get() = "mafia start - Starts the mafia game with all joined players"
+        override val requiresAdmin: Boolean
+            get() = true
+        override fun init(message: IMessage, args: List<String>): String {
+            Mafia.onGameStart(message)
+            return ""
+        }
+    }
+    class Info : MafiaCommand(){
+        override val commandName: String
+            get() = "info"
+        override val helpMessage: String
+            get() = "mafia info - Gets your info."
+        override fun init(message: IMessage, args: List<String>): String {
+            val details = Player(message, message.author)
+             Message.sendDM(message.author, Message.simpleEmbed(message.author, "Mafia Details", "Alignment: " + details.allignment + "\n" + "Role: " + details.role + "\n" + "Attack: " + details.attack + "\nDefence: " + details.defence, message))
+            return ""
+        }
+    }
+    class ModInfo : MafiaCommand(){
+        override val commandName: String
+            get() = "getInfo"
+        override val helpMessage: String
+            get() = "mafia getInfo <@User> - Gets info on the specified user"
+        override val requiresMod: Boolean
+            get() = true
+        override fun init(message: IMessage, args: List<String>): String {
+            val details = MafiaConfig.getPlayerDetails(message, Utils.getUserFromInput(message, args[2])!!.longID)
+            Message.sendDM(message.author, Message.simpleEmbed(Utils.getUserFromInput(message, args[2])!!, "Mafia Details","Alignment: " + details[0] + "\nClass: " + details[1] + "\nRole: " + details[2] + "\nIs Dead: " + details[3] + "\nAttack Power: " + details[4] + "\nDefence Power: " + details[5], message))
+            return ""
+        }
+    }
+    class RoleCard : MafiaCommand(){
+        override val commandName: String
+            get() = "rolecard"
+        override val helpMessage: String
+            get() = "mafia rolecard <RoleName> - Shows the role card for the specified role"
+        override fun init(message: IMessage, args: List<String>): String {
+            Message.sendMessage(message.channel, RoleCards.onRoleCardAsk(message, args[2], message.author))
+            return ""
+        }
+    }
+    class SetRole : MafiaCommand(){
+        override val commandName: String
+            get() = "setrole"
+        override val helpMessage: String
+            get() = "mafia setrole <User> <RoleName> - Sets the role of the provided user to the specified role"
+        override val requiresMod: Boolean
+            get() = true
+        override fun init(message: IMessage, args: List<String>): String {
+            val game = Game(Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt"))
+            Mafia.setRole(message, Utils.getUserFromInput(message, args[2])!!, args[3])
+            Message.sendMessage(game.adminChannel, "The role of " + Utils.getUserFromInput(message, args[2])!!.getDisplayName(message.guild) + " has been set to " + MafiaConfig.getPlayerDetails(message, Utils.getUserFromInput(message, args[2])!!.longID)[2])
+            Message.sendDM(Utils.getUserFromInput(message, args[2])!!, "Your role has been set to " + args[3] + " due to either Unique role or specific role change.")
+            return ""
+        }
+    }
+
+    fun init(listener : BaseListener){
+        listener.registerCommand(userDo, join, gameContinue, start, info, modInfo, roleCard, setRole)
+    }
+}

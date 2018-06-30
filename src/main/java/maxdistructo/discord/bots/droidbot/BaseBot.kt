@@ -2,6 +2,7 @@ package maxdistructo.discord.bots.droidbot
 
 import maxdistructo.discord.bots.droidbot.background.BetaListener
 import maxdistructo.discord.bots.droidbot.background.constructor.BaseListener
+import maxdistructo.discord.bots.droidbot.commands.mafia.MafiaCommands
 import maxdistructo.discord.bots.droidbot.commands.mafia.MafiaListener
 import maxdistructo.discord.core.Client
 import maxdistructo.discord.core.Config
@@ -14,6 +15,7 @@ object BaseBot {
     lateinit var LOGGER : Logger
     lateinit var bot : Bot
     lateinit var listener: BaseListener
+    lateinit var mafiaListener: MafiaListener
 
     @JvmStatic
     fun main(args: Array<String>) {
@@ -28,7 +30,11 @@ object BaseBot {
         LOGGER.info("Registered Commands")
         client.dispatcher.registerListener(listener)
         LOGGER.info("Registered Listener")
-        client.dispatcher.registerListener(MafiaListener())
+        mafiaListener = MafiaListener()
+        LOGGER.info("Instantiated Mafia Listener")
+        MafiaCommands.init(mafiaListener)
+        LOGGER.info("Registered Mafia Commands")
+        client.dispatcher.registerListener(mafiaListener)
         LOGGER.info("Registered Mafia Listener. PLAY ON!")
     }
 

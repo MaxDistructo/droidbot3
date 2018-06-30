@@ -1,6 +1,6 @@
 package maxdistructo.discord.bots.droidbot.commands.mafia.obj
 
-import maxdistructo.discord.bots.droidbot.commands.mafia.MafiaConfig
+import maxdistructo.discord.bots.droidbot.commands.mafia.methods.MafiaConfig
 import maxdistructo.discord.bots.droidbot.commands.mafia.init.IPlayer
 import sx.blah.discord.handle.obj.IMessage
 import sx.blah.discord.handle.obj.IUser

@@ -1,8 +1,9 @@
 package maxdistructo.discord.bots.droidbot.background
 
-import kotlinx.coroutines.experimental.launch
+import maxdistructo.discord.bots.droidbot.BaseBot
 import maxdistructo.discord.bots.droidbot.background.constructor.BaseCommand
 import maxdistructo.discord.bots.droidbot.background.constructor.BaseListener
+import maxdistructo.discord.bots.droidbot.background.filter.SwearFilter
 import maxdistructo.discord.core.Config
 import maxdistructo.discord.core.Perms
 import maxdistructo.discord.core.message.Message
@@ -11,41 +12,29 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 
 class BetaListener : BaseListener() {
 
-    override var commandsArray = listOf<BaseCommand>()
     override var adminCommands = listOf<BaseCommand>()
+    override var commandsArray = listOf<BaseCommand>()
     override var modCommands = listOf<BaseCommand>()
 
-    override fun registerCommand(vararg commands : BaseCommand){
-        for(command in commands) {
-            when {
-                command.requiresAdmin -> adminCommands += command
-                command.requiresMod -> {
-                    adminCommands += command
-                    modCommands += command
-                }
-                else -> {
-                    adminCommands += command
-                    modCommands += command
-                    commandsArray += command
-                }
-            }
-        }
-    }
-
     @EventSubscriber
-    override fun onMessageRecievedEvent(event : MessageReceivedEvent){
+    override fun onMessageReceivedEvent(event : MessageReceivedEvent){
         val message = event.message
         val prefix = Config.readPrefix()
         val messageContent = message.content.split(" ")
-
+        if(Config.readServerConfig(message.guild).getBoolean("SwearFilter")){
+            SwearFilter.filter(message)
+        }
         if(message.content.startsWith(prefix)) {
-            launch {
                 when {
                     Perms.checkAdmin(message) -> for (command in adminCommands) {
                         if (messageContent[0] == prefix + command.commandName) {
+                            println()
                             if(command.hasOutput) {
                                 Message.sendMessage(message.channel, command.init(message, messageContent))
                                 message.delete()
+                            }
+                            else{
+                                command.init(message, messageContent)
                             }
                         }
                     }
@@ -55,6 +44,9 @@ class BetaListener : BaseListener() {
                                 Message.sendMessage(message.channel, command.init(message, messageContent))
                                 message.delete()
                             }
+                            else{
+                                command.init(message, messageContent)
+                            }
                         }
                     }
                     else -> for (command in commandsArray) {
@@ -63,6 +55,10 @@ class BetaListener : BaseListener() {
                                 Message.sendMessage(message.channel, command.init(message, messageContent))
                                 message.delete()
                             }
+                            else{
+                                command.init(message, messageContent)
+
+                            }
                         }
                     }
                 }
@@ -70,4 +66,3 @@ class BetaListener : BaseListener() {
         }
 
     }
-}
