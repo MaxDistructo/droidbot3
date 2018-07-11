@@ -1,5 +1,6 @@
 package maxdistructo.discord.bots.droidbot.commands.mafia.obj
 
+import maxdistructo.discord.bots.droidbot.BaseBot
 import maxdistructo.discord.bots.droidbot.commands.mafia.methods.MafiaConfig
 import maxdistructo.discord.bots.droidbot.commands.mafia.init.IPlayer
 import sx.blah.discord.handle.obj.IMessage
@@ -22,6 +23,12 @@ class Player : IPlayer {
 
     override val defence: Int
         get() = details!![5] as Int
+
+    override val id : Long
+        get() = privPlayerID as Long
+
+    val user : IUser
+        get () = BaseBot.client.getUserByID(privPlayerID!!)
 
     constructor() {
         details = null

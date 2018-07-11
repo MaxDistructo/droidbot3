@@ -10,4 +10,6 @@ interface IPlayer {
     val attack: Int
 
     val defence: Int
+
+    val id : Long
 }

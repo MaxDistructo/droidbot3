@@ -6,9 +6,8 @@ import maxdistructo.discord.core.Config
 import maxdistructo.discord.core.command.BaseCommand
 import maxdistructo.discord.core.message.Message
 import sx.blah.discord.handle.obj.IMessage
-import java.util.*
 
-class Help1 : BaseCommand(){
+class Help : BaseCommand(){
 
     override val commandName: String
         get() = "help"
@@ -32,13 +31,13 @@ class Help1 : BaseCommand(){
             }
             Perms.checkMod(message) ->{
                 var i = 0
-                    for (command in BaseBot.listener.modCommands) {
-                        if(i != 0) {
-                            builder.append(Config.readPrefix() + command.helpMessage)
-                            builder.append("\n")
-                        }
-                        i++
+                for (command in BaseBot.listener.modCommands) {
+                    if(i != 0) {
+                        builder.append(Config.readPrefix() + command.helpMessage)
+                        builder.append("\n")
                     }
+                    i++
+                }
 
             }
             else ->{

@@ -2,7 +2,10 @@ package maxdistructo.discord.bots.droidbot.commands.mafia
 
 import maxdistructo.discord.bots.droidbot.BaseBot
 import maxdistructo.discord.bots.droidbot.background.CommandRegistry
+import maxdistructo.discord.bots.droidbot.background.EnumSelector
 import maxdistructo.discord.bots.droidbot.background.PrivUtils
+import maxdistructo.discord.bots.droidbot.commands.Help
+import maxdistructo.discord.bots.droidbot.commands.mafia.action.ActionMessage
 import maxdistructo.discord.bots.droidbot.commands.mafia.methods.*
 import maxdistructo.discord.bots.droidbot.commands.mafia.obj.Game
 import maxdistructo.discord.bots.droidbot.commands.mafia.obj.Player
@@ -172,6 +175,34 @@ object MafiaCommands{
         }
     }
 
+    class AdminMessage : MafiaCommand(){ //!mafia message @user message
+        override val commandName: String
+            get() = "message"
+        override val requiresMod: Boolean
+            get() = true
+        override val helpMessage: String
+            get() = "mafia message <User> <message> - Sends an official message to the provided user through the bot. (Only use for non provided messages)"
+
+        override fun init(message: IMessage, args: List<String>): String {
+            Message.sendDM(Utils.getUserFromInput(message, args[2])!!,Utils.makeNewString(PrivUtils.listToArray(args) as Array<Any>, 3))
+            return ""
+        }
+    }
+
+    class Action : MafiaCommand(){
+        override val commandName: String
+            get() = "action"
+        override val helpMessage: String
+            get() = "mafia action <@user> <action>"
+        override val requiresMod: Boolean
+            get() = true
+
+        override fun init(message: IMessage, args: List<String>): String { //!mafia action @user action
+            ActionMessage.getMessage(EnumSelector.mafiaAction(args[3]), Player(message, Utils.getUserFromInput(message, args[2])!!))
+            return ""
+        }
+    }
+
     class MafiaCommandRegistry : CommandRegistry() {
         override var commandHolder = LinkedList<BaseCommand>()
         init{
@@ -186,7 +217,9 @@ object MafiaCommands{
             val killCommand = KillCommand()
             val jailPlayer = JailPlayer()
             val vote = Vote()
-            this.commandHolder.addAll(listOf(userDo, join, gameContinue, start, info, modInfo, roleCard, setRole, killCommand, jailPlayer, vote))
+            val message = AdminMessage()
+            val action = Action()
+            this.commandHolder.addAll(listOf(userDo, join, gameContinue, start, info, modInfo, roleCard, setRole, killCommand, jailPlayer, vote, message, action))
         }
 
     }

@@ -20,7 +20,7 @@ object Commands{
             val fortune = Fortune()
             val horoscope = Horoscope()
             val insult = Insult()
-            val help = Help1()
+            val help = Help()
             val tnt = PlayerFun.Tnt()
             val slap = PlayerFun.Slap()
             val kiss = PlayerFun.Kiss()
