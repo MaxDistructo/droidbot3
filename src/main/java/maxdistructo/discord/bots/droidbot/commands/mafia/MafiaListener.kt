@@ -3,24 +3,28 @@ package maxdistructo.discord.bots.droidbot.commands.mafia
 
 import kotlinx.coroutines.experimental.launch
 import maxdistructo.discord.bots.droidbot.BaseBot
+import maxdistructo.discord.bots.droidbot.background.BaseListener
 import maxdistructo.discord.bots.droidbot.background.PrivUtils
-import maxdistructo.discord.bots.droidbot.background.constructor.BaseCommand
-import maxdistructo.discord.bots.droidbot.background.constructor.BaseListener
 import maxdistructo.discord.bots.droidbot.commands.mafia.methods.*
 import maxdistructo.discord.bots.droidbot.commands.mafia.obj.Game
 import maxdistructo.discord.bots.droidbot.commands.mafia.obj.Player
 import maxdistructo.discord.core.Config
 import maxdistructo.discord.core.Utils
+import maxdistructo.discord.core.command.BaseCommand
+import maxdistructo.discord.core.command.ICommandRegistry
 import maxdistructo.discord.core.message.Message
 import maxdistructo.discord.core.message.Webhook
 import sx.blah.discord.api.events.EventSubscriber
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
+import java.util.*
 
 class MafiaListener : BaseListener() {
 
     override var adminCommands = listOf<BaseCommand>()
     override var commandsArray = listOf<BaseCommand>()
     override var modCommands = listOf<BaseCommand>()
+    override val name = "Botfather.Mafia"
+    override var commandRegistries = LinkedList<ICommandRegistry>()
 
 
     @EventSubscriber
@@ -51,7 +55,7 @@ class MafiaListener : BaseListener() {
                 }
                 if (message.content.startsWith(prefix + "mafia")) {
                     launch {
-                        var player = Player(message, message.author)
+                        val player = Player(message, message.author)
                         when {
                             Perms.checkAdmin(message) -> for (command in adminCommands) {
                                 if (messageContent[1] == command.commandName) {
@@ -127,13 +131,8 @@ class MafiaListener : BaseListener() {
                             }
                         }
                     }
-                    if (Perms.checkMod(message) && messageContent.size >= 2 && Perms.checkMafiaChannels(message) && messageContent[0] == prefix + "mafia") {
+                   /* if (Perms.checkMod(message) && messageContent.size >= 2 && Perms.checkMafiaChannels(message) && messageContent[0] == prefix + "mafia") {
                         when (messageContent[1]) {
-                            "kill" -> {
-                                Mafia.killPlayer(message, Utils.getUserFromInput(message, messageContent[2])!!.longID)
-                                Webhook.send(BaseBot.bot, game.dayChannel, "Graveyard", "https://cdn.discordapp.com/emojis/294160585179004928.png", Kill.message(message, messageContent))
-                                message.delete()
-                            }
                             "revive" -> {
                                 val root = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_playerdat.txt")
                                 val playerInfo = root.getJSONObject("" + Utils.getUserFromInput(message, messageContent[2])!!.longID)
@@ -183,29 +182,8 @@ class MafiaListener : BaseListener() {
                                 Message.sendDM(Utils.getUserFromInput(message, messageContent[2])!!, Utils.makeNewString(messageContent, 3) + "\n To reply, use /mafia pm " + message.author.mention() + " in the mafia commands channel.") //Send PM to desired recipient
                                 message.delete()
                             }
-                            "jail", player.role == "jailor" -> {
-                                if (Utils.getUserFromInput(message, messageContent[2])!! === message.author) {
-                                    Message.sendDM(message.author, "You can not jail yourself!")
-                                } else {
-                                    Mafia.jailPlayer(message, Utils.getUserFromInput(message, messageContent[2])!!)
-                                    Message.sendDM(message.author, "You have successfully jailed " + Utils.getMentionedUser(message))
-                                    Message.sendMessage(game.adminChannel, "The jailor has jailed " + Utils.getUserFromInput(message, messageContent[2])!!.getDisplayName(message.guild))
-                                }
-                                message.delete()
-                            }
-                            "vote", game.day, Utils.getUserFromInput(message, messageContent[2])!! != message.author -> {
-                                if (player.role == "mayor") {
-                                    if (MafiaConfig.checkRevealed(message)) {
-                                        Message.sendMessage(message.channel, "The Mayor has voted for " + Utils.getMentionedUser(message)!!.mention(true))
-                                    }
-                                }
-                                Message.sendMessage(message.channel, message.author.toString() + " has voted for " + Utils.getMentionedUser(message)!!.mention(true))
-                                Message.sendMessage(game.adminChannel, message.author.toString() + " has voted for " + Utils.getMentionedUser(message)!!.mention(true))
-                                message.delete()
-                            }
                         }
-                    }
-
+                    }*/
                 }
             }
 

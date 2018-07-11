@@ -1,9 +1,9 @@
 package maxdistructo.discord.bots.droidbot.commands
 
 import maxdistructo.discord.bots.droidbot.background.PrivUtils
-import maxdistructo.discord.bots.droidbot.background.constructor.BaseCommand
 import maxdistructo.discord.core.Perms
 import maxdistructo.discord.core.Utils
+import maxdistructo.discord.core.command.BaseCommand
 import sx.blah.discord.handle.obj.IMessage
 import sx.blah.discord.handle.obj.IRole
 import sx.blah.discord.handle.obj.IUser

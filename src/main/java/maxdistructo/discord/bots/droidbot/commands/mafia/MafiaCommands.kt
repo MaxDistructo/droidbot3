@@ -1,29 +1,22 @@
 package maxdistructo.discord.bots.droidbot.commands.mafia
 
 import maxdistructo.discord.bots.droidbot.BaseBot
+import maxdistructo.discord.bots.droidbot.background.CommandRegistry
 import maxdistructo.discord.bots.droidbot.background.PrivUtils
-import maxdistructo.discord.bots.droidbot.background.constructor.BaseListener
-import maxdistructo.discord.bots.droidbot.commands.Help1
-import maxdistructo.discord.bots.droidbot.commands.mafia.methods.Mafia
-import maxdistructo.discord.bots.droidbot.commands.mafia.methods.MafiaConfig
-import maxdistructo.discord.bots.droidbot.commands.mafia.methods.RoleCards
-import maxdistructo.discord.bots.droidbot.commands.mafia.methods.UserDo
+import maxdistructo.discord.bots.droidbot.commands.mafia.methods.*
 import maxdistructo.discord.bots.droidbot.commands.mafia.obj.Game
 import maxdistructo.discord.bots.droidbot.commands.mafia.obj.Player
 import maxdistructo.discord.core.Utils
+import maxdistructo.discord.core.command.BaseCommand
 import maxdistructo.discord.core.message.Message
+import maxdistructo.discord.core.message.Webhook
 import sx.blah.discord.handle.obj.IMessage
+import java.util.*
 
-object MafiaCommands {
 
-    val userDo = Do()
-    val join = Join()
-    val gameContinue = Continue()
-    val start = Start()
-    val info = Info()
-    val modInfo = ModInfo()
-    val roleCard = RoleCard()
-    val setRole = SetRole()
+
+object MafiaCommands{
+
 
     class Do : MafiaCommand(){
         override val commandName: String
@@ -119,7 +112,83 @@ object MafiaCommands {
         }
     }
 
-    fun init(listener : BaseListener){
-        listener.registerCommand(userDo, join, gameContinue, start, info, modInfo, roleCard, setRole)
+    class KillCommand : MafiaCommand(){
+        override val commandName: String
+            get() = "kill"
+        override val helpMessage: String
+            get() = "mafia kill <User> <killer|-2kill killer1 killer2|-3kill killer1 killer2 killer3|-clean> - Kills the provided user in the specified way"
+        override val requiresMod: Boolean
+            get() = true
+
+        override fun init(message: IMessage, args: List<String>): String {
+            val game = Game(Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt"))
+            Mafia.killPlayer(message, Utils.getUserFromInput(message, args[2])!!.longID)
+            Webhook.send(BaseBot.bot, game.dayChannel, "Graveyard", "https://cdn.discordapp.com/emojis/294160585179004928.png", Kill.message(message, PrivUtils.listToArray(args) as Array<Any>))
+            message.delete()
+            return ""
+        }
     }
+
+    class JailPlayer : MafiaCommand(){
+        override val commandName: String
+            get() = "jail"
+        override val helpMessage: String
+            get() = "mafia jail <User> - Jails the provided user"
+        override val roleRestriction: String
+            get() = "jailor"
+
+        override fun init(message: IMessage, args: List<String>): String {
+            val game = Game(Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt"))
+            if (Utils.getUserFromInput(message, args[2])!! === message.author) {
+                Message.sendDM(message.author, "You can not jail yourself!")
+            } else {
+                Mafia.jailPlayer(message, Utils.getUserFromInput(message, args[2])!!)
+                Message.sendDM(message.author, "You will be Jailing " + Utils.getMentionedUser(message))
+                Message.sendMessage(game.adminChannel, "The jailor has jailed " + Utils.getUserFromInput(message, args[2])!!.getDisplayName(message.guild))
+            }
+            message.delete()
+            return ""
+        }
+    }
+
+    class Vote : MafiaCommand(){
+        override val commandName: String
+            get() = "vote"
+        override val helpMessage: String
+            get() = "mafia vote <User> - Votes the specified user up to the stand."
+
+        override fun init(message: IMessage, args: List<String>): String {
+            val player = Player(MafiaConfig.getPlayerDetails(message))
+            if (player.role == "mayor") {
+                if (MafiaConfig.checkRevealed(message)) {
+                    Message.sendMessage(message.channel, "The Mayor has voted for " + Utils.getMentionedUser(message)!!.mention(true))
+                } else {
+                    Message.sendMessage(message.channel, message.author.toString() + " has voted for " + Utils.getMentionedUser(message)!!.mention(true))
+                }
+            }
+            Message.sendMessage(message.channel, message.author.toString() + " has voted for " + Utils.getMentionedUser(message)!!.mention(true))
+            message.delete()
+            return ""
+        }
+    }
+
+    class MafiaCommandRegistry : CommandRegistry() {
+        override var commandHolder = LinkedList<BaseCommand>()
+        init{
+            val userDo = Do()
+            val join = Join()
+            val gameContinue = Continue()
+            val start = Start()
+            val info = Info()
+            val modInfo = ModInfo()
+            val roleCard = RoleCard()
+            val setRole = SetRole()
+            val killCommand = KillCommand()
+            val jailPlayer = JailPlayer()
+            val vote = Vote()
+            this.commandHolder.addAll(listOf(userDo, join, gameContinue, start, info, modInfo, roleCard, setRole, killCommand, jailPlayer, vote))
+        }
+
+    }
+
 }

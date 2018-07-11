@@ -3,7 +3,7 @@ package maxdistructo.discord.bots.droidbot.commands
 import com.mashape.unirest.http.Unirest
 import com.mashape.unirest.http.exceptions.UnirestException
 import maxdistructo.discord.bots.droidbot.background.PrivUtils
-import maxdistructo.discord.bots.droidbot.background.constructor.BaseCommand
+import maxdistructo.discord.core.command.BaseCommand
 import org.json.JSONObject
 import sx.blah.discord.handle.obj.IMessage
 

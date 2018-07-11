@@ -1,9 +1,12 @@
 package maxdistructo.discord.bots.droidbot
 
 import maxdistructo.discord.bots.droidbot.background.BetaListener
-import maxdistructo.discord.bots.droidbot.background.constructor.BaseListener
+import maxdistructo.discord.bots.droidbot.commands.admin.Admin
+import maxdistructo.discord.bots.droidbot.commands.admin.AdminListener
 import maxdistructo.discord.bots.droidbot.commands.mafia.MafiaCommands
 import maxdistructo.discord.bots.droidbot.commands.mafia.MafiaListener
+import maxdistructo.discord.bots.droidbot.commands.server.NateBattleCommands
+import maxdistructo.discord.bots.droidbot.commands.server.NateBattleListener
 import maxdistructo.discord.core.Client
 import maxdistructo.discord.core.Config
 import maxdistructo.discord.core.impl.Bot
@@ -14,8 +17,10 @@ object BaseBot {
     lateinit var client: IDiscordClient
     lateinit var LOGGER : Logger
     lateinit var bot : Bot
-    lateinit var listener: BaseListener
-    lateinit var mafiaListener: MafiaListener
+    val listener = BetaListener()
+    val mafiaListener = MafiaListener()
+    val nateListener = NateBattleListener()
+    val adminListener = AdminListener()
 
     @JvmStatic
     fun main(args: Array<String>) {
@@ -24,18 +29,15 @@ object BaseBot {
         Client.client = bot.client
         LOGGER = bot.logger
         LOGGER.info("Client Created")
-        listener = BetaListener()
-        LOGGER.info("Instantiated Listener")
-        Commands.init(listener)
-        LOGGER.info("Registered Commands")
-        client.dispatcher.registerListener(listener)
-        LOGGER.info("Registered Listener")
-        mafiaListener = MafiaListener()
-        LOGGER.info("Instantiated Mafia Listener")
-        MafiaCommands.init(mafiaListener)
-        LOGGER.info("Registered Mafia Commands")
-        client.dispatcher.registerListener(mafiaListener)
-        LOGGER.info("Registered Mafia Listener. PLAY ON!")
+        listener.addCommandRegistry(Commands.CommandsRegistry())
+        mafiaListener.addCommandRegistry(MafiaCommands.MafiaCommandRegistry())
+        nateListener.addCommandRegistry(NateBattleCommands.NateBattleCommandRegistry())
+        adminListener.addCommandRegistry(Admin.AdminCommandRegistry())
+        bot.addListener(listener)
+        bot.addListener(mafiaListener)
+        bot.addListener(nateListener)
+        bot.addListener(adminListener)
+        bot.registerListeners()
     }
 
 }

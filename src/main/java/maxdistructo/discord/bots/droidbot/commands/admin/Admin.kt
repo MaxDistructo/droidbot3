@@ -1,11 +1,14 @@
-package maxdistructo.discord.bots.droidbot.commands
+package maxdistructo.discord.bots.droidbot.commands.admin
 
 
 import maxdistructo.discord.bots.droidbot.BaseBot.client
+import maxdistructo.discord.bots.droidbot.background.CommandRegistry
 import maxdistructo.discord.bots.droidbot.background.Conf
-import maxdistructo.discord.bots.droidbot.background.constructor.BaseCommand
+import maxdistructo.discord.bots.droidbot.background.PrivUtils
+import maxdistructo.discord.bots.droidbot.commands.Shutdown
 import maxdistructo.discord.bots.droidbot.commands.casino.CasinoConfig
 import maxdistructo.discord.core.*
+import maxdistructo.discord.core.command.BaseCommand
 import maxdistructo.discord.core.message.Message
 import org.json.JSONArray
 import sx.blah.discord.handle.obj.*
@@ -18,19 +21,17 @@ import java.text.NumberFormat
 import java.time.Instant
 import java.util.*
 
-class Admin : BaseCommand() {
-    override val commandName: String
-        get() = "admin"
-    override val helpMessage: String
-        get() = "admin [subcommand] <arguments>"
-    override val requiresAdmin: Boolean
-        get() = true
-    override val requiresMod: Boolean
-        get() = super.requiresMod
+object Admin {
 
-    override fun init(message: IMessage, args: List<String>) : String {
+    class AddMod : AdminCommand(){
+        override val commandName: String
+            get() = "addmod"
+        override val requiresGuildOwner: Boolean
+            get() = true
 
-        return "Command Error: $commandName"
+        override fun init(message: IMessage, args: List<String>): String {
+            return addMod(message, Utils.getMentionedUser(message)!!)
+        }
     }
 
     fun addMod(message: IMessage, mentioned: IUser): String {
@@ -54,6 +55,17 @@ class Admin : BaseCommand() {
             return "Sucessfully added " + mentioned.getDisplayName(message.guild) + " to the Moderator list."
         }
         return "Command Error"
+    }
+
+    class AddAdmin : AdminCommand(){
+        override val commandName: String
+            get() = "addadmin"
+        override val requiresGuildOwner: Boolean
+            get() = true
+
+        override fun init(message: IMessage, args: List<String>): String {
+            return addAdmin(message, Utils.getMentionedUser(message)!!)
+        }
     }
 
     fun addAdmin(message: IMessage, mentioned: IUser): String {
@@ -116,6 +128,17 @@ class Admin : BaseCommand() {
         return mentioned.mention(true) + " you have been released from your bot abuse punishment."
     }
 
+    class Nickname : AdminCommand(){
+        override val commandName: String
+            get() = "nickname"
+        override val requiresOwner: Boolean
+            get() = true
+
+        override fun init(message: IMessage, args: List<String>): String {
+            return setNickname(PrivUtils.listToArray(args))
+        }
+    }
+
     fun setNickname(args: Array<String>): String {
         var makeNewString = ""
         println("Begin making new string.")
@@ -127,6 +150,17 @@ class Admin : BaseCommand() {
         println("End making new string.")
         client.changeUsername(makeNewString)
         return "Name successfully set to :$makeNewString"
+    }
+
+    class ProfilePic : AdminCommand(){
+        override val commandName: String
+            get() = "picture"
+        override val requiresOwner: Boolean
+            get() = true
+
+        override fun init(message: IMessage, args: List<String>): String {
+            return setProfilePic(PrivUtils.listToArray(args))
+        }
     }
 
     fun setProfilePic(args: Array<String>): String {
@@ -220,18 +254,32 @@ class Admin : BaseCommand() {
                 val guild = guildArray[i] as IGuild
                 val announcementsList = guild.getChannelsByName("announcements")
 
-                if (announcementsList.size != 0) {
-                    val announcements = announcementsList[0]
-                    Message.sendMessage(announcements, "@here $sendMessage")
-                } else if (guild.systemChannel != null) {
-                    Message.sendMessage(guild.systemChannel, "@here $sendMessage")
-                } else {
-                    Message.sendMessage(guild.defaultChannel, "@here $sendMessage")
+                when {
+                    announcementsList.size != 0 -> {
+                        val announcements = announcementsList[0]
+                        Message.sendMessage(announcements, "@here $sendMessage")
+                    }
+                    guild.systemChannel != null -> Message.sendMessage(guild.systemChannel, "@here $sendMessage")
+                    else -> Message.sendMessage(guild.defaultChannel, "@here $sendMessage")
                 }
                 i++
             }
         }
 
+    }
+
+    class ClearChannel : AdminCommand(){
+        override val commandName: String
+            get() = "clear"
+        override val requiresAdmin: Boolean
+            get() = true
+        override val hasOutput: Boolean
+            get() = false
+
+        override fun init(message: IMessage, args: List<String>): String {
+            clearChannel(message.channel)
+            return ""
+        }
     }
 
     fun clearChannel(channel: IChannel) {
@@ -240,7 +288,21 @@ class Admin : BaseCommand() {
             if (!message.isPinned) {
                 message.delete()
             }
-            Thread.sleep(2000L)
+            Thread.sleep(4000L)
+        }
+    }
+
+    class BackupChannel : AdminCommand(){
+        override val commandName: String
+            get() = "backup"
+        override val requiresAdmin: Boolean
+            get() = true
+        override val hasOutput: Boolean
+            get() = false
+
+        override fun init(message: IMessage, args: List<String>): String {
+            backupChat(message.channel)
+            return ""
         }
     }
 
@@ -258,6 +320,18 @@ class Admin : BaseCommand() {
         val fw = FileWriter(file)
         fw.write(sb.toString())
         Message.sendMessage(channel, "Successfully backed up this channel.")
+    }
+
+    class AdminCommandRegistry : CommandRegistry(){
+        override var commandHolder = LinkedList<BaseCommand>()
+        init {
+            val clear = ClearChannel()
+            val backup = BackupChannel()
+            val nick = Nickname()
+            val profile = ProfilePic()
+            val shutdown = Shutdown()
+            this.commandHolder.addAll(listOf(clear, backup, nick, profile, shutdown))
+        }
     }
 
 

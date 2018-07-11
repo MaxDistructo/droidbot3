@@ -1,6 +1,6 @@
 package maxdistructo.discord.bots.droidbot.commands.mafia
 
-import maxdistructo.discord.bots.droidbot.background.constructor.BaseCommand
+import maxdistructo.discord.core.command.BaseCommand
 import sx.blah.discord.handle.obj.IMessage
 
 open class MafiaCommand : BaseCommand() {
@@ -14,7 +14,7 @@ open class MafiaCommand : BaseCommand() {
         get() = "subcommandName"
     override val helpMessage: String
         get() = "subcommandName <parms> - Description of command"
-    val roleRestriction : String
+    open val roleRestriction : String
         get() = "none"
 
     override fun init(message: IMessage, args: List<String>): String {
