@@ -84,8 +84,8 @@ object MafiaCommands{
         override val requiresMod: Boolean
             get() = true
         override fun init(message: IMessage, args: List<String>): String {
-            val details = MafiaConfig.getPlayerDetails(message, Utils.getUserFromInput(message, args[2])!!.longID)
-            Message.sendDM(message.author, Message.simpleEmbed(Utils.getUserFromInput(message, args[2])!!, "Mafia Details","Alignment: " + details[0] + "\nClass: " + details[1] + "\nRole: " + details[2] + "\nIs Dead: " + details[3] + "\nAttack Power: " + details[4] + "\nDefence Power: " + details[5], message))
+            val details = MafiaConfig.getPlayerDetails(message, Mafia.getUserFromInput(message, args[2])!!.longID)
+            Message.sendDM(message.author, Message.simpleEmbed(Mafia.getUserFromInput(message, args[2])!!, "Mafia Details","Alignment: " + details[0] + "\nClass: " + details[1] + "\nRole: " + details[2] + "\nIs Dead: " + details[3] + "\nAttack Power: " + details[4] + "\nDefence Power: " + details[5], message))
             return ""
         }
     }
@@ -109,7 +109,7 @@ object MafiaCommands{
         override fun init(message: IMessage, args: List<String>): String {
             val game = Game(Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt"))
             Mafia.setRole(message, Utils.getUserFromInput(message, args[2])!!, args[3])
-            Message.sendMessage(game.adminChannel, "The role of " + Utils.getUserFromInput(message, args[2])!!.getDisplayName(message.guild) + " has been set to " + MafiaConfig.getPlayerDetails(message, Utils.getUserFromInput(message, args[2])!!.longID)[2])
+            Message.sendMessage(game.adminChannel, "The role of " + Mafia.getUserFromInput(message, args[2])!!.getDisplayName(message.guild) + " has been set to " + MafiaConfig.getPlayerDetails(message, Utils.getUserFromInput(message, args[2])!!.longID)[2])
             Message.sendDM(Utils.getUserFromInput(message, args[2])!!, "Your role has been set to " + args[3] + " due to either Unique role or specific role change.")
             return ""
         }

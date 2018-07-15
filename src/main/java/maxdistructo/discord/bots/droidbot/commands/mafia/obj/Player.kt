@@ -30,6 +30,9 @@ class Player : IPlayer {
     val user : IUser
         get () = BaseBot.client.getUserByID(privPlayerID!!)
 
+    val roleEnum : Enum<Roles>
+        get() = Roles.valueOf(role)
+
     constructor() {
         details = null
         privPlayerID = null

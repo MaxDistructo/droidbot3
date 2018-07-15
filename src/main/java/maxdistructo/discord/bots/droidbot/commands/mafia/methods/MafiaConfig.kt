@@ -1,5 +1,6 @@
 package maxdistructo.discord.bots.droidbot.commands.mafia.methods
 
+import maxdistructo.discord.bots.droidbot.commands.mafia.obj.Details
 import maxdistructo.discord.core.Roles
 import maxdistructo.discord.core.Utils
 import maxdistructo.discord.core.Utils.s
@@ -53,12 +54,12 @@ object MafiaConfig {
         if (!Perms.checkMod(message)) {
             val root1 = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_playerdat.txt")
             val root = root1.getJSONObject("" + message.author.longID)
-            val list = arrayListOf<Any>(root.getString("alignment"), root.getString("class"), root.getString("role"), message.author.getRolesForGuild(message.guild).contains(Roles.getRole(message, "Dead(Mafia)")), root.getInt("attack"), root.getInt("defense"))
+            val list = arrayListOf<Any>(root.getString("alignment"), root.getString("class"), root.getString("role"), message.author.getRolesForGuild(message.guild).contains(Roles.getRole(message, "Dead(Mafia)")), root.getInt("attack"), root.getInt("defense"), root.getString("extra"))
             return list.toArray()
         } else if(Perms.checkMod(message) && message.author.hasRole(message.guild.getRolesByName("Alive(Mafia)")[0]) || message.author.hasRole(message.guild.getRolesByName("Dead(Mafia)")[0])){
             val root1 = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_playerdat.txt")
             val root = root1.getJSONObject("" + message.author.longID)
-            val list = arrayListOf<Any>(root.getString("alignment"), root.getString("class"), root.getString("role"), message.author.getRolesForGuild(message.guild).contains(Roles.getRole(message, "Dead(Mafia)")), root.getInt("attack"), root.getInt("defense"))
+            val list = arrayListOf<Any>(root.getString("alignment"), root.getString("class"), root.getString("role"), message.author.getRolesForGuild(message.guild).contains(Roles.getRole(message, "Dead(Mafia)")), root.getInt("attack"), root.getInt("defense"), root.getString("extra"))
             return list.toArray()
         }
         else {
@@ -159,5 +160,29 @@ object MafiaConfig {
             return root1.getBoolean("revealed")
         }
         return false
+    }
+    fun setExtra(message : IMessage, value : Any){
+        val f = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_playerdat.txt").getJSONObject("" + message.author.longID)
+        f.remove("extra")
+        f.put("extra", value)
+        MafiaConfig.writeGame(message, f)
+    }
+    fun getExtra(message : IMessage) : Any{
+        val details = getPlayerDetails(message)
+        return details[6]
+    }
+    fun getExtra(message : IMessage, user : Long) : Any{
+        val details = getPlayerDetails(message, user)
+        return details[6]
+    }
+
+    fun editDetails(message : IMessage, user : IUser, key : Enum<Details>, value : Any){
+        val json = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_playerdat.txt")
+        val userJson = json.getJSONObject("" + user.longID)
+        json.remove("" + user.longID)
+        userJson.remove(key.name)
+        userJson.put(key.name, value)
+        json.put("" + user.longID, userJson)
+        writeGame(message, json)
     }
 }

@@ -2,6 +2,7 @@ package maxdistructo.discord.bots.droidbot.commands.mafia.obj
 
 import maxdistructo.discord.bots.droidbot.BaseBot
 import maxdistructo.discord.bots.droidbot.commands.mafia.init.IGame
+import org.json.JSONArray
 import org.json.JSONObject
 import sx.blah.discord.handle.obj.IChannel
 

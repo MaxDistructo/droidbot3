@@ -6,6 +6,7 @@ import maxdistructo.discord.bots.droidbot.BaseBot
 import maxdistructo.discord.bots.droidbot.background.BaseListener
 import maxdistructo.discord.bots.droidbot.background.PrivUtils
 import maxdistructo.discord.bots.droidbot.commands.mafia.methods.*
+import maxdistructo.discord.bots.droidbot.commands.mafia.obj.Details
 import maxdistructo.discord.bots.droidbot.commands.mafia.obj.Game
 import maxdistructo.discord.bots.droidbot.commands.mafia.obj.Player
 import maxdistructo.discord.core.Config
@@ -16,6 +17,8 @@ import maxdistructo.discord.core.message.Message
 import maxdistructo.discord.core.message.Webhook
 import sx.blah.discord.api.events.EventSubscriber
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
+import sx.blah.discord.handle.obj.IMessage
+import sx.blah.discord.handle.obj.IUser
 import java.util.*
 
 class MafiaListener : BaseListener() {
@@ -69,15 +72,15 @@ class MafiaListener : BaseListener() {
                                             message.delete()
                                         }
                                     }
+                                    else if ((command as MafiaCommand).roleRestriction != "none"){
+                                        if((command).roleRestriction == player.role && !command.hasOutput){
+                                            command.init(message, PrivUtils.arrayToList(message.content.split(" ").toTypedArray()))
+                                            message.delete()
+                                        }
+                                    }
                                     else{
-                                        if((command as MafiaCommand).roleRestriction == "none") {
-                                            command.init(message, PrivUtils.arrayToList(message.content.split(" ").toTypedArray()))
-                                            message.delete()
-                                        }
-                                        else if((command as MafiaCommand).roleRestriction == player.role){
-                                            command.init(message, PrivUtils.arrayToList(message.content.split(" ").toTypedArray()))
-                                            message.delete()
-                                        }
+                                        command.init(message,PrivUtils.arrayToList(message.content.split(" ").toTypedArray()))
+                                        message.delete()
                                     }
                                 }
                             }
@@ -189,4 +192,19 @@ class MafiaListener : BaseListener() {
 
         }
     }
+    companion object {
+        var dirtyValues : Array<Triple<IUser, Enum<Details>, Any>> = arrayOf()
+        fun addDirtyValue(triple : Triple<IUser,Enum<Details>,Any>){
+            dirtyValues += triple
+        }
+        fun fixDirty(message : IMessage){
+            var i = 0
+            for(value in dirtyValues){
+                MafiaConfig.editDetails(message, value.first, value.second, value.third)
+                dirtyValues.drop(i)
+                i++
+            }
+        }
+    }
+
 }

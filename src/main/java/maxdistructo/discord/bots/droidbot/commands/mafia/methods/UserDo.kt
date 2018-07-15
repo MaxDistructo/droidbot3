@@ -11,7 +11,7 @@ object UserDo {
     fun message(message: IMessage, messageContent: Array<Any>) {
         val player = Player(message, message.author)
         val game = Game(Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt"))
-        val mentioned = Utils.getUserFromInput(message, messageContent[2])
+        val mentioned = Mafia.getUserFromInput(message, messageContent[2])
         when (player.role) {
             "mafioso" -> {
                 Message.sendMessage(game.adminChannel, message.author.getDisplayName(message.guild) + " has voted to kill " + mentioned!!.getDisplayName(message.guild))
@@ -30,7 +30,13 @@ object UserDo {
             }
             "werewolf" -> {
                 Message.sendMessage(game.adminChannel, message.author.getDisplayName(message.guild) + " is gonna go and visit " + mentioned!!.getDisplayName(message.guild))
-                Message.sendDM(message.author, "You have decided to go and rampage at " + mentioned.getDisplayName(message.guild) + "'s house")
+                if(mentioned.getDisplayName(message.guild).toCharArray().last() != 's') {
+                    Message.sendDM(message.author, "You have decided to go and rampage at " + mentioned.getDisplayName(message.guild) + "'s house")
+                }
+                else{
+                    val charArray = mentioned.getDisplayName(message.guild).toCharArray().slice(0 until (mentioned.getDisplayName(message.guild).toCharArray().size - 1))
+                    Message.sendDM(message.author, "You have decided to go and rampage at " + charArray.toString() + "'s house")
+                }
                 message.delete()
             }
             "arsonist" -> {
@@ -51,6 +57,7 @@ object UserDo {
             "veteran" -> {
                 Message.sendMessage(game.adminChannel, message.author.getDisplayName(message.guild) + " is going on alert tonight.")
                 Message.sendDM(message.author, "You have decided to go on alert tonight")
+                MafiaConfig.setExtra(message, true)
                 message.delete()
             }
             "vigilante" -> {
@@ -60,8 +67,8 @@ object UserDo {
             }
             "jailor" -> {
                 if (mentioned!!.longID == MafiaConfig.getJailed(message)) {
-                    Message.sendMessage(game.adminChannel, "The jailor is going to shoot " + mentioned!!.getDisplayName(message.guild))
-                    Message.sendMessage(message.channel, "You have decided to shoot " + mentioned!!.getDisplayName(message.guild))
+                    Message.sendMessage(game.adminChannel, "The jailor is going to execute " + mentioned!!.getDisplayName(message.guild))
+                    Message.sendMessage(message.channel, "You have decided to execute " + mentioned!!.getDisplayName(message.guild))
                 } else {
                     Message.sendDM(message.author, "You can only shoot the person you have jailed!")
                 }
@@ -129,10 +136,7 @@ object UserDo {
             "mayor" -> {
                 Message.sendMessage(message.channel, message.author.getDisplayName(message.guild) + " has revealed themselves as the Mayor!")
                 //Set the variable for mayor reveal to true
-                val f = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_playerdat.txt").getJSONObject("" + message.author.longID)
-                f.remove("revealed")
-                f.put("revealed", true)
-                MafiaConfig.writeGame(message, f)
+                MafiaConfig.setExtra(message, true)
                 Message.sendMessage(game.adminChannel, message.author.getDisplayName(message.guild) + " has revealed as the mayor. Their votes now count as 3.")
                 message.delete()
             }
