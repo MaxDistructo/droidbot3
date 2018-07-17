@@ -12,8 +12,6 @@ import maxdistructo.discord.core.Config
 import maxdistructo.discord.core.impl.Bot
 import org.slf4j.Logger
 import sx.blah.discord.api.IDiscordClient
-import sx.blah.discord.handle.obj.ActivityType
-import sx.blah.discord.handle.obj.StatusType
 
 object BaseBot {
     lateinit var client: IDiscordClient
@@ -40,6 +38,7 @@ object BaseBot {
         bot.addListener(nateListener)
         bot.addListener(adminListener)
         bot.registerListeners()
+        bot.client.dispatcher.registerListener(ReconnectListener()) //Listener that reconnects the bot and handles the status updating.
 
     }
 

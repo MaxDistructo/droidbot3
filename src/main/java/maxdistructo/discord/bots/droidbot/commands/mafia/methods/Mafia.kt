@@ -2,6 +2,8 @@ package maxdistructo.discord.bots.droidbot.commands.mafia.methods
 
 import maxdistructo.discord.bots.droidbot.BaseBot
 import maxdistructo.discord.bots.droidbot.commands.mafia.MafiaListener
+import maxdistructo.discord.bots.droidbot.commands.mafia.action.RunActions
+import maxdistructo.discord.bots.droidbot.commands.mafia.obj.Details
 import maxdistructo.discord.bots.droidbot.commands.mafia.obj.Game
 import maxdistructo.discord.bots.droidbot.commands.mafia.obj.Player
 import maxdistructo.discord.core.Roles
@@ -39,7 +41,15 @@ object Mafia {
         val game = Game(Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt"))
         val adminChannel = game.adminChannel
         val dayChannel = game.dayChannel
-        assignRoles(message)
+        File(s + "/config/mafia/" + message.guild.longID + "_playerdat.txt").delete()
+        val roles = assignRoles(message)
+        val roleArray = roles.second
+        MafiaConfig.writeGame(message, roles.first)
+        var ii = 0
+        for(i in MafiaConfig.getPlayers(message, "Mafia Folks")){
+            Message.sendDM(message.guild.getUserByID(i), RoleCards.onRoleCardAsk(message, roleArray[ii]!!, message.guild.getUserByID(i)))
+            ii++
+        }
         Message.sendMessage(dayChannel, message.guild.getRolesByName("Mafia Folks")[0].mention() + " The Mafia game has started! \n Day 1 has begun!")
         Message.sendMessage(adminChannel, message.author.getDisplayName(message.guild) + "#" + message.author.discriminator + " has started the Mafia game.")
         val players = MafiaConfig.getPlayers(message, "Mafia Folks")
@@ -71,6 +81,7 @@ object Mafia {
         if (game.day) {
             toggleToNight(message)
         } else {
+            MafiaListener.fixDirty(message)
             toggleToDay(message)
         }
     }
@@ -213,7 +224,7 @@ object Mafia {
 
 
 
-    fun assignRoles(message: IMessage): JSONObject {
+    fun assignRoles(message: IMessage): Pair<JSONObject, Array<String?>> {
         val root = Utils.readJSONFromFile("/config/mafia/roles.dat")
         val jArrayRoles = root.getJSONArray("rolelist")
         val translator = root.getJSONObject("rolelist-translate")
@@ -234,14 +245,12 @@ object Mafia {
         sb.append("The role list contains: \n")
         for (player in players) {
             out.put("" + player, roleData.getJSONObject(roleList[ii]))
-            Message.sendDM(message.guild.getUserByID(player), RoleCards.onRoleCardAsk(message, roleList[ii].toString(), message.guild.getUserByID(player)))
+            //Message.sendDM(message.guild.getUserByID(player), RoleCards.onRoleCardAsk(message, roleList[ii].toString(), message.guild.getUserByID(player)))
             sb.append(message.guild.getUserByID(player).name + ": " + roleList[ii] + "\n")
             ii++
         }
         Message.sendMessage(game.adminChannel, sb.toString())
-        File(s + "/config/mafia/" + message.guild.longID + "_playerdat.txt").delete()
-        MafiaConfig.writeGame(message, out)
-        return out
+        return Pair(out, roleList)
     }
 
     fun killPlayer(message: IMessage, playerID: Long): String {
@@ -357,7 +366,11 @@ object Mafia {
     }
 
     private fun runActions(message : IMessage){
-        //Run Actions in Order
+        RunActions.activate(message)
         MafiaListener.fixDirty(message)
+    }
+
+    fun revive(message : IMessage, user : Long){
+        MafiaConfig.editDetails(message, message.guild.getUserByID(user), Details.DEAD,false)
     }
 }

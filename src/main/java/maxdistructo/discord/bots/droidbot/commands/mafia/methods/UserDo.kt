@@ -1,5 +1,7 @@
 package maxdistructo.discord.bots.droidbot.commands.mafia.methods
 
+import maxdistructo.discord.bots.droidbot.commands.mafia.MafiaListener
+import maxdistructo.discord.bots.droidbot.commands.mafia.obj.Details
 import maxdistructo.discord.bots.droidbot.commands.mafia.obj.Game
 import maxdistructo.discord.bots.droidbot.commands.mafia.obj.Player
 import maxdistructo.discord.core.Utils
@@ -155,6 +157,8 @@ object UserDo {
             }
             "disguiser" -> {
                 Message.sendMessage(game.adminChannel, message.author.name + " is going to be disguised as " + mentioned!!.getDisplayName(message.guild) + " in role.")
+                MafiaConfig.setExtra(message, mentioned.longID)
+                MafiaListener.addDirtyValue(Triple(mentioned, Details.EXTRA, 0L))
                 Message.sendDM(message.author, "You will be disguising as " + mentioned!!.getDisplayName(message.guild))
                 message.delete()
             }

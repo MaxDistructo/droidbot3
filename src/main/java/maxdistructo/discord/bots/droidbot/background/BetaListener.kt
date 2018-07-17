@@ -72,9 +72,4 @@ class BetaListener : BaseListener() {
         }
 
     }
-
-    @EventSubscriber
-    fun onShardLoggedIn(event : ShardReadyEvent){
-        BaseBot.bot.client.changePresence(StatusType.ONLINE, ActivityType.PLAYING, "Use " + Config.readPrefix() + "help")
-    }
 }

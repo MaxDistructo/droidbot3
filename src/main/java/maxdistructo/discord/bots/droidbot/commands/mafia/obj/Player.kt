@@ -27,6 +27,9 @@ class Player : IPlayer {
     override val id : Long
         get() = privPlayerID as Long
 
+    val extra : Any
+        get() = details!![6]
+
     val user : IUser
         get () = BaseBot.client.getUserByID(privPlayerID!!)
 

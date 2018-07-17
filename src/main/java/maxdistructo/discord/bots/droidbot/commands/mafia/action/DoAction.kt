@@ -37,6 +37,12 @@ object DoAction {
         MafiaConfig.writeActions(message, actions)
     }
 
+    fun removeAction(message : IMessage, action : Action){
+        val actions = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_actions.txt")
+        actions.remove("" + action.player)
+        MafiaConfig.writeActions(message, actions)
+    }
+
     fun addAction(message: IMessage, action: Action) {
         val actions = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_actions.txt")
         actions.remove("" + action.player)
@@ -140,7 +146,12 @@ object DoAction {
             }
             if (action.action == "invest") {
                 val target = Player(message, user)
-                Message.sendDM(message.guild.getUserByID(user), MafiaConfig.investResults(message).getString(target.role))
+                if (action.extra != "none") {
+                    Message.sendDM(message.guild.getUserByID(user), MafiaConfig.investResults(message).getString(target.role))
+                }
+                else{
+                    Message.sendDM(message.guild.getUserByID(user), MafiaConfig.investResults(message).getString(action.extra.toString()))
+                }
             }
         }
     }
@@ -154,15 +165,19 @@ object DoAction {
                 e.localizedMessage
             }
             if (action.action == "interrogate") {
-                val target = Player(message, user)
+                val target = if(action.extra != "none"){
+                    Player(message, Utils.convertToLong(action.extra)!!)
+                } else{
+                    Player(message, action.target)
+                }
                 if(target.allignment == "town" || target.role == "godfather" || target.role == "amnesiac" || target.role == "survivor" || target.role == "witch") {
-                    Message.sendDM(message.guild.getUserByID(user), message.guild.getUserByID(user).getDisplayName(message.guild) + "is Not Suspicious.")
+                    Message.sendDM(message.guild.getUserByID(user), message.guild.getUserByID(target.id).getDisplayName(message.guild) + "is Not Suspicious.")
                 }
                 else if(target.allignment == "mafia"){
-                    Message.sendDM(message.guild.getUserByID(user), message.guild.getUserByID(user).getDisplayName(message.guild) + "is a Member of the Mafia!")
+                    Message.sendDM(message.guild.getUserByID(user), message.guild.getUserByID(target.id).getDisplayName(message.guild) + "is a Member of the Mafia!")
                 }
                 else{
-                    Message.sendDM(message.guild.getUserByID(user), message.guild.getUserByID(user).getDisplayName(message.guild) + "is a " + target.role.toUpperCase() + "!")
+                    Message.sendDM(message.guild.getUserByID(user), message.guild.getUserByID(target.id).getDisplayName(message.guild) + "is a " + target.role.toUpperCase() + "!")
                 }
             }
         }
@@ -186,7 +201,12 @@ object DoAction {
                     if (player2.defence < original.attack) {
                         if (action2.target == action.target || action2.target2 == action.target && action2.player != action.player) {
                             kills++
-                            Kill.message(message, arrayOf(Config.readPrefix() + "mafia", "kill", action2.player.toString(), original.role))
+                            if (action.extra == "clean") {
+                                Kill.message(message, arrayOf(Config.readPrefix() + "mafia", "kill", action2.player.toString(), original.role, "-clean"))
+                            }
+                            else{
+                                Kill.message(message, arrayOf(Config.readPrefix() + "mafia", "kill", action2.player.toString(), original.role))
+                            }
                         }
 
                         if (player2.role == "veteran" && MafiaConfig.getExtra(message, player2.id) as Boolean) {
@@ -209,8 +229,13 @@ object DoAction {
             val player1 = Player(message, action.player)
             if(action.action == "kill"){
                 val player = Player(message, action.target)
-                if(player.defence < player1.attack){
-                    Kill.message(message, arrayOf(Config.readPrefix(), "mafia", "kill", action.target.toString(), player1.role))
+                if(player.defence < player1.attack) {
+                    if (action.extra == "clean") {
+                        Kill.message(message, arrayOf(Config.readPrefix(), "mafia", "kill", action.target.toString(), player1.role))
+                    }
+                    else{
+                        Kill.message(message, arrayOf(Config.readPrefix(), "mafia", "kill", action.target.toString(), player1.role, "-clean"))
+                    }
                 }
             }
         }
@@ -284,10 +309,177 @@ object DoAction {
         }
     }
 
+    fun revive(message : IMessage){
+        val actions = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_actions.txt")
+        for(user  in MafiaConfig.getPlayers(message, "Mafia Folks")){
+            lateinit var action: Action
+            try {
+                action = Action(user, actions.getJSONObject("" + user))
+            } catch (e: Exception) {
+                e.localizedMessage
+            }
+            if(action.action == "revive"){
+                val player = Player(message, action.player)
+                if(player.extra != 0){
+                    Mafia.revive(message, action.target)
+                    MafiaConfig.setExtra(message, action.player,0)
+                }
+            }
+        }
+    }
+
+    fun clean(message : IMessage){
+        val actions = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_actions.txt")
+        for(user  in MafiaConfig.getPlayers(message, "Mafia Folks")){
+            lateinit var action: Action
+            try {
+                action = Action(user, actions.getJSONObject("" + user))
+            } catch (e: Exception) {
+                e.localizedMessage
+            }
+            if(action.action == "clean"){
+                for(user2 in MafiaConfig.getPlayers(message, "Mafia Folks")){
+                    val action2 = Action(user, actions.getJSONObject("" + user2))
+                    if(action2.action == "kill" && action2.target == action.target) {
+                        addAction(message, message.guild.getUserByID(action2.player), action2.target, action2.target2, "kill", "clean")
+                    }
+                }
+            }
+        }
+    }
+
+    fun frame(message : IMessage){
+        val actions = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_actions.txt")
+        for(user  in MafiaConfig.getPlayers(message, "Mafia Folks")){
+            lateinit var action: Action
+            try {
+                action = Action(user, actions.getJSONObject("" + user))
+            } catch (e: Exception) {
+                e.localizedMessage
+            }
+            if(action.action == "frame"){
+                for(user2 in MafiaConfig.getPlayers(message, "Mafia Folks")){
+                    val action2 = Action(user, actions.getJSONObject("" + user2))
+                    if(action2.action == "invest" && action2.target == action.target) {
+                        addAction(message, message.guild.getUserByID(action2.player), action2.target, action2.target2, "invest", "" + action.player)
+                    }
+                    else if(action2.action == "interrogate" && action2.target == action.target2){
+                        addAction(message, message.guild.getUserByID(action2.player), action2.target, action2.target2, "interrogate", "" + action.player)
+                    }
+                }
+            }
+        }
+    }
+
+    fun heal(message : IMessage){
+        val actions = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_actions.txt")
+        for(user  in MafiaConfig.getPlayers(message, "Mafia Folks")){
+            lateinit var action: Action
+            try {
+                action = Action(user, actions.getJSONObject("" + user))
+            } catch (e: Exception) {
+                e.localizedMessage
+            }
+            if(action.action == "heal"){
+                val target = Player(message, action.target)
+                if(target.roleEnum == Roles.BODYGUARD){
+                    MafiaConfig.setExtra(message, action.target,"healed")
+                    MafiaListener.addDirtyValue(Triple(message.guild.getUserByID(action.target), Details.EXTRA, ""))
+                }
+                for(user2 in MafiaConfig.getPlayers(message, "Mafia Folks")){
+                    val action2 = Action(user, actions.getJSONObject("" + user2))
+                    if(action2.target == action.target && action2.action == "kill"){
+                        removeAction(message, action2)
+                        break
+                    }
+                    else if(action2.target == action.target && action2.action == "rampage"){
+                        val player = Player(message, action.target)
+                        MafiaConfig.editDetails(message, message.guild.getUserByID(action.target), Details.DEFENCE, "3")
+                        MafiaListener.addDirtyValue(Triple(message.guild.getUserByID(action.target), Details.DEFENCE, player.defence))
+                        break
+                    }
+                }
+            }
+        }
+    }
+
+    fun disguise(message : IMessage){
+        val actions = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_actions.txt")
+        for(user  in MafiaConfig.getPlayers(message, "Mafia Folks")){
+            lateinit var action: Action
+            try {
+                action = Action(user, actions.getJSONObject("" + user))
+            } catch (e: Exception) {
+                e.localizedMessage
+            }
+            val player = Player(message, action.player)
+            if(action.action == "disguise"){
+                for(user2 in MafiaConfig.getPlayers(message, "Mafia Folks")){
+                    val action2 = Action(user, actions.getJSONObject("" + user2))
+                    if(action2.target == action.target && action2.action == "invest"){
+                        addAction(message, message.guild.getUserByID(action2.player), action2.target, action2.target2, action2.action, "" + player.extra)
+                    }
+                }
+            }
+        }
+    }
+
+    fun investabsolute(message : IMessage){
+        val actions = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_actions.txt")
+        for(user  in MafiaConfig.getPlayers(message, "Mafia Folks")){
+            lateinit var action: Action
+            try {
+                action = Action(user, actions.getJSONObject("" + user))
+            } catch (e: Exception) {
+                e.localizedMessage
+            }
+            val player = Player(message, action.player)
+            if(action.action == "invest-absolute"){
+                val target = Player(message, action.target)
+                Message.sendDM(player.user, "Your target is a " + target.roleEnum.name)
+            }
+        }
+    }
+
+    fun protect(message : IMessage){
+        val actions = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_actions.txt")
+        for(user  in MafiaConfig.getPlayers(message, "Mafia Folks")){
+            lateinit var action: Action
+            try {
+                action = Action(user, actions.getJSONObject("" + user))
+            } catch (e: Exception) {
+                e.localizedMessage
+            }
+            val player = Player(message, action.player)
+            val target = Player(message, action.target)
+            if(action.action == "protect"){
+                for(user2 in MafiaConfig.getPlayers(message, "Mafia Folks")){
+                    val action2 = Action(user2, actions.getJSONObject("" + user))
+                        if(action2.action == "kill" || action2.action == "rampage" && action2.target == action.target){
+                            removeAction(message, action2)
+                            if(target.extra != "healed") {
+                                Kill.message(message, arrayOf(Config.readPrefix() + "mafia", "kill", action.player, "prote+cted"))
+                            }
+                            Kill.message(message, arrayOf(Config.readPrefix() + "mafia", "kill", action2.player, "bodyguard"))
+                            break
+                        }
+                }
+            }
+        }
+    }
+
+    fun blackmail(message : IMessage){
+
+    }
+
+    fun remember(message : IMessage){
+
+    }
+
     private fun setDirty(user : IUser, detail : Enum<Details>, originalValue : Any){
         MafiaListener.addDirtyValue(Triple(user, detail, originalValue))
     }
 
-    //TODO revive, seance, clean (set extra tag on kill), frame(set extra tag on interrogates and invest), forge, heal (removes kills on target), disguise(sets extra tag on kills, invest, and interrogates), invest-absolute, protect(sets target defence as dirty to be 1 unless has defence higher) , blackmail, remember
+    //TODO blackmail, remember
 
 }

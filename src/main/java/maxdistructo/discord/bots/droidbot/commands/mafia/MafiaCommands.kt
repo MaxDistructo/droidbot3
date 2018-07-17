@@ -203,6 +203,20 @@ object MafiaCommands{
         }
     }
 
+    class Generate : MafiaCommand(){
+        override val commandName: String
+            get() = "generate"
+        override val helpMessage: String
+            get() = "mafia generate - Generates a mafia playerdat file"
+        override val requiresAdmin: Boolean
+            get() = true
+        override fun init(message : IMessage , args : List<String>) : String{
+            val out = Mafia.assignRoles(message)
+            MafiaConfig.writeGame(message, out.first)
+            return ""
+        }
+    }
+
     class MafiaCommandRegistry : CommandRegistry() {
         override var commandHolder = LinkedList<BaseCommand>()
         init{
@@ -219,7 +233,8 @@ object MafiaCommands{
             val vote = Vote()
             val message = AdminMessage()
             val action = Action()
-            this.commandHolder.addAll(listOf(userDo, join, gameContinue, start, info, modInfo, roleCard, setRole, killCommand, jailPlayer, vote, message, action))
+            val generate = Generate()
+            this.commandHolder.addAll(listOf(userDo, join, gameContinue, start, info, modInfo, roleCard, setRole, killCommand, jailPlayer, vote, message, action, generate))
         }
 
     }

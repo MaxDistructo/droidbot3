@@ -25,6 +25,7 @@ class Action : IAction {
     val extra : Any
         get() = privExtra
 
+
     fun toJSON(): JSONObject {
         val obj = JSONObject()
         obj.put("target", privTarget)
@@ -34,9 +35,10 @@ class Action : IAction {
         return obj
     }
 
-    constructor() {
+    constructor(extra: Any) {
         privTarget = 0
         privTarget2 = 0
+        privExtra = extra
     }
 
     constructor(player: Long, target: Long, target2: Long, action: String, extra : Any) {

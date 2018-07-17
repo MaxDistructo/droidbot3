@@ -167,6 +167,12 @@ object MafiaConfig {
         f.put("extra", value)
         MafiaConfig.writeGame(message, f)
     }
+    fun setExtra(message : IMessage, user : Long, value : Any){
+        val f = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_playerdat.txt").getJSONObject("" + user)
+        f.remove("extra")
+        f.put("extra", value)
+        MafiaConfig.writeGame(message, f)
+    }
     fun getExtra(message : IMessage) : Any{
         val details = getPlayerDetails(message)
         return details[6]
