@@ -3,6 +3,7 @@ package maxdistructo.discord.bots.droidbot.commands.mafia.methods
 import maxdistructo.discord.bots.droidbot.BaseBot
 import maxdistructo.discord.bots.droidbot.commands.mafia.MafiaListener
 import maxdistructo.discord.bots.droidbot.commands.mafia.action.RunActions
+import maxdistructo.discord.bots.droidbot.commands.mafia.handlers.GraveyardHandler
 import maxdistructo.discord.bots.droidbot.commands.mafia.obj.Details
 import maxdistructo.discord.bots.droidbot.commands.mafia.obj.Game
 import maxdistructo.discord.bots.droidbot.commands.mafia.obj.Player
@@ -41,6 +42,8 @@ object Mafia {
         val game = Game(Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt"))
         val adminChannel = game.adminChannel
         val dayChannel = game.dayChannel
+        MafiaListener.registerHandler(GraveyardHandler.Handler(Message.sendMessage(game.dayChannel, "Graveyard: ")))
+        MafiaListener.resetHandlers(message)
         File(s + "/config/mafia/" + message.guild.longID + "_playerdat.txt").delete()
         val roles = assignRoles(message)
         val roleArray = roles.second
@@ -50,6 +53,7 @@ object Mafia {
             Message.sendDM(message.guild.getUserByID(i), RoleCards.onRoleCardAsk(message, roleArray[ii]!!, message.guild.getUserByID(i)))
             ii++
         }
+
         Message.sendMessage(dayChannel, message.guild.getRolesByName("Mafia Folks")[0].mention() + " The Mafia game has started! \n Day 1 has begun!")
         Message.sendMessage(adminChannel, message.author.getDisplayName(message.guild) + "#" + message.author.discriminator + " has started the Mafia game.")
         val players = MafiaConfig.getPlayers(message, "Mafia Folks")
@@ -73,6 +77,7 @@ object Mafia {
                 game.vamphunterChannel.overrideUserPermissions(BaseBot.bot.client.getUserByID(player),EnumSet.of(Permissions.READ_MESSAGES), EnumSet.of(Permissions.SEND_MESSAGES))
             }
         }
+        MafiaListener.updateHandlers(message)
     }
 
     fun onGameToggle(message: IMessage) {
@@ -266,6 +271,7 @@ object Mafia {
         root.remove("" + playerID)
         root.put("" + playerID, playerInfo)
         MafiaConfig.writeGame(message, root)
+        GraveyardHandler.addToGraveyard(message, message.guild.getUserByID(playerID))
         val dead = Roles.getRole(message, "Dead(Mafia)")
         val alive = Roles.getRole(message, "Alive(Mafia)")
         player.addRole(dead)
@@ -372,5 +378,6 @@ object Mafia {
 
     fun revive(message : IMessage, user : Long){
         MafiaConfig.editDetails(message, message.guild.getUserByID(user), Details.DEAD,false)
+        GraveyardHandler.removeFromGraveyard(message, message.guild.getUserByID(user))
     }
 }

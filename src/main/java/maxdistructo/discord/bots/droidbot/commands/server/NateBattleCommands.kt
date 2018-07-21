@@ -1,20 +1,17 @@
 package maxdistructo.discord.bots.droidbot.commands.server
 
-import maxdistructo.discord.bots.droidbot.background.CommandRegistry
 import maxdistructo.discord.bots.droidbot.background.EnumSelector
+import maxdistructo.discord.bots.droidbot.background.coreadditions.ICommandRegistry
 import maxdistructo.discord.core.command.BaseCommand
+import maxdistructo.discord.core.command.IBaseListener
 import maxdistructo.discord.core.message.Message
 import sx.blah.discord.handle.obj.IMessage
-import java.util.*
 
-object NateBattleCommands {
+object NateBattleCommands : ICommandRegistry {
 
-    class NateBattleCommandRegistry : CommandRegistry(){
-        override var commandHolder = LinkedList<BaseCommand>()
-        init {
-            val roleCard = RoleCard()
-            this.commandHolder.add(roleCard)
-        }
+    override fun registerCommands(listener : IBaseListener){
+        val roleCard = RoleCard()
+        listener.registerCommand(roleCard)
     }
 
     class RoleCard : BaseCommand(){

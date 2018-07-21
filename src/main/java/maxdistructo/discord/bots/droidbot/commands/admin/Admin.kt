@@ -2,13 +2,13 @@ package maxdistructo.discord.bots.droidbot.commands.admin
 
 
 import maxdistructo.discord.bots.droidbot.BaseBot.client
-import maxdistructo.discord.bots.droidbot.background.CommandRegistry
 import maxdistructo.discord.bots.droidbot.background.Conf
+import maxdistructo.discord.bots.droidbot.background.coreadditions.ICommandRegistry
 import maxdistructo.discord.bots.droidbot.background.PrivUtils
 import maxdistructo.discord.bots.droidbot.commands.Shutdown
 import maxdistructo.discord.bots.droidbot.commands.casino.CasinoConfig
 import maxdistructo.discord.core.*
-import maxdistructo.discord.core.command.BaseCommand
+import maxdistructo.discord.core.command.IBaseListener
 import maxdistructo.discord.core.message.Message
 import org.json.JSONArray
 import sx.blah.discord.handle.obj.*
@@ -21,7 +21,7 @@ import java.text.NumberFormat
 import java.time.Instant
 import java.util.*
 
-object Admin {
+object Admin : ICommandRegistry {
 
     class AddMod : AdminCommand(){
         override val commandName: String
@@ -322,17 +322,13 @@ object Admin {
         Message.sendMessage(channel, "Successfully backed up this channel.")
     }
 
-    class AdminCommandRegistry : CommandRegistry(){
-        override var commandHolder = LinkedList<BaseCommand>()
-        init {
-            val clear = ClearChannel()
-            val backup = BackupChannel()
-            val nick = Nickname()
-            val profile = ProfilePic()
-            val shutdown = Shutdown()
-            this.commandHolder.addAll(listOf(clear, backup, nick, profile, shutdown))
-        }
+    override fun registerCommands(listener : IBaseListener) {
+        val clear = ClearChannel()
+        val backup = BackupChannel()
+        val nick = Nickname()
+        val profile = ProfilePic()
+        val shutdown = Shutdown()
+        listener.registerCommand(clear, backup, nick, profile, shutdown)
     }
-
 
 }

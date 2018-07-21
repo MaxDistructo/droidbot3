@@ -157,7 +157,7 @@ object MafiaConfig {
     fun checkRevealed(message : IMessage) : Boolean{
         if (!Perms.checkMod(message)) {
             val root1 = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_playerdat.txt")
-            return root1.getBoolean("revealed")
+            return root1.getBoolean("extra")
         }
         return false
     }
@@ -191,4 +191,6 @@ object MafiaConfig {
         json.put("" + user.longID, userJson)
         writeGame(message, json)
     }
+
+
 }

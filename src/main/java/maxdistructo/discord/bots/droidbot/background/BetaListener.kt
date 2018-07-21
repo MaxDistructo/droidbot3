@@ -1,22 +1,18 @@
 package maxdistructo.discord.bots.droidbot.background
 
 import kotlinx.coroutines.experimental.launch
-import maxdistructo.discord.bots.droidbot.BaseBot
 import maxdistructo.discord.bots.droidbot.background.filter.SwearFilter
 import maxdistructo.discord.core.Config
 import maxdistructo.discord.core.Perms
 import maxdistructo.discord.core.command.BaseCommand
-import maxdistructo.discord.core.command.ICommandRegistry
+import maxdistructo.discord.core.command.ICommand
 import maxdistructo.discord.core.message.Message
 import sx.blah.discord.api.events.EventSubscriber
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
-import sx.blah.discord.handle.impl.events.shard.ShardReadyEvent
-import sx.blah.discord.handle.obj.ActivityType
-import sx.blah.discord.handle.obj.StatusType
 import java.util.*
 
 class BetaListener : BaseListener() {
-    override var commandRegistries = LinkedList<ICommandRegistry>()
+    override var commandRegistry = LinkedList<ICommand>()
     override val name = "Botfather.Base"
     override var adminCommands = listOf<BaseCommand>()
     override var commandsArray = listOf<BaseCommand>()

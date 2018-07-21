@@ -5,7 +5,7 @@ import maxdistructo.discord.bots.droidbot.background.BaseListener
 import maxdistructo.discord.core.Config
 import maxdistructo.discord.core.Perms
 import maxdistructo.discord.core.command.BaseCommand
-import maxdistructo.discord.core.command.ICommandRegistry
+import maxdistructo.discord.core.command.ICommand
 import maxdistructo.discord.core.message.Message
 import sx.blah.discord.api.events.EventSubscriber
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
@@ -14,7 +14,7 @@ import java.util.*
 class AdminListener : BaseListener() {
 
     override val name = "Botfather.Admin"
-    override var commandRegistries = LinkedList<ICommandRegistry>()
+    override var commandRegistry: LinkedList<ICommand> = LinkedList()
     override var commandsArray: List<BaseCommand> = listOf()
     override var adminCommands: List<BaseCommand> = listOf()
     override var modCommands: List<BaseCommand> = listOf()

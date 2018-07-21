@@ -1,24 +1,21 @@
 package maxdistructo.discord.bots.droidbot.commands.mafia
 
 import maxdistructo.discord.bots.droidbot.BaseBot
-import maxdistructo.discord.bots.droidbot.background.CommandRegistry
 import maxdistructo.discord.bots.droidbot.background.EnumSelector
+import maxdistructo.discord.bots.droidbot.background.coreadditions.ICommandRegistry
 import maxdistructo.discord.bots.droidbot.background.PrivUtils
-import maxdistructo.discord.bots.droidbot.commands.Help
 import maxdistructo.discord.bots.droidbot.commands.mafia.action.ActionMessage
 import maxdistructo.discord.bots.droidbot.commands.mafia.methods.*
 import maxdistructo.discord.bots.droidbot.commands.mafia.obj.Game
 import maxdistructo.discord.bots.droidbot.commands.mafia.obj.Player
 import maxdistructo.discord.core.Utils
-import maxdistructo.discord.core.command.BaseCommand
+import maxdistructo.discord.core.command.IBaseListener
 import maxdistructo.discord.core.message.Message
 import maxdistructo.discord.core.message.Webhook
 import sx.blah.discord.handle.obj.IMessage
-import java.util.*
 
 
-
-object MafiaCommands{
+object MafiaCommands : ICommandRegistry {
 
 
     class Do : MafiaCommand(){
@@ -217,26 +214,23 @@ object MafiaCommands{
         }
     }
 
-    class MafiaCommandRegistry : CommandRegistry() {
-        override var commandHolder = LinkedList<BaseCommand>()
-        init{
-            val userDo = Do()
-            val join = Join()
-            val gameContinue = Continue()
-            val start = Start()
-            val info = Info()
-            val modInfo = ModInfo()
-            val roleCard = RoleCard()
-            val setRole = SetRole()
-            val killCommand = KillCommand()
-            val jailPlayer = JailPlayer()
-            val vote = Vote()
-            val message = AdminMessage()
-            val action = Action()
-            val generate = Generate()
-            this.commandHolder.addAll(listOf(userDo, join, gameContinue, start, info, modInfo, roleCard, setRole, killCommand, jailPlayer, vote, message, action, generate))
-        }
-
+    override fun registerCommands(listener : IBaseListener){
+        val userDo = Do()
+        val join = Join()
+        val gameContinue = Continue()
+        val start = Start()
+        val info = Info()
+        val modInfo = ModInfo()
+        val roleCard = RoleCard()
+        val setRole = SetRole()
+        val killCommand = KillCommand()
+        val jailPlayer = JailPlayer()
+        val vote = Vote()
+        val message = AdminMessage()
+        val action = Action()
+        val generate = Generate()
+        val reset = Resetter.Command()
+        listener.registerCommand(userDo, join, gameContinue, start, info, modInfo, roleCard, setRole, killCommand, jailPlayer, vote, message, action, generate, reset)
     }
 
 }

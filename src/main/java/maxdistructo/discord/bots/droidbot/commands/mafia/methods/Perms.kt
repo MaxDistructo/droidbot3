@@ -91,7 +91,7 @@ object Perms {
     }
 
     fun checkSpectator(message: IMessage) : Boolean{
-        return message.author.hasRole(message.guild.getRolesByName("Mafia(Spectator)")[0])
+        return message.author.hasRole(message.guild.getRolesByName("Spectator(Mafia)")[0])
     }
 
     fun denyMediumChat(message: IMessage, userByID: IUser?) {

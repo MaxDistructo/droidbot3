@@ -5,6 +5,7 @@ import kotlinx.coroutines.experimental.launch
 import maxdistructo.discord.bots.droidbot.BaseBot
 import maxdistructo.discord.bots.droidbot.background.BaseListener
 import maxdistructo.discord.bots.droidbot.background.PrivUtils
+import maxdistructo.discord.bots.droidbot.commands.mafia.init.IHandler
 import maxdistructo.discord.bots.droidbot.commands.mafia.methods.*
 import maxdistructo.discord.bots.droidbot.commands.mafia.obj.Details
 import maxdistructo.discord.bots.droidbot.commands.mafia.obj.Game
@@ -12,7 +13,7 @@ import maxdistructo.discord.bots.droidbot.commands.mafia.obj.Player
 import maxdistructo.discord.core.Config
 import maxdistructo.discord.core.Utils
 import maxdistructo.discord.core.command.BaseCommand
-import maxdistructo.discord.core.command.ICommandRegistry
+import maxdistructo.discord.core.command.ICommand
 import maxdistructo.discord.core.message.Message
 import maxdistructo.discord.core.message.Webhook
 import sx.blah.discord.api.events.EventSubscriber
@@ -27,7 +28,7 @@ class MafiaListener : BaseListener() {
     override var commandsArray = listOf<BaseCommand>()
     override var modCommands = listOf<BaseCommand>()
     override val name = "Botfather.Mafia"
-    override var commandRegistries = LinkedList<ICommandRegistry>()
+    override var commandRegistry = LinkedList<ICommand>()
 
 
     @EventSubscriber
@@ -194,6 +195,7 @@ class MafiaListener : BaseListener() {
     }
     companion object {
         var dirtyValues : Array<Triple<IUser, Enum<Details>, Any>> = arrayOf()
+        var handlers : LinkedList<IHandler> = LinkedList()
         fun addDirtyValue(triple : Triple<IUser,Enum<Details>,Any>){
             dirtyValues += triple
         }
@@ -203,6 +205,19 @@ class MafiaListener : BaseListener() {
                 MafiaConfig.editDetails(message, value.first, value.second, value.third)
                 dirtyValues.drop(i)
                 i++
+            }
+        }
+        fun registerHandler(handler : IHandler){
+            handlers.add(handler)
+        }
+        fun updateHandlers(message : IMessage){
+            for(handler in handlers){
+                handler.update(message)
+            }
+        }
+        fun resetHandlers(message : IMessage){
+            for(handler in handlers){
+                handler.reset(message)
             }
         }
     }
