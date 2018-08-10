@@ -1,6 +1,7 @@
 package maxdistructo.discord.bots.droidbot
 
 import maxdistructo.discord.bots.droidbot.background.BetaListener
+import maxdistructo.discord.bots.droidbot.background.RunnableShutdown
 import maxdistructo.discord.bots.droidbot.background.coreadditions.ICommandRegistry
 import maxdistructo.discord.bots.droidbot.background.coreadditions.IDiscordBot
 import maxdistructo.discord.bots.droidbot.commands.admin.Admin
@@ -14,6 +15,7 @@ import maxdistructo.discord.core.Client
 import maxdistructo.discord.core.Config
 import maxdistructo.discord.core.command.IBaseListener
 import maxdistructo.discord.core.impl.Bot
+import maxdistructo.discord.core.message.Message
 import org.slf4j.Logger
 import sx.blah.discord.api.IDiscordClient
 import java.util.*
@@ -42,6 +44,7 @@ object BaseBot : IDiscordBot {
         }
         bot.registerListeners()
         bot.client.dispatcher.registerListener(ReconnectListener()) //Listener that reconnects the bot and handles the status updating.
+        Runtime.getRuntime().addShutdownHook(Thread(RunnableShutdown)) // Sends DM to Owner on Shutdown via Command Line or Bot command
     }
 
     private fun addRegistryValues(){

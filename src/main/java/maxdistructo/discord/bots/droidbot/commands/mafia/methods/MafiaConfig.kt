@@ -54,12 +54,12 @@ object MafiaConfig {
         if (!Perms.checkMod(message)) {
             val root1 = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_playerdat.txt")
             val root = root1.getJSONObject("" + message.author.longID)
-            val list = arrayListOf<Any>(root.getString("alignment"), root.getString("class"), root.getString("role"), message.author.getRolesForGuild(message.guild).contains(Roles.getRole(message, "Dead(Mafia)")), root.getInt("attack"), root.getInt("defense"), root.getString("extra"))
+            val list = arrayListOf<Any>(root.getString("alignment"), root.getString("class"), root.getString("role"), message.author.getRolesForGuild(message.guild).contains(Roles.getRole(message, "Dead(Mafia)")), root.getInt("attack"), root.getInt("defense"), root.get("extra"))
             return list.toArray()
         } else if(Perms.checkMod(message) && message.author.hasRole(message.guild.getRolesByName("Alive(Mafia)")[0]) || message.author.hasRole(message.guild.getRolesByName("Dead(Mafia)")[0])){
             val root1 = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_playerdat.txt")
             val root = root1.getJSONObject("" + message.author.longID)
-            val list = arrayListOf<Any>(root.getString("alignment"), root.getString("class"), root.getString("role"), message.author.getRolesForGuild(message.guild).contains(Roles.getRole(message, "Dead(Mafia)")), root.getInt("attack"), root.getInt("defense"), root.getString("extra"))
+            val list = arrayListOf<Any>(root.getString("alignment"), root.getString("class"), root.getString("role"), message.author.getRolesForGuild(message.guild).contains(Roles.getRole(message, "Dead(Mafia)")), root.getInt("attack"), root.getInt("defense"), root.get("extra"))
             return list.toArray()
         }
         else {
@@ -72,12 +72,12 @@ object MafiaConfig {
         if (!Perms.checkMod(message, playerID)) {
             val root1 = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_playerdat.txt")
             val root = root1.getJSONObject("" + playerID)
-            val list = arrayListOf<Any>(root.getString("alignment"), root.getString("class"), root.getString("role"), message.guild.getUserByID(playerID).getRolesForGuild(message.guild).contains(Roles.getRole(message, "Dead(Mafia)")), root.getInt("attack"), root.getInt("defense"), root.getString("extra"))
+            val list = arrayListOf<Any>(root.getString("alignment"), root.getString("class"), root.getString("role"), message.guild.getUserByID(playerID).getRolesForGuild(message.guild).contains(Roles.getRole(message, "Dead(Mafia)")), root.getInt("attack"), root.getInt("defense"), root.get("extra"))
             return list.toArray()
         } else if(Perms.checkMod(message, playerID) && message.guild.getUserByID(playerID).hasRole(message.guild.getRolesByName("Alive(Mafia)")[0]) || message.guild.getUserByID(playerID).hasRole(message.guild.getRolesByName("Dead(Mafia)")[0])){
             val root1 = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_playerdat.txt")
             val root = root1.getJSONObject("" + message.author.longID)
-            val list = arrayListOf<Any>(root.getString("alignment"), root.getString("class"), root.getString("role"), message.author.getRolesForGuild(message.guild).contains(Roles.getRole(message, "Dead(Mafia)")), root.getInt("attack"), root.getInt("defense"), root.getString("extra"))
+            val list = arrayListOf<Any>(root.getString("alignment"), root.getString("class"), root.getString("role"), message.author.getRolesForGuild(message.guild).contains(Roles.getRole(message, "Dead(Mafia)")), root.getInt("attack"), root.getInt("defense"), root.get("extra"))
             return list.toArray()
         } else {
             val list = arrayListOf<Any>("admin", "admin", "admin", false, 3, 3,"")
@@ -162,15 +162,21 @@ object MafiaConfig {
         return false
     }
     fun setExtra(message : IMessage, value : Any){
-        val f = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_playerdat.txt").getJSONObject("" + message.author.longID)
-        f.remove("extra")
-        f.put("extra", value)
+        val f = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_playerdat.txt")
+        val user = f.getJSONObject("" + message.author.longID)
+        f.remove("" + message.author.longID)
+        user.remove("extra")
+        user.put("extra", value)
+        f.put("" + message.author.longID, user)
         MafiaConfig.writeGame(message, f)
     }
     fun setExtra(message : IMessage, user : Long, value : Any){
-        val f = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_playerdat.txt").getJSONObject("" + user)
-        f.remove("extra")
-        f.put("extra", value)
+        val f = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_playerdat.txt")
+        val user2 = f.getJSONObject("" + user)
+        f.remove("" + user)
+        user2.remove("extra")
+        user2.put("extra", value)
+        f.put("" + user, user2)
         MafiaConfig.writeGame(message, f)
     }
     fun getExtra(message : IMessage) : Any{

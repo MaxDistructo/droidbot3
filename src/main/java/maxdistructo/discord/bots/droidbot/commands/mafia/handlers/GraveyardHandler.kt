@@ -20,19 +20,20 @@ object GraveyardHandler {
     }
     fun update(message : IMessage, update : IMessage){
         val builder = StringBuilder()
+        builder.append("Graveyard: \n")
         for(user in getGraveyard(message)){
             val player = Player(message, user as Long)
             builder.append(player.user.getDisplayName(message.guild))
             builder.append("- ")
             builder.append(player.roleEnum.name)
+            builder.append("\n")
         }
         update.edit(builder.toString())
+        update.channel.pin(update)
     }
     fun reset(message : IMessage, update : IMessage){
         update.delete()
         resetGraveyard(message)
-
-
     }
     fun getGraveyard(message : IMessage) : JSONArray{
         val dat = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt")
@@ -64,6 +65,7 @@ object GraveyardHandler {
     fun resetGraveyard(message : IMessage){
         val dat = Utils.readJSONFromFile("/config/mafia/" + message.guild.longID + "_dat.txt")
         dat.remove("graveyard")
+        dat.put("graveyard", JSONArray())
         Utils.writeJSONToFile("/config/mafia/" + message.guild.longID + "_dat.txt", dat)
     }
 }

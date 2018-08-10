@@ -45,16 +45,16 @@ class MafiaListener : BaseListener() {
                 if (!game.day && message.channel === game.mediumChannel && !message.author.isBot && MafiaConfig.getJailed(message) != message.author.longID && !Perms.checkMod(message) && !Perms.checkSpectator(message)) { //Medium to Dead
                     Webhook.send(BaseBot.bot, game.deadChannel, "Medium", "https://i.imgur.com/WBTx4Kx.png", message.formattedContent)
                 }
-                if (message.channel === game.mafiaChannel && !Perms.checkMod(message) && !Perms.checkSpectator(message)) { //Mafia to Spy
+                if (message.channel === game.mafiaChannel && !Perms.checkMod(message) && !Perms.checkSpectator(message) && !message.author.isBot) { //Mafia to Spy
                     Webhook.send(BaseBot.bot, game.spyChannel, "Mafia", "https://vignette.wikia.nocookie.net/town-of-salem/images/7/70/DarkRevenant.png/revision/latest/scale-to-width-down/87?cb=20140701002425", message.formattedContent)
                 }
-                if (message.channel === game.jailorChannel && !Perms.checkMod(message) && !Perms.checkSpectator(message)) {
+                if (message.channel === game.jailorChannel && !Perms.checkMod(message) && !Perms.checkSpectator(message) && !message.author.isBot) {
                     Webhook.send(BaseBot.bot, game.jailedChannel, "Jailor", "https://vignette.wikia.nocookie.net/town-of-salem/images/7/7e/Jailor.png/revision/latest/scale-to-width-down/150?cb=20151021224315", message.formattedContent)
                 }
-                if (message.channel === game.jailedChannel && !Perms.checkMod(message) && !Perms.checkSpectator(message)) { //Jailed to Jailor
+                if (message.channel === game.jailedChannel && !Perms.checkMod(message) && !Perms.checkSpectator(message) && !message.author.isBot) { //Jailed to Jailor
                     Webhook.send(BaseBot.bot, game.jailorChannel, message.author.getDisplayName(message.guild), message.author.avatarURL, message.formattedContent)
                 }
-                if (message.channel == game.vampChannel && !Perms.checkMod(message) && !Perms.checkSpectator(message)) {
+                if (message.channel == game.vampChannel && !Perms.checkMod(message) && !Perms.checkSpectator(message) && !message.author.isBot) {
                     Webhook.send(BaseBot.bot, game.vamphunterChannel, "Vampire", "https://vignette.wikia.nocookie.net/town-of-salem/images/4/4e/Vampire.png/revision/latest/scale-to-width-down/150?cb=20151101133009", message.formattedContent)
                 }
                 if (message.content.startsWith(prefix + "mafia")) {

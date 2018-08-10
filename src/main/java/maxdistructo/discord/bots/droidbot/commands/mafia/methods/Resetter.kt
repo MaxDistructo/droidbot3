@@ -40,7 +40,7 @@ object Resetter {
         file.delete() //Clears the Player Data file
         println("Resetting Channels")
         channelClear(message)
-        Message.Companion.sendMessage(message.channel, "Mafia Reset has been completed.")
+        Message.sendMessage(message.channel, "Mafia Reset has been completed.")
     }
     private fun resetRoles(message : IMessage){
         val inRole = Roles.getRole(message, "Mafia Folks")

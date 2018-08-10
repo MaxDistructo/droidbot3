@@ -5,6 +5,7 @@ import maxdistructo.discord.bots.droidbot.background.EnumSelector
 import maxdistructo.discord.bots.droidbot.background.coreadditions.ICommandRegistry
 import maxdistructo.discord.bots.droidbot.background.PrivUtils
 import maxdistructo.discord.bots.droidbot.commands.mafia.action.ActionMessage
+import maxdistructo.discord.bots.droidbot.commands.mafia.handlers.VoteCountHandler
 import maxdistructo.discord.bots.droidbot.commands.mafia.methods.*
 import maxdistructo.discord.bots.droidbot.commands.mafia.obj.Game
 import maxdistructo.discord.bots.droidbot.commands.mafia.obj.Player
@@ -160,13 +161,13 @@ object MafiaCommands : ICommandRegistry {
         override fun init(message: IMessage, args: List<String>): String {
             val player = Player(MafiaConfig.getPlayerDetails(message))
             if (player.role == "mayor") {
-                if (MafiaConfig.checkRevealed(message)) {
-                    Message.sendMessage(message.channel, "The Mayor has voted for " + Utils.getMentionedUser(message)!!.mention(true))
-                } else {
-                    Message.sendMessage(message.channel, message.author.toString() + " has voted for " + Utils.getMentionedUser(message)!!.mention(true))
-                }
+                Message.sendMessage(message.channel, message.author.toString() + " has voted for " + Utils.getMentionedUser(message)!!.mention(true))
+                VoteCountHandler.addVote(message, true)
             }
-            Message.sendMessage(message.channel, message.author.toString() + " has voted for " + Utils.getMentionedUser(message)!!.mention(true))
+            else {
+                Message.sendMessage(message.channel, message.author.toString() + " has voted for " + Utils.getMentionedUser(message)!!.mention(true))
+                VoteCountHandler.addVote(message, false)
+            }
             message.delete()
             return ""
         }
@@ -214,6 +215,18 @@ object MafiaCommands : ICommandRegistry {
         }
     }
 
+    class Leave : MafiaCommand(){
+        override val commandName: String
+            get() = "leave"
+        override val helpMessage: String
+            get() = "mafia leave - Removes you from the mafia games"
+
+        override fun init(message: IMessage, args: List<String>): String {
+            Mafia.onGameLeaveCommand(message)
+            return ""
+        }
+    }
+
     override fun registerCommands(listener : IBaseListener){
         val userDo = Do()
         val join = Join()
@@ -230,7 +243,8 @@ object MafiaCommands : ICommandRegistry {
         val action = Action()
         val generate = Generate()
         val reset = Resetter.Command()
-        listener.registerCommand(userDo, join, gameContinue, start, info, modInfo, roleCard, setRole, killCommand, jailPlayer, vote, message, action, generate, reset)
+        val leave = Leave()
+        listener.registerCommand(userDo, join, gameContinue, start, info, modInfo, roleCard, setRole, killCommand, jailPlayer, vote, message, action, generate, reset, leave)
     }
 
 }
